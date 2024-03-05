@@ -1,0 +1,54 @@
+<div class="container container-top">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="display-4">Einloggen</h2>
+          <p class="description">Die Anmeldung findet via Magic Link statt. Sie bekommen einen Link per Mail, über den
+            Sie sich passwortlos anmelden. Sollten Sie sich zum ersten Mal anmelden, werden Sie automatisch registriert. Bitte
+            geben Sie eine gültige Mailadresse an, da Sie sonst keinen Link erhalten können.</p>
+          <form [formGroup]="signInForm" (ngSubmit)="signUp()">
+            <label class="form-label">Email</label>
+            <div class="row">
+              <div class="col">
+                <input class="form-control" type="email" #email placeholder="mustermann@schule.hessen.de" id="email"
+                  formControlName="email">
+                <div *ngIf="signInForm.controls.email.errors?.['invalidDomain']" style="margin-top: 1rem;">
+                  Bitte verwenden Sie ihre Schul-Mailadresse <i>&#64;schule.hessen.de</i>
+                </div>
+              </div>
+              <div class="col col-lg-3">
+                <button class="btn" type="submit" [disabled]="loading || !signInForm.valid">{{ loading ? 'Lade...' :
+                  'Sende Magic Link' }}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="row flex-center flex">
+  <div class="col-6 form-widget" aria-live="polite">
+    <h1 class="header">Supabase + Angular</h1>
+    <p class="description">Sign in via magic link with your email below</p>
+    <form [formGroup]="signInForm" (ngSubmit)="signUp()" class="form-widget">
+      <div>
+        <label for="email">Email</label>
+        <input
+          id="email"
+          formControlName="email"
+          class="inputField"
+          type="email"
+          placeholder="Your email"
+        />
+      </div>
+      <div>
+        <button type="submit" class="button block" [disabled]="loading">
+          {{ loading ? 'Loading' : 'Send magic link' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div> -->

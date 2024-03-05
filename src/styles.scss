@@ -1,1 +1,91 @@
 /* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bootstrap/dist/css/bootstrap.css";
+
+:root {
+  --primary-color: #003087;
+  --secondary-color: #b3f2db;
+  --accent-color: #b3f2db;
+  --accent-color-hover: #425850;
+  --text-color: #16191f;
+  --primary-text-color: #fff;
+}
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: #fff;
+  color: var(--text-color);
+}
+
+.text {
+  color: var(--text-color);
+}
+
+.btn {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  border-color: var(--accent-color);
+}
+
+.btn:hover {
+  background-color: var(--accent-color-hover);
+  border-color: var(--accent-color-hover);
+  color: var(--primary-text-color);
+}
+
+.container-top {
+  margin-top: 2rem;
+}
+
+a:visited,
+a:link,
+a:active,
+a.active {
+  text-decoration: none;
+  color: var(--text-color) !important;
+}
+
+a:hover {
+  text-decoration: none;
+  color: var(--accent-color) !important;
+}
+
+.card, .modal-content {
+  background-color: var(--primary-color);
+  border-color: #fff;
+  color: var(--primary-text-color);
+}
+
+.modal {
+  background-color: rgba(0,0,0,0.5);
+}
+
+.round-button {
+  position: fixed; /* Fixes the button to the viewport */
+  bottom: 20px; /* Positions the button 20px from the bottom of the viewport */
+  right: 20px; /* Positions the button 20px from the right of the viewport */
+  width: 60px; /* Width of the button */
+  height: 60px; /* Height of the button */
+  border-radius: 50%; /* Makes the button round */
+  background-color: var(--accent-color); /* Background color of the button */
+  color: var(--text-color); /* Color of the plus icon */
+  border: none; /* Removes the default button border */
+  cursor: pointer; /* Changes the cursor to a pointer when hovering over the button */
+  display: flex; /* Allows for flexbox styling */
+  justify-content: center; /* Centers the icon horizontally */
+  align-items: center; /* Centers the icon vertically */
+  z-index: 9999;
+ }
+
+ /* Icon styling (if using Font Awesome) */
+ .round-button i {
+  font-size: 24px; /* Adjusts the size of the plus icon */
+ }
+
+ .round-button:hover {
+  background-color: var(--accent-color-hover);
+ }

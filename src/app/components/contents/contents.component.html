@@ -1,0 +1,82 @@
+<!-- contents.component.html -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">5. Klasse</h5>
+          <!-- <p class="card-text">Click to view content for fifth grade.</p> -->
+          <a routerLink="/contents/fifth-grade" class="btn">Gehe zu 5. Klasse</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">6. Klasse</h5>
+          <!-- <p class="card-text">Click to view content for sixth grade.</p> -->
+          <a routerLink="/contents/sixth-grade" class="btn">Gehe zu 6. Klasse</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="round-button btn" data-bs-toggle="modal" data-bs-target="#uploadModal">
+  <i class="fas fa-plus"></i>
+</button>
+
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true"
+  #uploadModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Neuen Inhalt hochladen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="heading" class="form-label">Überschrift*</label>
+            <input type="text" class="form-control" id="heading" formControlName="heading">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Beschreibung*</label>
+            <textarea class="form-control" id="description" formControlName="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label">Klassenstufe*</label>
+            <select class="form-select" id="gradeLevel" formControlName="gradeLevel">
+              <option value="fifth">5. Klasse</option>
+              <option value="sixth">6. Klasse</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="topic" class="form-label">Thema*</label>
+            <select class="form-select" id="topic" formControlName="topic">
+              <option value="topic1">Computer überall</option>
+              <option value="topic2">Informationen und Daten</option>
+              <option value="topic3">Grundlagen der Programmierung</option>
+              <option value="topic4">Vernetzung</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="pdfFile" class="form-label">Datei hochladen*</label>
+            <input type="file" class="form-control" id="pdfFile" (change)="onFileSelected($event)">
+          </div>
+          <div class="mb-3">
+            Mit * gekennzeichnete Felder sind verpflichtend.
+          </div>
+          <button type="submit" class="btn" [disabled]="!uploadForm.valid">Hochladen</button>
+          <div class="mb-3">
+            Das Fenster schließt bei erfolgreichem Upload automatisch. Die hochgeladenen Inhalte sind erst nach Prüfung
+            durch einen Admin auf der Seite zum Download verfügbar. Bitte verzichten Sie darauf Inhalte mehrfach
+            hochzuladen.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
