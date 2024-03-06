@@ -1,3 +1,5 @@
+<!--Navbar, die noch auf Mobile angepasst werden muss -> BurgerMenu-->
+
 <nav class="navbar navbar-expand-lg">
   <div class="container">
     <a class="navbar-brand text" href="">Digitale Welt</a>
@@ -16,10 +18,10 @@
           <a class="nav-link text" (click)="logout()" routerLink="/">Ausloggen</a>
         </li>
       </ul>
+
+      <!--hier soll dann die Suche hin, ist aber noch viel zu tun-->
       <form class="form-inline my-2 my-lg-0">
-        <!-- Magnifying glass icon -->
         <button *ngIf="isLoggedIn && !showSearchInputField" class="btn"><i class="fas fa-search" (click)="toggleSearchInput()"></i></button>
-        <!-- Search input field -->
         <input class="form-control mr-sm-2" type="search" placeholder="Suche" aria-label="Search" #searchTerm [style.display]="showSearchInputField ? 'block' : 'none'" (focus)="showSearchInput()" (blur)="hideSearchInput()">
         <button *ngIf="isLoggedIn && showSearchInputField" class="btn btn-outline-success my-2 my-sm-0" type="submit" (click)="search(searchTerm.value)">Suche</button>
       </form>
