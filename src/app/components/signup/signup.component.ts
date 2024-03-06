@@ -6,21 +6,23 @@ import { SupabaseFactoryService } from '../../services/supabase-factory.service'
 import { SupabaseClient } from '@supabase/supabase-js';
 
 @Component({
- selector: 'app-signup',
- templateUrl: './signup.component.html',
- styleUrls: ['./signup.component.scss']
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent {
   supabase: SupabaseClient;
- loading = false;
+  loading = false;
 
- signInForm = this.formBuilder.group({
+  //schaut ob Daten eingetragen sind
+  signInForm = this.formBuilder.group({
     email: ['', [Validators.required, emailDomainValidator]],
- });
+  });
 
- constructor(private supabaseFactory: SupabaseFactoryService, private readonly formBuilder: FormBuilder) { this.supabase = supabaseFactory.getClient() }
+  constructor(private supabaseFactory: SupabaseFactoryService, private readonly formBuilder: FormBuilder) { this.supabase = supabaseFactory.getClient() }
 
- async signUp() {
+  //kümmert sich um den Signup/Login
+  async signUp() {
     try {
       this.loading = true;
       const email = this.signInForm.value.email as string;
@@ -36,5 +38,5 @@ export class SignupComponent {
       this.signInForm.reset();
       this.loading = false;
     }
- }
+  }
 }

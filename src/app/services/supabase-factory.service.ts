@@ -14,6 +14,7 @@ export class SupabaseFactoryService {
     return this.client;
   }
 
+  //Funktion zum Check ob der angemeldete User auch Admin ist
   async isAdmin(): Promise<boolean> {
     const currentUser = await this.client.auth.getUser();
 
@@ -40,7 +41,7 @@ export class SupabaseFactoryService {
       if (event === 'SIGNED_IN' && session) {
         const { user } = session;
         if (user) {
-          // Check if the user's email exists in the `users` table
+          // Schaut ob User schon registriert ist
           const { data: existingUser, error } = await this.client
             .from('users')
             .select('email')
@@ -50,7 +51,7 @@ export class SupabaseFactoryService {
           if (error) {
             console.error('Error checking for existing user:', error);
           } else if (!existingUser) {
-            // If the user's email does not exist in the `users` table, insert the new user
+            // Wenn User noch nicht registriert ist, wird er hinzugefügt
             const { data, error: insertError } = await this.client
               .from('users')
               .insert([{ /* id: user.id, */ email: user.email, is_admin: false }]);
