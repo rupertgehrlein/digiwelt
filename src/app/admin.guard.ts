@@ -3,6 +3,8 @@ import { Injector } from '@angular/core';
 //import { SupabaseService } from './services/supabase.service';
 import { SupabaseFactoryService } from './services/supabase-factory.service';
 
+
+//wird im Routing aufgerufen -> wenn jemand auf .de/admin will und kein Admin ist, wird er abgewiesen
 export function adminGuardFactory(injector: Injector): CanActivateFn {
  return async (route, state) => {
     const supabase = injector.get(SupabaseFactoryService);

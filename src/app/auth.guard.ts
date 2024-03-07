@@ -4,6 +4,7 @@ import { Injector } from '@angular/core';
 import { SupabaseFactoryService } from './services/supabase-factory.service';
 
 
+//wird im Routing aufgerufen -> wenn jemand auf .de/contents will und nicht angemeldet ist, wird er abgewiesen
 export function authGuardFactory(injector: Injector): CanActivateFn {
  return async (route, state) => {
     const supabase = injector.get(SupabaseFactoryService);
