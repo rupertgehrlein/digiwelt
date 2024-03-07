@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: 'contents',
     component: ContentsComponent,
-    canActivate: ['authGuard'],
+    canActivate: ['authGuard'], //siehe auth.guard.ts
     children: [
       { path: 'fifth-grade', component: FifthGradeComponent },
       { path: 'sixth-grade', component: SixthGradeComponent },
@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: ['adminGuard'],
+    canActivate: ['adminGuard'], //siehe admin.guard.ts
   },
 ];
 
