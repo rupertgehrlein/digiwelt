@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
-
 @Component({
   selector: 'app-fifth-grade',
   templateUrl: './fifth-grade.component.html',
@@ -10,44 +9,51 @@ import { SupabaseFactoryService } from '../../services/supabase-factory.service'
 export class FifthGradeComponent implements OnInit {
   supabase: SupabaseClient;
   contents: any[] = [];
+  users: any[] = [];
   gradeLevel = 'fifth';
   pdfUrl = ''
-
   constructor(private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
-
   ngOnInit() {
     this.fetchContents();
+    this.testUser();
   }
-
+  //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
     const { data, error } = await this.supabase
       .from('contents')
       .select('*')
       .eq('grade_level', this.gradeLevel)
       .eq('is_approved', true)
-
     if (error) {
       console.error('Error fetching contents:', error);
       return;
     }
-
     this.contents = data || [];
   }
-
+  async testUser(): Promise<void> {
+    const { data, error } = await this.supabase
+      .from('users')
+      .select('*')
+    if (error) {
+      console.error('Error fetching users:', error);
+      return;
+    }
+    this.users = data || [];
+    console.log(this.users);
+  }
+  //Funktion zur Generierung von gesicherten Download-URLs
   async generateSignedUrl(filePath: string): Promise<string | null> {
     const { data, error } = await this.supabase
        .storage
        .from('pdf_uploads')
        .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
-
     if (error) {
        console.error('Error generating signed URL:', error);
        return null;
     }
-
     return data?.signedUrl;
    }
-
+   //Funktion für den File Download
    async downloadFile(filePath: string): Promise<void> {
     const signedUrl = await this.generateSignedUrl(filePath);
     if (signedUrl) {
@@ -56,7 +62,4 @@ export class FifthGradeComponent implements OnInit {
        alert('Error generating download link.');
     }
    }
-
-
-
 }

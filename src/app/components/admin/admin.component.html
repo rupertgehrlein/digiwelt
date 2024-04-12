@@ -7,6 +7,7 @@
            <p class="card-text">{{ content.description }}</p>
            <a (click)="downloadFile(content.pdf_file_url)" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Download</a>
            <a (click)="setApproved(content.id)" class="btn btn-primary">Geprüft</a>
+           <a (click)="setDisapproved(content.id)" class="btn btn-primary">Ablehnen</a>
          </div>
        </div>
      </div>
