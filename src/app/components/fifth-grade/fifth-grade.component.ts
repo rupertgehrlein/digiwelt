@@ -15,7 +15,6 @@ export class FifthGradeComponent implements OnInit {
   constructor(private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
   ngOnInit() {
     this.fetchContents();
-    this.testUser();
   }
 
   //Funktion zum Laden der Inhalte
