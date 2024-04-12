@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
-
 @Component({
   selector: 'app-fifth-grade',
   templateUrl: './fifth-grade.component.html',
@@ -10,13 +9,13 @@ import { SupabaseFactoryService } from '../../services/supabase-factory.service'
 export class FifthGradeComponent implements OnInit {
   supabase: SupabaseClient;
   contents: any[] = [];
+  users: any[] = [];
   gradeLevel = 'fifth';
   pdfUrl = ''
-
   constructor(private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
-
   ngOnInit() {
     this.fetchContents();
+    this.testUser();
   }
 
   //Funktion zum Laden der Inhalte
@@ -26,12 +25,10 @@ export class FifthGradeComponent implements OnInit {
       .select('*')
       .eq('grade_level', this.gradeLevel)
       .eq('is_approved', true)
-
     if (error) {
       console.error('Error fetching contents:', error);
       return;
     }
-
     this.contents = data || [];
   }
 
@@ -41,12 +38,10 @@ export class FifthGradeComponent implements OnInit {
        .storage
        .from('pdf_uploads')
        .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
-
     if (error) {
        console.error('Error generating signed URL:', error);
        return null;
     }
-
     return data?.signedUrl;
    }
 
@@ -59,7 +54,4 @@ export class FifthGradeComponent implements OnInit {
        alert('Error generating download link.');
     }
    }
-
-
-
 }

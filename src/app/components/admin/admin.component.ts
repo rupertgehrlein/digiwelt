@@ -73,4 +73,15 @@ export class AdminComponent {
     this.fetchContents();
   }
 
+  async setDisapproved(id): Promise<void>{
+    const { error } = await this.supabase
+      .from('contents')
+      .delete()
+      .eq('id', id)
+      
+    if(error) {
+      console.error('Error updating content approval status:', error);
+      return;
+      }
+  }
 }
