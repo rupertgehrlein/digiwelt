@@ -15,7 +15,7 @@ export class AdminComponent {
 
   ngOnInit() {
     this.fetchContents(); //ruft beim laden der Seite die Funktion auf
-  }
+  }//test test
 
   //Funktion zum abrufen der Daten, die in der Spalte is_approved = false stehen haben
   async fetchContents(): Promise<void> {
