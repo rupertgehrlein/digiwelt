@@ -17,6 +17,7 @@ export class FifthGradeComponent implements OnInit {
     this.fetchContents();
     this.testUser();
   }
+
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
     const { data, error } = await this.supabase
@@ -30,17 +31,7 @@ export class FifthGradeComponent implements OnInit {
     }
     this.contents = data || [];
   }
-  async testUser(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('users')
-      .select('*')
-    if (error) {
-      console.error('Error fetching users:', error);
-      return;
-    }
-    this.users = data || [];
-    console.log(this.users);
-  }
+
   //Funktion zur Generierung von gesicherten Download-URLs
   async generateSignedUrl(filePath: string): Promise<string | null> {
     const { data, error } = await this.supabase
@@ -53,6 +44,7 @@ export class FifthGradeComponent implements OnInit {
     }
     return data?.signedUrl;
    }
+
    //Funktion für den File Download
    async downloadFile(filePath: string): Promise<void> {
     const signedUrl = await this.generateSignedUrl(filePath);

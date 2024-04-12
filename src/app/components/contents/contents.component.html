@@ -1,4 +1,4 @@
-<!-- contents.component.html -->
+<!--Auswahl-Übersicht für die Klassenstufen mit passendem Routing s.u.-->
 <div class="container">
   <div class="row">
     <div class="col-md-6">
@@ -22,10 +22,12 @@
   </div>
 </div>
 
+<!--Button zum öffnen des Modals zum Upload-->
 <button type="button" class="round-button btn" data-bs-toggle="modal" data-bs-target="#uploadModal">
   <i class="fas fa-plus"></i>
 </button>
 
+<!--Modal für den Upload von neuem Content-->
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true"
   #uploadModal>
   <div class="modal-dialog">
@@ -79,4 +81,5 @@
   </div>
 </div>
 
+<!--Router Outlet, der je nachdem ausgewählten Inhalt zeigt-->
 <router-outlet></router-outlet>

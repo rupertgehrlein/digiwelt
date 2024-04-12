@@ -35,6 +35,7 @@ export class ContentsComponent implements OnInit {
     });
   }
 
+  //Check ob Dateityp passt
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -48,26 +49,17 @@ export class ContentsComponent implements OnInit {
     }
   }
 
-  /* async generateSignedUrl(filePath: string): Promise<string | null> {
-    const { data, error } = await this.supabase
-      .storage
-      .from('pdf_uploads')
-      .createSignedUrl(filePath, 60);
 
-    if (error) {
-      console.error('Error generating signed URL:', error);
-      return null;
-    }
-
-    return data?.signedUrl;
-  } */
-
+  //Funktion für den Upload neuer Inhalte
   async onSubmit(): Promise<void> {
+
+    //Check ob Datei existiert
     if (!this.uploadForm.valid || !this.selectedFile) {
       alert('Es wurde keine Datei ausgewählt.')
       return;
     }
 
+    //Setzt timestamp an Dateiname um Dopplungen zu vermeiden
     const timestamp = new Date().getTime();
     const uniqueFileName = `${this.selectedFile.name.replace(/\.[^/.]+$/, "")}_${timestamp}${this.selectedFile.name.split('.').pop()}`;
 
@@ -75,6 +67,7 @@ export class ContentsComponent implements OnInit {
     formData.append('file', this.selectedFile, uniqueFileName);
     formData.append('path', uniqueFileName);
 
+    //Packt Datei in den Backend Storage Bucket
     const { data, error } = await this.supabase
       .storage
       .from('pdf_uploads')
@@ -87,6 +80,7 @@ export class ContentsComponent implements OnInit {
 
     const pdfFileUrl = data?.path;
 
+    //Datenbank-Eintrag mit allen nötigen Spalten
     const { data: contentData, error: contentError } = await this.supabase
       .from('contents')
       .insert([
@@ -106,6 +100,7 @@ export class ContentsComponent implements OnInit {
       return;
     }
 
+    //Alles wieder auf Anfang und Modal wird geschlossen
     this.uploadForm.reset();
     this.selectedFile = null;
     this.modalInstance.hide();

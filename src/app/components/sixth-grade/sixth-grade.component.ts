@@ -18,6 +18,7 @@ export class SixthGradeComponent {
     this.fetchContents();
   }
 
+  //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
     const { data, error } = await this.supabase
       .from('contents')
@@ -33,27 +34,29 @@ export class SixthGradeComponent {
     this.contents = data || [];
   }
 
+  //Funktion zur Generierung von gesicherten Download-URLs
   async generateSignedUrl(filePath: string): Promise<string | null> {
     const { data, error } = await this.supabase
-       .storage
-       .from('pdf_uploads')
-       .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
+      .storage
+      .from('pdf_uploads')
+      .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
 
     if (error) {
-       console.error('Error generating signed URL:', error);
-       return null;
+      console.error('Error generating signed URL:', error);
+      return null;
     }
 
     return data?.signedUrl;
-   }
+  }
 
-   async downloadFile(filePath: string): Promise<void> {
+  //Funktion für den File Download
+  async downloadFile(filePath: string): Promise<void> {
     const signedUrl = await this.generateSignedUrl(filePath);
     if (signedUrl) {
       window.open(signedUrl, '_blank');
     } else {
-       alert('Error generating download link.');
+      alert('Error generating download link.');
     }
-   }
+  }
 
 }

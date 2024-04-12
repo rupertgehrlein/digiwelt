@@ -20,11 +20,14 @@ export class NavbarComponent implements OnInit {
   constructor(private supabaseFactory: SupabaseFactoryService, private router: Router, private ngZone: NgZone, private cdr: ChangeDetectorRef) { this.supabase = supabaseFactory.getClient() }
 
 
+  //Beim Laden der Seite wird prinzipiell alles gechecked, muss aber noch aufgeräumt werden
   ngOnInit() {
     const { data } = this.supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'INITIAL_SESSION') {
         // handle initial session
       } else if (event === 'SIGNED_IN') {
+
+        //hier wird geschaut ob der Nutzer auch angemeldet ist
         const user = this.supabase.auth.getUser().then(async user => {
           if (user && user.data && user.data.user) {
             this.isLoggedIn = true;
@@ -35,6 +38,8 @@ export class NavbarComponent implements OnInit {
         });
         //this.router.navigate(['/contents']);
       } else if (event === 'SIGNED_OUT') {
+
+        //Reset der Werte wenn User sich ausloggt
         this.isLoggedIn = false;
         this.isAdmin = false;
         this.cdr.detectChanges();
@@ -54,6 +59,7 @@ export class NavbarComponent implements OnInit {
     } */
 
 
+  //Funktion für den logout
   logout() {
     this.supabase.auth.signOut().then(() => {
       this.isLoggedIn = false;
@@ -63,6 +69,7 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  //das muss noch alles überarbeitet werden
   toggleSearchInput(): void {
     this.showSearchInputField = !this.showSearchInputField;
   }
