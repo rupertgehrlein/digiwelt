@@ -73,15 +73,23 @@ export class AdminComponent {
     this.fetchContents();
   }
 
+  //Funktion zum ablehnen und löschen der entsprechenden Einträge
   async setDisapproved(id): Promise<void>{
+
+    //hierhin muss dann noch der Funktionsaufruf für unten
+
     const { error } = await this.supabase
       .from('contents')
       .delete()
       .eq('id', id)
-      
+
     if(error) {
       console.error('Error updating content approval status:', error);
       return;
-      }
+    }
+
+    this.fetchContents();
   }
+
+  //Übergabe an neue Tabelle sollte dann hierherkommen
 }

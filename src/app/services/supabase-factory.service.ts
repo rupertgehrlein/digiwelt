@@ -54,7 +54,7 @@ export class SupabaseFactoryService {
             // Wenn User noch nicht registriert ist, wird er hinzugefügt
             const { data, error: insertError } = await this.client
               .from('users')
-              .insert([{ /* id: user.id, */ email: user.email, is_admin: false }]);
+              .insert([{ id: user.id, email: user.email, is_admin: false }]);
 
             if (insertError) {
               console.error('Error inserting new user:', insertError);
