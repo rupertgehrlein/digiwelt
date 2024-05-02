@@ -77,11 +77,14 @@ export class AdminComponent {
   async setDisapproved(id): Promise<void>{
 
     const { data, error } = await this.supabase
-      .from('contents')
+      .from('dismissed_contents')
+      .insert({id: '2', heading: "test", description: "test", grade_level:"fifth", creator_id: '1', is_approved: false, pdf_file_url: "www", topic: "topic", admin_comment: "comment"  })
       .select()
-      .eq('id', id)
+    //.from('contents')
+      //.select()
+      //.eq('id', id)
 
-    console.log(data[0]);
+    //console.log(data[0]);
     
     //hier fehlt noch die übergabe an die neue Datenbank
 
