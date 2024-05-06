@@ -78,7 +78,7 @@ export class AdminComponent {
 
     const { data, error } = await this.supabase
       .from('dismissed_contents')
-      .insert({id: '2', heading: "test", description: "test", grade_level:"fifth", creator_id: '1', is_approved: false, pdf_file_url: "www", topic: "topic", admin_comment: "comment"  })
+      .insert({id: '7ae49ff4-d964-405f-8a69-3b20de487035', heading: "test", description: "test", grade_level:"fifth", creator_id: '7ae49ff4-d964-405f-8a69-3b20de487035', is_approved: false, pdf_file_url: "www", topic: "topic", admin_comment: "comment"  })
       .select()
     //.from('contents')
       //.select()

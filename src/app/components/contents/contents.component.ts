@@ -90,6 +90,7 @@ export class ContentsComponent implements OnInit {
           grade_level: this.uploadForm.value.gradeLevel,
           creator_id: (await this.supabase.auth.getUser()).data.user.id,
           is_approved: false,
+          is_disapproved: false,
           pdf_file_url: pdfFileUrl,
           topic: this.uploadForm.value.topic,
         },
