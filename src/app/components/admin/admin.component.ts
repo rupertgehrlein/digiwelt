@@ -73,8 +73,31 @@ export class AdminComponent {
     this.fetchContents();
   }
 
-  //Funktion zum ablehnen und löschen der entsprechenden Einträge
+  //Funktion zum übergeben der Daten an neue Tabelle
   async setDisapproved(id): Promise<void>{
+
+    const { data, error } = await this.supabase
+      .from('dismissed_contents')
+      .insert({id: '7ae49ff4-d964-405f-8a69-3b20de487035', heading: "test", description: "test", grade_level:"fifth", creator_id: '7ae49ff4-d964-405f-8a69-3b20de487035', is_approved: false, pdf_file_url: "www", topic: "topic", admin_comment: "comment"  })
+      .select()
+    //.from('contents')
+      //.select()
+      //.eq('id', id)
+
+    //console.log(data[0]);
+    
+    //hier fehlt noch die übergabe an die neue Datenbank
+
+    if(error) {
+      console.error('Error updating content approval status:', error);
+      return;
+    }
+    //this.deleteContent(id)
+  }
+  
+
+  //Funktion zum löschen der entsprechenden Einträge aus der "contents" liste
+  async deleteContent(id): Promise<void>{
 
     //hierhin muss dann noch der Funktionsaufruf für unten
 
@@ -87,9 +110,7 @@ export class AdminComponent {
       console.error('Error updating content approval status:', error);
       return;
     }
-
+//Seite wird hiermit automatisch "neu geladen"
     this.fetchContents();
   }
-
-  //Übergabe an neue Tabelle sollte dann hierherkommen
 }
