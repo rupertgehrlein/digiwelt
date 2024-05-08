@@ -8,11 +8,17 @@ import { environment } from '../../environments/environment';
 export class SupabaseFactoryService {
   private client: SupabaseClient;
 
-  constructor() { this.client = createClient(environment.supabaseUrl, environment.supabaseKey)}
+  constructor() { this.client = createClient(environment.supabaseUrl, environment.supabaseKey) }
 
   getClient(): SupabaseClient {
     return this.client;
   }
+
+ /*  async getUUID() {
+    const { data, error } = await this.client.auth.admin.getUserById(1)
+
+    return data;
+  } */
 
   //Funktion zum Check ob der angemeldete User auch Admin ist
   async isAdmin(): Promise<boolean> {
