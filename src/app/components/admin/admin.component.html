@@ -12,38 +12,38 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
           <a (click)="downloadFile(content.pdf_file_url)" class="btn btn-primary" target="_blank"
             rel="noopener noreferrer">Download</a>
           <a (click)="setApproved(content.id)" class="btn btn-primary">Geprüft</a>
-          <a (click)="openModal(content)" class="btn btn-primary">Ablehnen</a>
-
-          <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true"
-            #commentModal>
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="commentModalLabel">Inhalt ablehnen</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form [formGroup]="uploadForm" (ngSubmit)="setDisapproved(content.id)">
-                    <div class="mb-3">
-                      <label for="adminComment" class="form-label">Kommentar*</label> <br>
-                      <textarea type="text" class="form-control" id="adminComment" formControlName="adminComment" rows="8" cols="50"></textarea>
-                    </div>
-                    <div class="mb-3">
-                      Mit * gekennzeichnete Felder sind verpflichtend.
-                    </div>
-                    <button type="submit" class="btn" [disabled]="!uploadForm.valid">Ablehnen</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+          <a data-bs-toggle="modal" data-bs-target="#commentModal" class="btn btn-primary"
+            (click)="saveCurrentId(content.id)">Ablehnen</a>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true"
+  #commentModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">Inhalt ablehnen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="uploadForm" (ngSubmit)="setDisapproved()">
+          <div class="mb-3">
+            <label for="adminComment" class="form-label">Kommentar*</label> <br>
+            <textarea type="text" class="form-control" id="adminComment" formControlName="adminComment" rows="8"
+              cols="50"></textarea>
+          </div>
+          <div class="mb-3">
+            Mit * gekennzeichnete Felder sind verpflichtend.
+          </div>
+          <button type="submit" class="btn" [disabled]="!uploadForm.valid">Ablehnen</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

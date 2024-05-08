@@ -16,8 +16,15 @@ export class AdminComponent {
   contents: any[] = [];
   uploadForm: FormGroup;
   private modalInstance: bootstrap.Modal;
+  currentId;
 
   constructor(private formBuilder: FormBuilder, private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
+
+  ngAfterViewInit(): void {
+    const modalElement = this.commentModal.nativeElement;
+    this.modalInstance = new bootstrap.Modal(modalElement);
+  }
+
 
   ngOnInit() {
     this.fetchContents(); //ruft beim laden der Seite die Funktion auf
@@ -27,12 +34,10 @@ export class AdminComponent {
     });
   }
 
-  ngAfterViewInit(): void {
-
-  }
-
   //Funktion zum abrufen der Daten, die in der Spalte is_approved = false stehen haben
   async fetchContents(): Promise<void> {
+    this.contents = [];
+
     const { data, error } = await this.supabase
       .from('contents')
       .select('*')
@@ -72,6 +77,10 @@ export class AdminComponent {
     }
   }
 
+  saveCurrentId(id) {
+    this.currentId = id;
+  }
+
   //Funktion, die den Wert für is_approved des entsprechenden Eintrags auf true setzt -> dann erst für alle User verfügbar
   async setApproved(id): Promise<void> {
     const { error } = await this.supabase
@@ -88,42 +97,23 @@ export class AdminComponent {
     this.fetchContents();
   }
 
-  openModal(content: any): void {
-    const modalElement = this.commentModal.nativeElement;
-    const modalInstance = new bootstrap.Modal(modalElement);
-    modalInstance.show();
-    // You can also pass the content data to the modal component or service if needed
-  }
-
   //Funktion zum übergeben der Daten an neue Tabelle
-  async setDisapproved(id): Promise<void>{
+  async setDisapproved(): Promise<void>{
 
     const { error } = await this.supabase
       .from('contents')
       .update({ is_disapproved: true, admin_comment: this.uploadForm.value.adminComment })
-      .eq('id', id)
+      .eq('id', this.currentId)
 
     if (error) {
       console.error('Error updating content approval status:', error);
       return;
     }
 
+    this.currentId = '';
+
     this.uploadForm.reset();
-    this.closeModal()
-
-    //Seite wird hiermit automatisch "neu geladen"
+    this.modalInstance.hide();
     this.fetchContents();
-
-    //this.deleteContent(id)
-  }
-
-  closeModal(): void {
-    const modalElement = this.commentModal.nativeElement;
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    if (modalInstance) {
-      modalInstance.hide();
-    } else {
-      console.error('Modal instance is not available.');
-    }
   }
 }
