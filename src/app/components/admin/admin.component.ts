@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-admin',
@@ -8,14 +10,26 @@ import { SupabaseFactoryService } from '../../services/supabase-factory.service'
   styleUrl: './admin.component.scss'
 })
 export class AdminComponent {
+  @ViewChild('commentModal') commentModal: ElementRef;
+
   supabase: SupabaseClient;
   contents: any[] = [];
+  uploadForm: FormGroup;
+  private modalInstance: bootstrap.Modal;
 
-  constructor(private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
+  constructor(private formBuilder: FormBuilder, private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
 
   ngOnInit() {
     this.fetchContents(); //ruft beim laden der Seite die Funktion auf
-  }//test test
+
+    this.uploadForm = this.formBuilder.group({
+      adminComment: ['', Validators.required],
+    });
+  }
+
+  ngAfterViewInit(): void {
+
+  }
 
   //Funktion zum abrufen der Daten, die in der Spalte is_approved = false stehen haben
   async fetchContents(): Promise<void> {
@@ -23,6 +37,7 @@ export class AdminComponent {
       .from('contents')
       .select('*')
       .eq('is_approved', false)
+      .eq('is_disapproved', false)
 
     if (error) {
       console.error('Error fetching contents:', error);
@@ -73,44 +88,42 @@ export class AdminComponent {
     this.fetchContents();
   }
 
+  openModal(content: any): void {
+    const modalElement = this.commentModal.nativeElement;
+    const modalInstance = new bootstrap.Modal(modalElement);
+    modalInstance.show();
+    // You can also pass the content data to the modal component or service if needed
+  }
+
   //Funktion zum übergeben der Daten an neue Tabelle
   async setDisapproved(id): Promise<void>{
 
-    const { data, error } = await this.supabase
-      .from('dismissed_contents')
-      .insert({id: '7ae49ff4-d964-405f-8a69-3b20de487035', heading: "test", description: "test", grade_level:"fifth", creator_id: '7ae49ff4-d964-405f-8a69-3b20de487035', is_approved: false, pdf_file_url: "www", topic: "topic", admin_comment: "comment"  })
-      .select()
-    //.from('contents')
-      //.select()
-      //.eq('id', id)
-
-    //console.log(data[0]);
-    
-    //hier fehlt noch die übergabe an die neue Datenbank
-
-    if(error) {
-      console.error('Error updating content approval status:', error);
-      return;
-    }
-    //this.deleteContent(id)
-  }
-  
-
-  //Funktion zum löschen der entsprechenden Einträge aus der "contents" liste
-  async deleteContent(id): Promise<void>{
-
-    //hierhin muss dann noch der Funktionsaufruf für unten
-
     const { error } = await this.supabase
       .from('contents')
-      .delete()
+      .update({ is_disapproved: true, admin_comment: this.uploadForm.value.adminComment })
       .eq('id', id)
 
-    if(error) {
+    if (error) {
       console.error('Error updating content approval status:', error);
       return;
     }
-//Seite wird hiermit automatisch "neu geladen"
+
+    this.uploadForm.reset();
+    this.closeModal()
+
+    //Seite wird hiermit automatisch "neu geladen"
     this.fetchContents();
+
+    //this.deleteContent(id)
+  }
+
+  closeModal(): void {
+    const modalElement = this.commentModal.nativeElement;
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    if (modalInstance) {
+      modalInstance.hide();
+    } else {
+      console.error('Modal instance is not available.');
+    }
   }
 }
