@@ -25,7 +25,7 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
                 <div class="modal-body">
                   <form [formGroup]="uploadForm" (ngSubmit)="setDisapproved(content.id)">
                     <div class="mb-3">
-                      <label for="adminComment" class="form-label">Kommentar</label> <br>
+                      <label for="adminComment" class="form-label">Kommentar*</label> <br>
                       <textarea type="text" class="form-control" id="adminComment" formControlName="adminComment" rows="8" cols="50"></textarea>
                     </div>
                     <div class="mb-3">

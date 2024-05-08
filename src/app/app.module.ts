@@ -18,6 +18,7 @@ import { adminGuardFactory } from './admin.guard';
 import { AdminComponent } from './components/admin/admin.component';
 import { FifthGradeComponent } from './components/fifth-grade/fifth-grade.component';
 import { SixthGradeComponent } from './components/sixth-grade/sixth-grade.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { SixthGradeComponent } from './components/sixth-grade/sixth-grade.compon
     ContentsComponent,
     AdminComponent,
     FifthGradeComponent,
-    SixthGradeComponent
+    SixthGradeComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

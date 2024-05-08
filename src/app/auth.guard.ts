@@ -15,7 +15,7 @@ export function authGuardFactory(injector: Injector): CanActivateFn {
       return true;
     } else {
       const router = injector.get(Router);
-      router.navigate(['/']);
+      router.navigate(['/login']);
       return false;
     }
  };

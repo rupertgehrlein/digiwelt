@@ -6,10 +6,16 @@ import { ContentsComponent } from './components/contents/contents.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { FifthGradeComponent } from './components/fifth-grade/fifth-grade.component';
 import { SixthGradeComponent } from './components/sixth-grade/sixth-grade.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
   { path: 'login', component: SignupComponent },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: ['authGuard']
+  },
   {
     path: 'contents',
     component: ContentsComponent,

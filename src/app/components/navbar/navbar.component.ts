@@ -31,12 +31,11 @@ export class NavbarComponent implements OnInit {
         const user = this.supabase.auth.getUser().then(async user => {
           if (user && user.data && user.data.user) {
             this.isLoggedIn = true;
-            //this.isAdmin = user.data.user;
             this.isAdmin = await this.supabaseFactory.isAdmin();
             this.cdr.detectChanges();
           }
         });
-        //this.router.navigate(['/contents']);
+        this.router.navigate(['/dashboard']);
       } else if (event === 'SIGNED_OUT') {
 
         //Reset der Werte wenn User sich ausloggt
