@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -18,7 +18,9 @@ export class AdminComponent {
   private modalInstance: bootstrap.Modal;
   currentId;
 
-  constructor(private formBuilder: FormBuilder, private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
+  constructor(private formBuilder: FormBuilder,
+    private supabaseFactory: SupabaseFactoryService,
+    private cdr: ChangeDetectorRef) { this.supabase = supabaseFactory.getClient(); }
 
   ngAfterViewInit(): void {
     const modalElement = this.commentModal.nativeElement;
@@ -36,7 +38,7 @@ export class AdminComponent {
 
   //Funktion zum abrufen der Daten, die in der Spalte is_approved = false stehen haben
   async fetchContents(): Promise<void> {
-    this.contents = [];
+    console.log('Start fetchContents()');
 
     const { data, error } = await this.supabase
       .from('contents')
@@ -97,9 +99,8 @@ export class AdminComponent {
     this.fetchContents();
   }
 
-  //Funktion zum übergeben der Daten an neue Tabelle
+  //Funktion, die den Wert für is_disapproved des entsprechenden Eintrags auf true setzt -> wird dann Ersteller wieder angezeigt
   async setDisapproved(): Promise<void>{
-
     const { error } = await this.supabase
       .from('contents')
       .update({ is_disapproved: true, admin_comment: this.uploadForm.value.adminComment })
@@ -109,11 +110,13 @@ export class AdminComponent {
       console.error('Error updating content approval status:', error);
       return;
     }
+    //ab hier scheint es noch einen Bug zu geben, den ich aber nicht finde. Die Contents laden sich nicht einfach nicht neu.
+    //Wenn man woanders drückt lädt es aber neu. I have no fucking idea was ich da noch machen kann
+    this.contents = this.contents.filter(item => item.id !== this.currentId);
 
-    this.currentId = '';
+    this.fetchContents();
 
     this.uploadForm.reset();
     this.modalInstance.hide();
-    this.fetchContents();
   }
 }
