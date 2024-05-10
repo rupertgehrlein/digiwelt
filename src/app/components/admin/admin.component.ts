@@ -38,8 +38,6 @@ export class AdminComponent {
 
   //Funktion zum abrufen der Daten, die in der Spalte is_approved = false stehen haben
   async fetchContents(): Promise<void> {
-    console.log('Start fetchContents()');
-
     const { data, error } = await this.supabase
       .from('contents')
       .select('*')
@@ -110,13 +108,10 @@ export class AdminComponent {
       console.error('Error updating content approval status:', error);
       return;
     }
-    //ab hier scheint es noch einen Bug zu geben, den ich aber nicht finde. Die Contents laden sich nicht einfach nicht neu.
-    //Wenn man woanders drückt lädt es aber neu. I have no fucking idea was ich da noch machen kann
-    this.contents = this.contents.filter(item => item.id !== this.currentId);
-
-    this.fetchContents();
 
     this.uploadForm.reset();
     this.modalInstance.hide();
+
+    location.reload()
   }
 }

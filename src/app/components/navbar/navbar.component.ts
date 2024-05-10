@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
             this.cdr.detectChanges();
           }
         });
-        this.router.navigate(['/dashboard']);
+        //this.router.navigate(['/dashboard']);
       } else if (event === 'SIGNED_OUT') {
 
         //Reset der Werte wenn User sich ausloggt
