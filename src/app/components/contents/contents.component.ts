@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-//import { SupabaseService } from '../../services/supabase.service';
 import * as bootstrap from 'bootstrap';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { SupabaseClient } from '@supabase/supabase-js';
