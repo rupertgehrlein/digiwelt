@@ -1,15 +1,76 @@
 <div class="container container-top">
-  <h1 class="display-6">Dashboard</h1>
+  <h1 class="display-4">Dashboard</h1>
   <div class="container">
-    <div class="row">
-      <div class="col-md-6" *ngFor="let content of contents">
-        <div class="card mb-6">
-          <div class="card-body">
-            <h5 class="card-title">{{ content.heading }}</h5>
-            <p class="card-text"> {{ content.admin_comment }} </p>
+    <div class="container">
+      <h3 class="display-6" *ngIf="contents">Abgelehnte Einreichungen:</h3>
+      <div class="row">
+        <div class="col-md-6" *ngFor="let content of contents">
+          <div class="card mb-6">
+            <div class="card-body">
+              <h5 class="card-title">{{ content.heading }}</h5>
+              <p class="card-text"> {{ content.admin_comment }} </p>
+              <a (click)="deleteContent(content.id)" class="btn btn-primary">Inhalt löschen</a>
+              <!-- <a data-bs-toggle="modal" data-bs-target="#changeModal" class="btn btn-primary"
+                (click)="saveCurrentId(content.id)">Inhalt bearbeiten</a> -->
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- <div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true"
+  #changeModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changeModalLabel">Inhalt überarbeiten</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="uploadForm" (ngSubmit)="saveChanges()">
+          <div class="mb-3">
+            <label for="heading" class="form-label">Überschrift*</label>
+            <input type="text" class="form-control" id="heading" formControlName="heading">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Beschreibung*</label>
+            <textarea class="form-control" id="description" formControlName="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label">Klassenstufe*</label>
+            <select class="form-select" id="gradeLevel" formControlName="gradeLevel">
+              <option value="fifth">5. Klasse</option>
+              <option value="sixth">6. Klasse</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="topic" class="form-label">Thema*</label>
+            <select class="form-select" id="topic" formControlName="topic">
+              <option value="topic1">Computer überall</option>
+              <option value="topic2">Informationen und Daten</option>
+              <option value="topic3">Grundlagen der Programmierung</option>
+              <option value="topic4">Vernetzung</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="pdfFile" class="form-label">Datei hochladen*</label>
+            <input type="file" class="form-control" id="pdfFile" (change)="onFileSelected($event)">
+          </div>
+          <div class="mb-3">
+            Mit * gekennzeichnete Felder sind verpflichtend.
+          </div>
+          <button type="submit" class="btn" [disabled]="!uploadForm.valid">Erneut einreichen</button>
+          <div class="mb-3">
+            Das Fenster schließt bei erfolgreichem Upload automatisch. Die hochgeladenen Inhalte sind erst
+            nach Prüfung
+            durch einen Admin auf der Seite zum Download verfügbar. Bitte verzichten Sie darauf Inhalte
+            mehrfach
+            hochzuladen.
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
