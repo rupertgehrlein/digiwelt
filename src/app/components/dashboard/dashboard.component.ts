@@ -80,13 +80,13 @@ export class DashboardComponent {
 
   async saveChanges() {
     //Check ob Datei existiert
-    if (!this.uploadForm.valid || !this.selectedFile) {
+    /* if (!this.uploadForm.valid || !this.selectedFile) {
       alert('Es wurde keine Datei ausgewählt.')
       return;
-    }
+    } */
 
     //Setzt timestamp an Dateiname um Dopplungen zu vermeiden
-    const timestamp = new Date().getTime();
+    /* const timestamp = new Date().getTime();
     const uniqueFileName = `${this.selectedFile.name.replace(/\.[^/.]+$/, "")}_${timestamp}${this.selectedFile.name.split('.').pop()}`;
 
     const formData = new FormData();
@@ -104,26 +104,26 @@ export class DashboardComponent {
       return;
     }
 
-    const pdfFileUrl = data?.path;
+    const pdfFileUrl = data?.path; */
 
     //Datenbank-Eintrag mit allen nötigen Spalten
     const { data: contentData, error: contentError } = await this.supabase
       .from('contents')
-      .insert([
+      .update([
         {
           heading: this.uploadForm.value.heading,
           description: this.uploadForm.value.description,
-          grade_level: this.uploadForm.value.gradeLevel,
-          creator_id: this.currentUser.data.user.id,
+          grade_level: this.uploadForm.value.gradeLevel,/*
+          creator_id: this.currentUser.data.user.id, */
           is_approved: false,
-          is_disapproved: false,
-          pdf_file_url: pdfFileUrl,
+          is_disapproved: false,/*
+          pdf_file_url: pdfFileUrl, */
           topic: this.uploadForm.value.topic,
         },
       ]);
 
     if (contentError) {
-      console.error('Error inserting content:', contentError);
+      console.error('Error updating content:', contentError);
       return;
     }
 
