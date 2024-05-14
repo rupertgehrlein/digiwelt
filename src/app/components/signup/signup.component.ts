@@ -21,6 +21,17 @@ export class SignupComponent {
     password: ['', [Validators.required]]
   });
 
+  loginForm = this.formBuilder.group({
+    email: ['', [Validators.required]]
+  })
+
+  registerForm = this.formBuilder.group({
+    email: ['', [Validators.required]],
+    firstname: ['', [Validators.required]],
+    lastname: ['', [Validators.required]],
+    school_number: ['', [Validators.required]],
+  })
+
   constructor(private supabaseFactory: SupabaseFactoryService, private readonly formBuilder: FormBuilder) { this.supabase = supabaseFactory.getClient() }
 
   //kümmert sich um den Signup/Login
@@ -46,6 +57,42 @@ export class SignupComponent {
       }
     } finally {
       this.signInForm.reset();
+      this.loading = false;
+    }
+  }
+
+  async login() {
+    try {
+      this.loading = true;
+      const email = this.loginForm.value.email as string;
+
+      if (await this.supabaseFactory.isRegistered(email)) {
+        console.log('Rückgabe von isRegistered ist: ' + this.supabaseFactory.isRegistered(email));
+        const { error } = await this.supabase.auth.signInWithOtp({ email });
+        if (error) throw error;
+        alert('Checken Sie Ihr Mail-Postfach');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    } finally {
+      this.signInForm.reset();
+      this.loading = false;
+    }
+  }
+
+  async register() {
+    try {
+      this.loading = true;
+      const email = this.registerForm.value.email as string;
+      const firstname = this.registerForm.value.firstname as string;
+      const lastname = this.registerForm.value.lastname as string;
+      const school_number = this.registerForm.value.school_number as string;
+      await this.supabaseFactory.register(email, firstname, lastname, school_number);
+      alert('Die Registrierung ist vollständig. Zeitnah wird sich ein Admin um die Anmeldung kümmern.')
+    } finally {
+      this.registerForm.reset();
       this.loading = false;
     }
   }

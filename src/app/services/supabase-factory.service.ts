@@ -14,11 +14,11 @@ export class SupabaseFactoryService {
     return this.client;
   }
 
- /*  async getUUID() {
-    const { data, error } = await this.client.auth.admin.getUserById(1)
+  /*  async getUUID() {
+     const { data, error } = await this.client.auth.admin.getUserById(1)
 
-    return data;
-  } */
+     return data;
+   } */
 
   //Funktion zum Check ob der angemeldete User auch Admin ist
   async isAdmin(): Promise<boolean> {
@@ -72,4 +72,41 @@ export class SupabaseFactoryService {
       }
     });
   }
+
+  async isRegistered(email) {
+    // Schaut ob User schon registriert ist
+    const { data: existingUser, error } = await this.client
+      .from('users')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error checking for existing user:', error);
+      return false;
+    } else if (existingUser) {
+      return true;
+    } else {
+      alert('Diese Mail ist noch nicht durch einen Admin bestätigt oder wurde noch nicht registriert. Wenn Sie schon lange auf die Bestätigung warten, melden Sie sich bitte beim Admin-Team.');
+      return false;
+    }
+  }
+
+  //irgendwie ist das noch ein bisschen buggy...er schmeißt noch die falschen Fehlercodes
+  async register(email, firstname, lastname, school_number) {
+    const { data, error: registerError } = await this.client
+      .from('unregistered_users')
+      .insert([{ email: email, firstname: firstname, lastname: lastname, school_number: school_number }])
+
+    if (registerError.code == '23505') {
+      alert('Ein Fehler ist aufgetreten. Die Mailadresse wurde bereits registriert.')
+    } else if (registerError) {
+      console.error('Error inserting new user:', registerError);
+    } else {
+      console.log('New user inserted:', data);
+    }
+
+    return;
+  }
 }
+

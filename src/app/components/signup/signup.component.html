@@ -5,9 +5,10 @@
     <div class="col-8">
       <div class="card">
         <div class="card-body">
-          <h2 class="display-4">Einloggen</h2>
+          <h2 class="display-6">Einloggen Schul-Mailadresse</h2>
           <p class="description">Die Anmeldung findet via Magic Link statt. Sie bekommen einen Link per Mail, über den
-            Sie sich passwortlos anmelden. Sollten Sie sich zum ersten Mal anmelden, werden Sie automatisch registriert. Bitte
+            Sie sich passwortlos anmelden. Sollten Sie sich zum ersten Mal anmelden, werden Sie automatisch registriert.
+            Bitte
             geben Sie eine gültige Mailadresse an, da Sie sonst keinen Link erhalten können.</p>
           <form [formGroup]="signInForm" (ngSubmit)="signUp()">
             <label class="form-label">Passwort der Pilotschulen</label>
@@ -25,7 +26,7 @@
                   Bitte verwenden Sie ihre Schul-Mailadresse <i>&#64;schule.hessen.de</i>
                 </div>
               </div>
-              <div class="col col-lg-3">
+              <div class="col col-lg-4">
                 <button class="btn" type="submit" [disabled]="loading || !signInForm.valid">{{ loading ? 'Lade...' :
                   'Sende Magic Link' }}</button>
               </div>
@@ -33,6 +34,86 @@
           </form>
         </div>
       </div>
+
+      <hr>
+
+      <p>
+        Sollten Sie sich nicht mit Ihrer Schul-Mailadresse anmelden wollen, dann müssen Sie einen Registrierungsprozess
+        durchlaufen. Geben Sie die benötigten Daten für eine Registrierung am Ende der Seite unter "Registrierung andere
+        Mailadressen" ein. Die Daten werden von einem Admin geprüft und freigeschaltet. Dies kann durchweg mehrere Tage
+        dauern. Sobald sie erfolgreich registriert sind können Sie sich via Magic Link bei "Einloggen andere
+        Mailadressen" einloggen.
+      </p>
+
+      <div class="card">
+        <div class="card-body">
+          <h2 class="display-6">Einloggen andere Mailadressen</h2>
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <label class="form-label">Email</label>
+            <div class="row">
+              <div class="col">
+                <input class="form-control" type="email" #email placeholder="mustermann@web.de" id="email"
+                  formControlName="email">
+              </div>
+              <div class="col col-lg-4">
+                <button class="btn" type="submit" [disabled]="loading || !loginForm.valid">{{ loading ? 'Lade...' :
+                  'Sende Magic Link' }}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h2 class="display-6">Registrierung andere Mailadresse</h2>
+          <form [formGroup]="registerForm" (ngSubmit)="register()">
+            <div class="row">
+              <div class="col col-lg-3">
+                <label class="form-label">Email</label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="email" #email placeholder="mustermann@web.de" id="email"
+                  formControlName="email">
+              </div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+              <div class="col col-lg-3">
+                <label class="form-label">Vorname</label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" #firstname placeholder="Max" id="firstname"
+                  formControlName="firstname">
+              </div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+              <div class="col col-lg-3">
+                <label class="form-label">Nachname</label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" #lastname placeholder="Mustermann" id="lastname"
+                  formControlName="lastname">
+              </div>
+            </div>
+            <div class="row" style="margin-top: 1rem;">
+              <div class="col col-lg-3">
+                <label class="form-label">Schulnummer</label>
+              </div>
+              <div class="col">
+                <input class="form-control" type="text" #school_number placeholder="5432" id="school_number"
+                  formControlName="school_number">
+              </div>
+            </div>
+            <div class="row justify-content-end" style="margin-top: 1rem;">
+              <div class="col">
+                <button class="btn" type="submit" [disabled]="loading || !registerForm.valid">{{ loading ? 'Lade...' :
+                  'Registrieren' }}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

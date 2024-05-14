@@ -14,6 +14,7 @@ export class AdminComponent {
 
   supabase: SupabaseClient;
   contents: any[] = [];
+  unregisteredUsers: any[] = []
   uploadForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
@@ -30,6 +31,7 @@ export class AdminComponent {
 
   ngOnInit() {
     this.fetchContents(); //ruft beim laden der Seite die Funktion auf
+    this.fetchRegisteredUsers();
 
     this.uploadForm = this.formBuilder.group({
       adminComment: ['', Validators.required],
@@ -50,6 +52,19 @@ export class AdminComponent {
     }
 
     this.contents = data || [];
+  }
+
+  async fetchRegisteredUsers(): Promise<void> {
+    const { data, error } = await this.supabase
+      .from('unregistered_users')
+      .select('*')
+
+    if(error) {
+      console.error('Fetching unregistered Users failed: ', error);
+      return;
+    }
+
+    this.unregisteredUsers = data || [];
   }
 
   // Funktion zur signierten URL Erstellung für den sicheren Datei-Download
