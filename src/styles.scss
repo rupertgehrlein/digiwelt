@@ -1,6 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/bootstrap/dist/css/bootstrap.css";
 
+@font-face {
+  font-family: "Titillium Web";
+  src: local(TitilliumWeb-Regular) format("ttf");
+}
+
+@font-face {
+  font-family: "Titillium Bold";
+  src: local(TitilliumWeb-Bold) format("ttf");
+}
+
+@font-face {
+  font-family: "Titillium Light";
+  src: local(TitilliumWeb-Light) format("ttf");
+}
+
 :root {
   --primary-color: #003087;
   --secondary-color: #b3f2db;
@@ -10,11 +25,14 @@
   --primary-text-color: #fff;
 }
 
-html, body { height: 100%; }
+html,
+body {
+  height: 100%;
+}
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Titillium Web", sans-serif;
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-color: #fff;
@@ -41,6 +59,15 @@ body {
   margin-top: 2rem;
 }
 
+/* h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Titillium Bold';
+} */
+
 a:visited,
 a:link,
 a:active,
@@ -54,14 +81,15 @@ a:hover {
   color: var(--accent-color) !important;
 }
 
-.card, .modal-content {
+.card,
+.modal-content {
   background-color: var(--primary-color);
   border-color: #fff;
   color: var(--primary-text-color);
 }
 
 .modal {
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .round-button {
@@ -79,13 +107,17 @@ a:hover {
   justify-content: center; /* Centers the icon horizontally */
   align-items: center; /* Centers the icon vertically */
   z-index: 9999;
- }
+}
 
- /* Icon styling (if using Font Awesome) */
- .round-button i {
+/* Icon styling (if using Font Awesome) */
+.round-button i {
   font-size: 24px; /* Adjusts the size of the plus icon */
- }
+}
 
- .round-button:hover {
+.round-button:hover {
   background-color: var(--accent-color-hover);
- }
+}
+
+.btn {
+  margin-right: 1rem;
+}

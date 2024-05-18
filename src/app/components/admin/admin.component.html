@@ -3,6 +3,23 @@ Für jeden zu prüfenden Upload wird eine Karte erstellt mit den wichtigen Infos
 einem Download-Button und einem Button, der den Datenbankeintrag von is_approved auf true setzt -->
 
 <div class="container">
+  <table>
+    <tr>
+      <th>Email</th>
+      <th>Vorname</th>
+      <th>Nachname</th>
+      <th>Schulnummer</th>
+    </tr>
+    <tr *ngFor="let user of unregisteredUsers">
+      <th>{{ user.email }}</th>
+      <th>{{ user.firstname }}</th>
+      <th>{{ user.lastname }}</th>
+      <th>{{ user.school_number }}</th>
+    </tr>
+  </table>
+</div>
+
+<div class="container">
   <div class="row">
     <div class="col-md-4" *ngFor="let content of contents">
       <div class="card mb-4">
