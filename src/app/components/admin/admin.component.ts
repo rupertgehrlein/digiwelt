@@ -18,6 +18,7 @@ export class AdminComponent {
   uploadForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
+  Reason: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges'] //Items for dropdown menue
 
   constructor(private formBuilder: FormBuilder,
     private supabaseFactory: SupabaseFactoryService,
@@ -34,7 +35,8 @@ export class AdminComponent {
     this.fetchRegisteredUsers();
 
     this.uploadForm = this.formBuilder.group({
-      adminComment: ['', Validators.required],
+      adminComment: [''],
+      disapprovedReason: ['', [Validators.required]],
     });
   }
 
@@ -114,9 +116,13 @@ export class AdminComponent {
 
   //Funktion, die den Wert für is_disapproved des entsprechenden Eintrags auf true setzt -> wird dann Ersteller wieder angezeigt
   async setDisapproved(): Promise<void>{
+
+    let commentString:string = '';
+    commentString = this.uploadForm.value.disapprovedReason.concat(' ',this.uploadForm.value.adminComment);
+
     const { error } = await this.supabase
       .from('contents')
-      .update({ is_disapproved: true, admin_comment: this.uploadForm.value.adminComment })
+      .update({ is_disapproved: true, admin_comment: commentString })
       .eq('id', this.currentId)
 
     if (error) {
@@ -128,5 +134,17 @@ export class AdminComponent {
     this.modalInstance.hide();
 
     location.reload()
+  }
+  // Changes disapprovedReason attribute after an item in the dropdown has been selected
+  changeReason(reason) {
+    console.log(reason.value)
+    this.disapprovedReason.setValue(reason.target.value, {
+      onlySelf: true
+    })
+  }
+
+  // Getter method to access formcontrols
+  get disapprovedReason() {
+    return this.uploadForm.get('disapprovedReason');
   }
 }

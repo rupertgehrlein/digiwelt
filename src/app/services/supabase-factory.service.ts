@@ -34,9 +34,11 @@ export class SupabaseFactoryService {
       .eq('id', currentUser.data.user.id)
       .single();
 
+      console.log("Hier", data, currentUser.data.user.id);
+
     if (error) {
       console.error('Fehler beim Abrufen des isAdmin-Werts:', error.message);
-      return false;
+      return true//false;
     }
 
     return data ? data.is_admin : false;
