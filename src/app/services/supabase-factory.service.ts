@@ -38,7 +38,7 @@ export class SupabaseFactoryService {
 
     if (error) {
       console.error('Fehler beim Abrufen des isAdmin-Werts:', error.message);
-      return true//false;
+      return false;
     }
 
     return data ? data.is_admin : false;
