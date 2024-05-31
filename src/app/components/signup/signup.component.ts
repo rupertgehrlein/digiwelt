@@ -4,7 +4,7 @@ import { emailDomainValidator } from '../../email-domain.validator';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { login } from '../../../environments/environment';
-import * as sha256 from 'crypto-js/sha256';
+import { sha256 } from 'crypto-js/sha256';
 
 @Component({
   selector: 'app-signup',
