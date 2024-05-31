@@ -23,6 +23,7 @@
   --accent-color-hover: #425850;
   --text-color: #16191f;
   --primary-text-color: #fff;
+  --danger-color: rgb(178, 34, 34);
 }
 
 html,
@@ -119,5 +120,17 @@ a:hover {
 }
 
 .btn {
-  margin-right: 1rem;
+  margin: 0 0.5rem;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+  color: var(--primary-text-color);
+}
+
+.btn-danger:hover {
+  background-color: rgb(100, 19, 19);
+  border-color: rgb(100, 19, 19);
+  color: var(--primary-text-color);
 }
