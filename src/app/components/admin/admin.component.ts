@@ -7,7 +7,7 @@ import * as bootstrap from 'bootstrap';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
   @ViewChild('commentModal') commentModal: ElementRef;
@@ -18,7 +18,8 @@ export class AdminComponent {
   uploadForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
-  Reason: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges'] //Items for dropdown menue
+  reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges'] //Items for dropdown menue
+  showCommentField: boolean = false; // Variable zum Verwalten der Sichtbarkeit des Kommentarfeldes
 
   constructor(private formBuilder: FormBuilder,
     private supabaseFactory: SupabaseFactoryService,
@@ -28,7 +29,6 @@ export class AdminComponent {
     const modalElement = this.commentModal.nativeElement;
     this.modalInstance = new bootstrap.Modal(modalElement);
   }
-
 
   ngOnInit() {
     this.fetchContents(); //ruft beim laden der Seite die Funktion auf
@@ -61,7 +61,7 @@ export class AdminComponent {
       .from('unregistered_users')
       .select('*')
 
-    if(error) {
+    if (error) {
       console.error('Fetching unregistered Users failed: ', error);
       return;
     }
@@ -115,10 +115,10 @@ export class AdminComponent {
   }
 
   //Funktion, die den Wert für is_disapproved des entsprechenden Eintrags auf true setzt -> wird dann Ersteller wieder angezeigt
-  async setDisapproved(): Promise<void>{
+  async setDisapproved(): Promise<void> {
 
-    let commentString:string = '';
-    commentString = this.uploadForm.value.disapprovedReason.concat(' ',this.uploadForm.value.adminComment);
+    let commentString: string = '';
+    commentString = this.uploadForm.value.disapprovedReason.concat(' ', this.uploadForm.value.adminComment);
 
     const { error } = await this.supabase
       .from('contents')
@@ -135,16 +135,26 @@ export class AdminComponent {
 
     location.reload()
   }
-  // Changes disapprovedReason attribute after an item in the dropdown has been selected
-  changeReason(reason) {
-    console.log(reason.value)
-    this.disapprovedReason.setValue(reason.target.value, {
-      onlySelf: true
-    })
+
+
+  //klappt noch nicht so recht
+  changeReason(event) {
+    const selectedReason = event.target.value;
+    this.showCommentField = selectedReason === 'Sonstiges';
+    this.disapprovedReason.setValue(selectedReason);
   }
 
-  // Getter method to access formcontrols
   get disapprovedReason() {
     return this.uploadForm.get('disapprovedReason');
+  }
+
+  async acceptNewUser(id, userMail){
+    await this.supabaseFactory.newUserAccepted(id, userMail);
+    this.fetchRegisteredUsers();
+  }
+
+  async declineNewUser(id) {
+    await this.supabaseFactory.removeUnregisteredUser(id);
+    this.fetchRegisteredUsers();
   }
 }
