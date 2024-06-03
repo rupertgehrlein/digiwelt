@@ -63,7 +63,7 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
         <form [formGroup]="uploadForm" (ngSubmit)="setDisapproved()">
           <div class="mb-3">
             <label for="disapprovedReason" class="form-label">Ablehnungsgrund*</label>
-            <select class="form-select" (change)="changeReason($event)" formControlName="disapprovedReason">
+            <select class="form-select" formControlName="disapprovedReason">
               <option value="">Wähle einen Grund aus</option>
               <option *ngFor="let reason of reasons" [ngValue]="reason">{{reason}}</option>
             </select>

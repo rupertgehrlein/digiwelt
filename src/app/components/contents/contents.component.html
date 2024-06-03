@@ -69,6 +69,13 @@
           <div class="mb-3">
             Mit * gekennzeichnete Felder sind verpflichtend.
           </div>
+          <div class="mb-3">
+            <label for="commitment" class="form-check-label">
+              Ich bestätige, dass der Inhalt von mir erstellt ist und wenn Fremdmaterial enthalten ist, dieses korrekt
+              gekennzeichnet wurde.
+            </label>
+            <input type="checkbox" class="form-check-input" id="commitment" formControlName="commitment">
+          </div>
           <button type="submit" class="btn" [disabled]="!uploadForm.valid">Hochladen</button>
           <div class="mb-3">
             Das Fenster schließt bei erfolgreichem Upload automatisch. Die hochgeladenen Inhalte sind erst nach Prüfung

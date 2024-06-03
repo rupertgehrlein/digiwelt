@@ -138,6 +138,7 @@ export class DashboardComponent {
 
   async deleteContent(id) {
     await this.getFileName(id);
+    console.log(this.fileName);
 
     await this.deleteFile(this.fileName);
 
@@ -159,14 +160,19 @@ export class DashboardComponent {
     const { data, error } = await this.supabase
       .from('contents')
       .select('pdf_file_url')
-      .eq('id', id)
+      .eq('id', id);
 
     if (error) {
       console.error('Error getting file:', error);
       return;
     }
 
-    this.fileName = data;
+    if (data && data.length > 0) {
+      this.fileName = data[0].pdf_file_url;
+    } else {
+      console.warn('No file found with the given ID.');
+      this.fileName = null;
+    }
   }
 
   async deleteFile(fileName) {
