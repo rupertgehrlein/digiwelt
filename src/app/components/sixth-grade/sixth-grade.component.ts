@@ -11,13 +11,11 @@ export class SixthGradeComponent {
   supabase: SupabaseClient;
   contents: any[] = [];
   gradeLevel = 'sixth';
-  ImagePath : String;
 
   constructor(private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
 
   ngOnInit() {
     this.fetchContents();
-    this.ImagePath = "../../assets/file_pictures/misc_symbol.png"; //vorläufiger Pfad, wird aber auf der Webseite nicht angezeigt, warum auch immmer
   }
 
   //Funktion zum Laden der Inhalte
@@ -61,22 +59,4 @@ export class SixthGradeComponent {
     }
   }
 
-  // UNVOLLSTÄNDIG
-  // Funktion für den Auswahl des Filetype Pictures
-  async selectFilePic(id: String): Promise<String>{
-    const { data, error } = await this.supabase
-      .from('contents')
-      .select('file_format')
-      .eq('id', id)
-
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return "../../file_pictures/misc_symbol.png";
-    }
-    console.log(data);
-    switch (data){
-    
-    }
-    return "../../file_pictures/misc_symbol.png"
-  }
 }
