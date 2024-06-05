@@ -34,8 +34,6 @@ export class SupabaseFactoryService {
       .eq('id', currentUser.data.user.id)
       .single();
 
-      console.log("Hier", data, currentUser.data.user.id);
-
     if (error) {
       console.error('Fehler beim Abrufen des isAdmin-Werts:', error.message);
       return false;
@@ -110,5 +108,20 @@ export class SupabaseFactoryService {
 
     return;
   }
-}
 
+  async newUserAccepted(id, email) {
+    await this.client
+      .from('users')
+      .insert([{ id: id, email: email, is_admin: false }])
+
+    await this.removeUnregisteredUser(id);
+  }
+
+  async removeUnregisteredUser(id) {
+    await this.client
+      .from('unregistered_users')
+      .delete()
+      .eq('id', id)
+  }
+
+}

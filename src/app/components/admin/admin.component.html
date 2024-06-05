@@ -3,23 +3,37 @@ Für jeden zu prüfenden Upload wird eine Karte erstellt mit den wichtigen Infos
 einem Download-Button und einem Button, der den Datenbankeintrag von is_approved auf true setzt -->
 
 <div class="container">
-  <table>
-    <tr>
-      <th>Email</th>
-      <th>Vorname</th>
-      <th>Nachname</th>
-      <th>Schulnummer</th>
-    </tr>
-    <tr *ngFor="let user of unregisteredUsers">
-      <th>{{ user.email }}</th>
-      <th>{{ user.firstname }}</th>
-      <th>{{ user.lastname }}</th>
-      <th>{{ user.school_number }}</th>
-    </tr>
+  <h2 *ngIf="unregisteredUsers.length > 0">Unregistrierte Benutzer</h2>
+  <table *ngIf="unregisteredUsers.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Schulnummer</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of unregisteredUsers">
+        <td>{{ user.email }}</td>
+        <td>{{ user.firstname }}</td>
+        <td>{{ user.lastname }}</td>
+        <td>{{ user.school_number }}</td>
+        <td><button (click)="acceptNewUser(user.id, user.email)" class="btn btn-success">Annehmen</button></td>
+        <td><button (click)="declineNewUser(user.id)" class="btn btn-danger">Ablehnen</button></td>
+      </tr>
+    </tbody>
   </table>
 </div>
 
+<div class="container" *ngIf="unregisteredUsers.length > 0">
+  <hr>
+</div>
+
 <div class="container">
+  <h2>Zu prüfende Inhalte</h2>
   <div class="row">
     <div class="col-md-4" *ngFor="let content of contents">
       <div class="card mb-4">
@@ -28,8 +42,8 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
           <p class="card-text">{{ content.description }}</p>
           <a (click)="downloadFile(content.pdf_file_url)" class="btn btn-primary" target="_blank"
             rel="noopener noreferrer">Download</a>
-          <a (click)="setApproved(content.id)" class="btn btn-primary">Geprüft</a>
-          <a data-bs-toggle="modal" data-bs-target="#commentModal" class="btn btn-primary"
+          <a (click)="setApproved(content.id)" class="btn btn-success">Geprüft</a>
+          <a data-bs-toggle="modal" data-bs-target="#commentModal" class="btn btn-danger"
             (click)="saveCurrentId(content.id)">Ablehnen</a>
         </div>
       </div>
@@ -48,26 +62,23 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
       <div class="modal-body">
         <form [formGroup]="uploadForm" (ngSubmit)="setDisapproved()">
           <div class="mb-3">
-            <select class="custom-select" (change)="changeReason($event)" formControlName="disapprovedReason">
+            <label for="disapprovedReason" class="form-label">Ablehnungsgrund*</label>
+            <select class="form-select" (change)="changeReason($event)" formControlName="disapprovedReason">
               <option value="">Wähle einen Grund aus</option>
-              <option *ngFor="let reason of Reason" [ngValue]="reason">{{reason}}</option>
+              <option *ngFor="let reason of reasons" [ngValue]="reason">{{reason}}</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label for="adminComment" class="form-label">Kommentar*</label> <br>
+          <div class="mb-3" *ngIf="showCommentField">
+            <label for="adminComment" class="form-label">Kommentar*</label>
             <textarea type="text" class="form-control" id="adminComment" formControlName="adminComment" rows="8"
               cols="50"></textarea>
           </div>
           <div class="mb-3">
             Mit * gekennzeichnete Felder sind verpflichtend.
           </div>
-          <button type="submit" class="btn" [disabled]="!uploadForm.valid">Ablehnen</button>
+          <button type="submit" class="btn btn-danger" [disabled]="!uploadForm.valid">Ablehnen</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-
-
-<!--(click)="setDisapproved(content.id)"-->
