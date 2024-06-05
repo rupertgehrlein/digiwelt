@@ -93,6 +93,7 @@ export class ContentsComponent implements OnInit {
           is_approved: false,
           is_disapproved: false,
           pdf_file_url: pdfFileUrl,
+          file_format: this.selectedFile.type,
           topic: this.uploadForm.value.topic,
         },
       ]);
