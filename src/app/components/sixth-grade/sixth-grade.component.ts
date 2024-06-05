@@ -17,7 +17,7 @@ export class SixthGradeComponent {
 
   ngOnInit() {
     this.fetchContents();
-    this.ImagePath = "../../file_pictures/misc_symbol.png"; //vorläufiger Pfad, wird aber auf der Webseite nicht angezeigt, warum auch immmer
+    this.ImagePath = "../../assets/file_pictures/misc_symbol.png"; //vorläufiger Pfad, wird aber auf der Webseite nicht angezeigt, warum auch immmer
   }
 
   //Funktion zum Laden der Inhalte
