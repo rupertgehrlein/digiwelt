@@ -47,7 +47,7 @@ export class ContentsComponent implements OnInit {
       const fileType = file.type;
       console.log(fileType);
       // windows zeigt mir an, dass die Dateien .zip files sind, aber anscheinend sind sie bei mir x-zip. Möglicherweise, müssen in Zukunft eventuell noch andere zip MIME zip typen hinzugefügt werden
-      const allowedTypes = ['application/pdf', 'application/zip', 'application/x-zip-compressed', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      const allowedTypes = ['application/pdf', 'application/zip','application/x-zip-compressed' ,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
       if (!allowedTypes.includes(fileType)) {
         alert('Bitte laden Sie nur .pdf, .zip, .doc oder .docx Dateien hoch.');
         return;
