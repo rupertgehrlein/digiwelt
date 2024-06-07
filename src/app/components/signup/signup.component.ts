@@ -14,6 +14,7 @@ import * as sha256 from 'crypto-js/sha256';
 export class SignupComponent {
   supabase: SupabaseClient;
   loading = false;
+  passwordVisible = false;
 
   //schaut ob Daten eingetragen sind
   signInForm = this.formBuilder.group({
@@ -33,6 +34,10 @@ export class SignupComponent {
   })
 
   constructor(private supabaseFactory: SupabaseFactoryService, private readonly formBuilder: FormBuilder) { this.supabase = supabaseFactory.getClient() }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
+  }
 
   //kümmert sich um den Signup/Login
   async signUp() {

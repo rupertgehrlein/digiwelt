@@ -31,6 +31,12 @@ export class ContentsComponent implements OnInit {
       description: ['', Validators.required],
       gradeLevel: ['', Validators.required],
       topic: ['', Validators.required],
+      commitment: [false, Validators.requiredTrue]
+    });
+
+    // Debugging: Log form state changes
+    this.uploadForm.valueChanges.subscribe(formState => {
+      console.log('Form state changed:', formState);
     });
   }
 

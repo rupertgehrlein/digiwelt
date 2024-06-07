@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -18,12 +18,11 @@ export class AdminComponent {
   uploadForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
-  reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges'] //Items for dropdown menue
-  showCommentField: boolean = false; // Variable zum Verwalten der Sichtbarkeit des Kommentarfeldes
+  reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges']
+  showCommentField: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
-    private supabaseFactory: SupabaseFactoryService,
-    private cdr: ChangeDetectorRef) { this.supabase = supabaseFactory.getClient(); }
+    private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
 
   ngAfterViewInit(): void {
     const modalElement = this.commentModal.nativeElement;
@@ -37,6 +36,11 @@ export class AdminComponent {
     this.uploadForm = this.formBuilder.group({
       adminComment: [''],
       disapprovedReason: ['', [Validators.required]],
+    });
+
+    // Subscribe to changes in the disapprovedReason form control
+    this.uploadForm.get('disapprovedReason').valueChanges.subscribe(reason => {
+      this.showCommentField = reason === 'Sonstiges';
     });
   }
 
@@ -136,8 +140,6 @@ export class AdminComponent {
     location.reload()
   }
 
-
-  //klappt noch nicht so recht
   changeReason(event) {
     const selectedReason = event.target.value;
     this.showCommentField = selectedReason === 'Sonstiges';
@@ -148,7 +150,9 @@ export class AdminComponent {
     return this.uploadForm.get('disapprovedReason');
   }
 
-  async acceptNewUser(id, userMail){
+
+  //Funktionen zum Annehmen und Ablehnen von neuen Nutzern
+  async acceptNewUser(id, userMail) {
     await this.supabaseFactory.newUserAccepted(id, userMail);
     this.fetchRegisteredUsers();
   }
