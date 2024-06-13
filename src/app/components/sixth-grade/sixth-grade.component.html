@@ -6,6 +6,8 @@
        <div class="card mb-4">
          <div class="card-body">
            <h5 class="card-title">{{ content.heading }}</h5>
+           <p (click)="addFavourite(content.id)" class="btn" icon>addFavo</p>
+           <p (click)="removeFavourite(content.id)" class="btn" icon>removeFavo</p>
            <p class="card-text">{{ content.description }}</p>
             <img src ="../../assets/filetypepics/{{content.file_format}}.png"  
                   style="width: 100px;height: 100px;">
