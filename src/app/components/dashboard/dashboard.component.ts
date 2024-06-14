@@ -11,20 +11,22 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class DashboardComponent {
   @ViewChild('changeModal') changeModal: ElementRef;
   supabase: SupabaseClient;
-  contents: any[] = [];
+  rejectedContents: any[] = [];
   currentUser: any;
   uploadForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
   selectedFile;
   fileName;
+  favoriteContents: any[] = [];
 
   constructor(private formBuilder: FormBuilder, private supabaseFactory: SupabaseFactoryService) {
     this.supabase = supabaseFactory.getClient();
   }
 
   async ngOnInit() {
-    await this.getCurrentUserAndFetchContents(); // Wait for currentUser to be fetched before fetching contents
+    await this.getCurrentUserAndFetchContents();
+    await this.fetchFavoriteContents();
 
     this.uploadForm = this.formBuilder.group({
       heading: ['', Validators.required],
@@ -39,13 +41,13 @@ export class DashboardComponent {
 
     if (this.currentUser) {
       const userId = this.currentUser.data.user.id;
-      await this.fetchContents(userId);
+      await this.fetchRejectedContents(userId);
     } else {
       console.error('Current user is undefined');
     }
   }
 
-  async fetchContents(userId: string): Promise<void> {
+  async fetchRejectedContents(userId: string): Promise<void> {
     const { data, error } = await this.supabase
       .from('contents')
       .select('*')
@@ -57,8 +59,15 @@ export class DashboardComponent {
       return;
     }
 
-    this.contents = data || [];
-    console.log(this.contents.length);
+    this.rejectedContents = data || [];
+  }
+
+  async fetchFavoriteContents() {
+    try {
+      this.favoriteContents = await this.supabaseFactory.getFavoriteDetails();
+    } catch (error) {
+      console.error('Error fetching favorite contents:', error);
+    }
   }
 
   //Check ob Dateityp passt
@@ -153,7 +162,7 @@ export class DashboardComponent {
       return;
     }
 
-    this.fetchContents(this.currentUser.data.user.id);
+    this.fetchRejectedContents(this.currentUser.data.user.id);
 
   }
 
@@ -187,5 +196,31 @@ export class DashboardComponent {
       return;
     }
   }
+
+  //Funktion zur Generierung von gesicherten Download-URLs
+  async generateSignedUrl(filePath: string): Promise<string | null> {
+    const { data, error } = await this.supabase
+      .storage
+      .from('pdf_uploads')
+      .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
+
+    if (error) {
+      console.error('Error generating signed URL:', error);
+      return null;
+    }
+
+    return data?.signedUrl;
+  }
+
+  //Funktion für den File Download
+  async downloadFile(filePath: string): Promise<void> {
+    const signedUrl = await this.generateSignedUrl(filePath);
+    if (signedUrl) {
+      window.open(signedUrl, '_blank');
+    } else {
+      alert('Error generating download link.');
+    }
+  }
 }
+
 
