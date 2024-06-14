@@ -14,12 +14,6 @@ export class SupabaseFactoryService {
     return this.client;
   }
 
-  /*  async getUUID() {
-     const { data, error } = await this.client.auth.admin.getUserById(1)
-
-     return data;
-   } */
-
   //Funktion zum Check ob der angemeldete User auch Admin ist
   async isAdmin(): Promise<boolean> {
     const currentUser = await this.client.auth.getUser();
@@ -126,12 +120,10 @@ export class SupabaseFactoryService {
 
 
   async getFavorites(){
-    const userId = (await this.client.auth.getUser()).data.user.id;
-    console.log(userId);
     const { data, error } = await this.client
       .from('favorites')
       .select('content_id')
-      .eq('user_id', userId);  // Ändere hier "id" zu "user_id"
+      .eq('user_id', (await this.client.auth.getUser()).data.user.id);
 
     if (error) {
       console.error('Error fetching favorites:', error.message);
@@ -142,21 +134,19 @@ export class SupabaseFactoryService {
   }
 
   async addFavorite(contentId) {
-    const userId = (await this.client.auth.getUser()).data.user.id;
     const { data, error } = await this.client
       .from('favorites')
-      .insert({ user_id: userId, content_id: contentId });
+      .insert({ user_id: (await this.client.auth.getUser()).data.user.id, content_id: contentId });
 
     if (error) throw error;
     return data;
   }
 
   async removeFavorite(contentId) {
-    const userId = (await this.client.auth.getUser()).data.user.id;
     const { data, error } = await this.client
       .from('favorites')
       .delete()
-      .eq('user_id', userId)
+      .eq('user_id', (await this.client.auth.getUser()).data.user.id)
       .eq('content_id', contentId);
 
     if (error) throw error;
@@ -164,11 +154,10 @@ export class SupabaseFactoryService {
   }
 
   async getFavoriteDetails(): Promise<any[]> {
-    const userId = (await this.client.auth.getUser()).data.user.id;
     const { data: favorites, error: favError } = await this.client
       .from('favorites')
       .select('content_id')
-      .eq('user_id', userId);
+      .eq('user_id', (await this.client.auth.getUser()).data.user.id);
 
     if (favError) {
       console.error('Error fetching favorites:', favError.message);
@@ -192,6 +181,21 @@ export class SupabaseFactoryService {
     }
 
     return contents;
+  }
+
+  async getContentDetails(contentId: string): Promise<any> {
+    const { data, error } = await this.client
+      .from('contents')
+      .select('*')
+      .eq('id', contentId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching content details:', error.message);
+      throw error;
+    }
+
+    return data;
   }
 
 }

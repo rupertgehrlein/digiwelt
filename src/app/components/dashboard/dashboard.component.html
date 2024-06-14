@@ -25,6 +25,14 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-start">
                 <h5 class="card-title">{{ favorite.heading }}</h5>
+                <button class="favorite-btn" (click)="toggleFavorite(favorite.id)">
+                  <ng-container *ngIf="isFavorite(favorite.id); else notFavorited">
+                    <img src="assets/heart-filled.png" alt="Favorited">
+                  </ng-container>
+                  <ng-template #notFavorited>
+                    <img src="assets/heart-outline.png" alt="Not Favorited">
+                  </ng-template>
+                </button>
               </div>
               <div class="d-flex justify-content-between align-items-center">
                 <p class="card-text">{{ favorite.description }}</p>

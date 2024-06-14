@@ -70,6 +70,23 @@ export class DashboardComponent {
     }
   }
 
+  isFavorite(contentId: string): boolean {
+    return this.favoriteContents.some(content => content.id === contentId);
+  }
+
+  async toggleFavorite(contentId: string) {
+    if (this.isFavorite(contentId)) {
+      await this.supabaseFactory.removeFavorite(contentId);
+      this.favoriteContents = this.favoriteContents.filter(content => content.id !== contentId);
+    } else {
+      await this.supabaseFactory.addFavorite(contentId);
+      const favoriteDetails = await this.supabaseFactory.getContentDetails(contentId);
+      if (favoriteDetails) {
+        this.favoriteContents.push(favoriteDetails);
+      }
+    }
+  }
+
   //Check ob Dateityp passt
   onFileSelected(event: any): void {
     const file = event.target.files[0];
@@ -89,33 +106,6 @@ export class DashboardComponent {
   }
 
   async saveChanges() {
-    //Check ob Datei existiert
-    /* if (!this.uploadForm.valid || !this.selectedFile) {
-      alert('Es wurde keine Datei ausgewählt.')
-      return;
-    } */
-
-    //Setzt timestamp an Dateiname um Dopplungen zu vermeiden
-    /* const timestamp = new Date().getTime();
-    const uniqueFileName = `${this.selectedFile.name.replace(/\.[^/.]+$/, "")}_${timestamp}${this.selectedFile.name.split('.').pop()}`;
-
-    const formData = new FormData();
-    formData.append('file', this.selectedFile, uniqueFileName);
-    formData.append('path', uniqueFileName);
-
-    //Packt Datei in den Backend Storage Bucket
-    const { data, error } = await this.supabase
-      .storage
-      .from('pdf_uploads')
-      .upload(uniqueFileName, formData);
-
-    if (error) {
-      console.error('Error uploading file:', error);
-      return;
-    }
-
-    const pdfFileUrl = data?.path; */
-
     //Datenbank-Eintrag mit allen nötigen Spalten
     const { data: contentData, error: contentError } = await this.supabase
       .from('contents')
@@ -148,7 +138,6 @@ export class DashboardComponent {
 
   async deleteContent(id) {
     await this.getFileName(id);
-    console.log(this.fileName);
 
     await this.deleteFile(this.fileName);
 
