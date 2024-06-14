@@ -6,10 +6,16 @@
        <div class="card mb-4">
          <div class="card-body">
            <h5 class="card-title">{{ content.heading }}</h5>
-           <p (click)="addFavourite(content.id)" class="btn" icon>addFavo</p>
-           <p (click)="removeFavourite(content.id)" class="btn" icon>removeFavo</p>
+           <button (click)="toggleFavorite(content.id)">
+            <ng-container *ngIf="isFavorite(content.id); else notFavorited">
+              <img src="assets/heart-filled.png" alt="Favorited">
+            </ng-container>
+            <ng-template #notFavorited>
+              <img src="assets/heart-outline.png" alt="Not Favorited">
+            </ng-template>
+          </button>
            <p class="card-text">{{ content.description }}</p>
-            <img src ="../../assets/filetypepics/{{content.file_format}}.png"  
+            <img src ="../../assets/filetypepics/{{content.file_format}}.png"
                   style="width: 100px;height: 100px;">
            <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
          </div>

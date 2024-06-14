@@ -124,4 +124,43 @@ export class SupabaseFactoryService {
       .eq('id', id)
   }
 
+
+  async getFavorites(){
+    const userId = (await this.client.auth.getUser()).data.user.id;
+    console.log(userId);
+    const { data, error } = await this.client
+      .from('favorites')
+      .select('content_id')
+      .eq('user_id', userId);  // Ändere hier "id" zu "user_id"
+
+    if (error) {
+      console.error('Error fetching favorites:', error.message);
+      throw error;
+    }
+
+    return data.map(fav => fav.content_id);
+  }
+
+  async addFavorite(contentId) {
+    const userId = (await this.client.auth.getUser()).data.user.id;
+    const { data, error } = await this.client
+      .from('favorites')
+      .insert({ user_id: userId, content_id: contentId });
+
+    if (error) throw error;
+    return data;
+  }
+
+  async removeFavorite(contentId) {
+    const userId = (await this.client.auth.getUser()).data.user.id;
+    const { data, error } = await this.client
+      .from('favorites')
+      .delete()
+      .eq('user_id', userId)
+      .eq('content_id', contentId);
+
+    if (error) throw error;
+    return data;
+  }
+
 }
