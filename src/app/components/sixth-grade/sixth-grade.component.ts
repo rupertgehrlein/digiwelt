@@ -59,4 +59,51 @@ export class SixthGradeComponent {
     }
   }
 
+  async getFavourites(): Promise<any>{
+    const { data, error } = await this.supabase
+    .from('users')
+    .select('favourites')
+    .eq('id', (await this.supabase.auth.getUser()).data.user.id);
+
+    if (error) {
+      console.error('Error fetching contents:', error);
+      return;
+    }
+
+    var output = data[0].favourites;
+    if (output == null){
+      return [];
+    }
+    else{
+      return output;
+    }
+
+  }
+
+  async addFavourite(id: any): Promise<void>{
+    var favos = await this.getFavourites();
+    console.log("1:", favos);
+    favos.push(id);
+    console.log("2:",favos);
+    this.uploadFavourites(favos);
+  }
+
+  async removeFavourite(id:any): Promise<void>{
+  var oldFavos = await this.getFavourites();
+  var newFavos = oldFavos.filter((e,i) => e != id);
+  this.uploadFavourites(newFavos);
+  }
+
+  async uploadFavourites(favos: any): Promise<void> {
+    console.log(favos);
+    const {error} = await this.supabase
+    .from('users')
+    .update({favourites: favos})
+    .eq('id', (await this.supabase.auth.getUser()).data.user.id);
+
+    if (error) {
+      console.error(error);
+     return;
+   }
+  }
 }
