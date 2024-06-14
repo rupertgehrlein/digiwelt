@@ -163,4 +163,35 @@ export class SupabaseFactoryService {
     return data;
   }
 
+  async getFavoriteDetails(): Promise<any[]> {
+    const userId = (await this.client.auth.getUser()).data.user.id;
+    const { data: favorites, error: favError } = await this.client
+      .from('favorites')
+      .select('content_id')
+      .eq('user_id', userId);
+
+    if (favError) {
+      console.error('Error fetching favorites:', favError.message);
+      throw favError;
+    }
+
+    const favoriteIds = favorites.map(fav => fav.content_id);
+
+    if (favoriteIds.length === 0) {
+      return [];
+    }
+
+    const { data: contents, error: contentError } = await this.client
+      .from('contents')
+      .select('*')
+      .in('id', favoriteIds);
+
+    if (contentError) {
+      console.error('Error fetching content details:', contentError.message);
+      throw contentError;
+    }
+
+    return contents;
+  }
+
 }
