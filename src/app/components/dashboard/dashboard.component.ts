@@ -58,6 +58,7 @@ export class DashboardComponent {
     }
 
     this.contents = data || [];
+    console.log(this.contents.length);
   }
 
   //Check ob Dateityp passt
