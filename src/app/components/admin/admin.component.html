@@ -21,7 +21,7 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
         <td>{{ user.firstname }}</td>
         <td>{{ user.lastname }}</td>
         <td>{{ user.school_number }}</td>
-        <td><button (click)="acceptNewUser(user.id, user.email)" class="btn btn-success">Annehmen</button></td>
+        <td><button (click)="acceptNewUser(user.email)" class="btn btn-success">Annehmen</button></td>
         <td><button (click)="declineNewUser(user.id)" class="btn btn-danger">Ablehnen</button></td>
       </tr>
     </tbody>
