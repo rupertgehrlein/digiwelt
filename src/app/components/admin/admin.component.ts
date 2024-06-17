@@ -152,8 +152,8 @@ export class AdminComponent {
 
 
   //Funktionen zum Annehmen und Ablehnen von neuen Nutzern
-  async acceptNewUser(id, userMail) {
-    await this.supabaseFactory.newUserAccepted(id, userMail);
+  async acceptNewUser(userMail) {
+    await this.supabaseFactory.newUserAccepted(userMail);
     this.fetchRegisteredUsers();
   }
 
