@@ -72,7 +72,6 @@ export class SignupComponent {
       const email = this.loginForm.value.email as string;
 
       if (await this.supabaseFactory.isRegistered(email)) {
-        console.log('Rückgabe von isRegistered ist: ' + this.supabaseFactory.isRegistered(email));
         const { error } = await this.supabase.auth.signInWithOtp({ email });
         if (error) throw error;
         alert('Checken Sie Ihr Mail-Postfach');

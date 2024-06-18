@@ -1,19 +1,28 @@
-<!--Für jeden Inhalt wird eigene Karte erstellt und angezeigt-->
-
 <div class="container container-top">
   <div class="row">
-     <div class="col-md-4" *ngFor="let content of contents">
-       <div class="card mb-4">
-         <div class="card-body">
-           <h5 class="card-title">{{ content.heading }}</h5>
-           <p (click)="addFavourite(content.id)" class="btn" icon>addFavo</p>
-           <p (click)="removeFavourite(content.id)" class="btn" icon>removeFavo</p>
-           <p class="card-text">{{ content.description }}</p>
-            <img src ="../../assets/filetypepics/{{content.file_format}}.png"  
-                  style="width: 100px;height: 100px;">
-           <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
-         </div>
-       </div>
-     </div>
+    <div class="col-md-6 col-lg-6" *ngFor="let content of contents">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <h5 class="card-title">{{ content.heading }}</h5>
+            <button class="favorite-btn" (click)="toggleFavorite(content.id)">
+              <ng-container *ngIf="isFavorite(content.id); else notFavorited">
+                <img src="assets/heart-filled.png" alt="Favorited">
+              </ng-container>
+              <ng-template #notFavorited>
+                <img src="assets/heart-outline.png" alt="Not Favorited">
+              </ng-template>
+            </button>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="card-text">{{ content.description }}</p>
+            <img [src]="content.file_format ? '../../assets/filetypepics/' + content.file_format + '.png' : '../../assets/filetypepics/sonst.png'" class="file-format-img">
+          </div>
+          <div class="d-flex justify-content-start align-items-end">
+            <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
- </div>
+</div>

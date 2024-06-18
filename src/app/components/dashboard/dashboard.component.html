@@ -2,16 +2,45 @@
   <h1 class="display-4">Dashboard</h1>
   <div class="container">
     <div class="container">
-      <h3 class="display-6" *ngIf="contents">Abgelehnte Einreichungen:</h3>
+      <h3 class="display-6" *ngIf="rejectedContents.length > 0">Abgelehnte Einreichungen:</h3>
       <div class="row">
-        <div class="col-md-6" *ngFor="let content of contents">
+        <div class="col-md-6" *ngFor="let rejectedContent of rejectedContents">
           <div class="card mb-6">
             <div class="card-body">
-              <h5 class="card-title">{{ content.heading }}</h5>
-              <p class="card-text"> {{ content.admin_comment }} </p>
-              <a (click)="deleteContent(content.id)" class="btn btn-primary">Inhalt löschen</a>
+              <h5 class="card-title">{{ rejectedContent.heading }}</h5>
+              <p class="card-text"> {{ rejectedContent.admin_comment }} </p>
+              <a (click)="deleteContent(rejectedContent.id)" class="btn btn-primary">Inhalt löschen</a>
               <!-- <a data-bs-toggle="modal" data-bs-target="#changeModal" class="btn btn-primary"
                 (click)="saveCurrentId(content.id)">Inhalt bearbeiten</a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container container-top">
+      <h3 class="display-6" *ngIf="favoriteContents.length > 0">Favoriten:</h3>
+      <div class="row">
+        <div class="col-md-6" *ngFor="let favorite of favoriteContents">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title">{{ favorite.heading }}</h5>
+                <button class="favorite-btn" (click)="toggleFavorite(favorite.id)">
+                  <ng-container *ngIf="isFavorite(favorite.id); else notFavorited">
+                    <img src="assets/heart-filled.png" alt="Favorited">
+                  </ng-container>
+                  <ng-template #notFavorited>
+                    <img src="assets/heart-outline.png" alt="Not Favorited">
+                  </ng-template>
+                </button>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">{{ favorite.description }}</p>
+                <img [src]="favorite.file_format ? '../../assets/filetypepics/' + favorite.file_format + '.png' : '../../assets/filetypepics/sonst.png'" class="file-format-img">
+              </div>
+              <div class="d-flex justify-content-start align-items-end">
+                <a (click)="downloadFile(favorite.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
+              </div>
             </div>
           </div>
         </div>

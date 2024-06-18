@@ -10,12 +10,14 @@ import { SupabaseFactoryService } from '../../services/supabase-factory.service'
 export class SixthGradeComponent {
   supabase: SupabaseClient;
   contents: any[] = [];
+  favoriteContentIds = [];
   gradeLevel = 'sixth';
 
   constructor(private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
 
-  ngOnInit() {
-    this.fetchContents();
+  async ngOnInit() {
+    await this.fetchFavorites();
+    await this.fetchContents();
   }
 
   //Funktion zum Laden der Inhalte
@@ -34,6 +36,14 @@ export class SixthGradeComponent {
     this.contents = data || [];
   }
 
+  async fetchFavorites(): Promise<void> {
+    try {
+      this.favoriteContentIds = await this.supabaseFactory.getFavorites();
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    }
+  }
+
   //Funktion zur Generierung von gesicherten Download-URLs
   async generateSignedUrl(filePath: string): Promise<string | null> {
     const { data, error } = await this.supabase
@@ -48,7 +58,7 @@ export class SixthGradeComponent {
 
     return data?.signedUrl;
   }
-  
+
   //Funktion für den File Download
   async downloadFile(filePath: string): Promise<void> {
     const signedUrl = await this.generateSignedUrl(filePath);
@@ -59,7 +69,21 @@ export class SixthGradeComponent {
     }
   }
 
-  async getFavourites(): Promise<any>{
+  isFavorite(contentId): boolean {
+    return this.favoriteContentIds.includes(contentId);
+  }
+
+  async toggleFavorite(contentId) {
+    if (this.isFavorite(contentId)) {
+      await this.supabaseFactory.removeFavorite(contentId);
+      this.favoriteContentIds = this.favoriteContentIds.filter(id => id !== contentId);
+    } else {
+      await this.supabaseFactory.addFavorite(contentId);
+      this.favoriteContentIds.push(contentId);
+    }
+  }
+
+  /* async getFavourites(): Promise<any>{
     const { data, error } = await this.supabase
     .from('users')
     .select('favourites')
@@ -105,5 +129,5 @@ export class SixthGradeComponent {
       console.error(error);
      return;
    }
-  }
+  } */
 }

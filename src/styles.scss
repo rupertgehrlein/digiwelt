@@ -134,3 +134,35 @@ a:hover {
   border-color: rgb(100, 19, 19);
   color: var(--primary-text-color);
 }
+
+.container-top {
+  margin-top: 20px;
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.favorite-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.file-format-img {
+  width: 100px;
+  height: 100px;
+  margin-left: 10px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-text {
+  margin: 15px 0;
+  flex: 1;
+}
