@@ -15,7 +15,8 @@ export class AdminComponent {
   supabase: SupabaseClient;
   contents: any[] = [];
   unregisteredUsers: any[] = []
-  uploadForm: FormGroup;
+  disapproveForm: FormGroup;
+  changeForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
   reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges']
@@ -33,15 +34,23 @@ export class AdminComponent {
     this.fetchContents(); //ruft beim laden der Seite die Funktion auf
     this.fetchRegisteredUsers();
 
-    this.uploadForm = this.formBuilder.group({
+    this.disapproveForm = this.formBuilder.group({
       adminComment: [''],
       disapprovedReason: ['', [Validators.required]],
     });
 
     // Subscribe to changes in the disapprovedReason form control
-    this.uploadForm.get('disapprovedReason').valueChanges.subscribe(reason => {
+    this.disapproveForm.get('disapprovedReason').valueChanges.subscribe(reason => {
       this.showCommentField = reason === 'Sonstiges';
     });
+
+    this.changeForm = this.formBuilder.group({
+      heading: ['', Validators.required],
+      description: ['', Validators.required],
+      gradeLevel: ['', Validators.required],
+      topic: ['', Validators.required],
+    });
+
   }
 
   //Funktion zum abrufen der Daten, die in der Spalte is_approved = false stehen haben
@@ -122,19 +131,44 @@ export class AdminComponent {
   async setDisapproved(): Promise<void> {
 
     let commentString: string = '';
-    commentString = this.uploadForm.value.disapprovedReason.concat(' ', this.uploadForm.value.adminComment);
+    commentString = this.disapproveForm.value.disapprovedReason.concat(' ', this.disapproveForm.value.adminComment);
 
     const { error } = await this.supabase
       .from('contents')
       .update({ is_disapproved: true, admin_comment: commentString })
       .eq('id', this.currentId)
+      console.log(this.currentId);
 
     if (error) {
       console.error('Error updating content approval status:', error);
       return;
     }
 
-    this.uploadForm.reset();
+    this.disapproveForm.reset();
+    this.modalInstance.hide();
+
+    location.reload()
+  }
+
+  async changeContent(): Promise<void>{
+    const { error } = await this.supabase
+      .from('contents')
+      .update({ 
+        heading: this.changeForm.value.heading,
+        description: this.changeForm.value.description,
+        grade_level: this.changeForm.value.gradeLevel,
+        topic: this.changeForm.value.topic,
+       })
+      .eq('id', this.currentId)
+
+      console.log(this.currentId);
+
+    if (error) {
+      console.error('Error updating content approval status:', error);
+      return;
+    }
+
+    this.disapproveForm.reset();
     this.modalInstance.hide();
 
     location.reload()
@@ -147,7 +181,7 @@ export class AdminComponent {
   }
 
   get disapprovedReason() {
-    return this.uploadForm.get('disapprovedReason');
+    return this.disapproveForm.get('disapprovedReason');
   }
 
 
