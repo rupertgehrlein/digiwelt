@@ -150,6 +150,27 @@ export class AdminComponent {
     location.reload()
   }
 
+  async createContentForm(id): Promise<void> {
+    this.saveCurrentId(id);
+
+    const { data, error } = await this.supabase
+      .from('contents')
+      .select('*')
+      .eq('id', this.currentId)
+
+      if (error) {
+        console.error('Error fetching contents:', error);
+        return;
+      }
+
+      this.changeForm = this.formBuilder.group({
+        heading: [data[0].heading, Validators.required],
+        description: [data[0].description, Validators.required],
+        gradeLevel: [data[0].grade_level, Validators.required],
+        topic: [data[0].topic, Validators.required],
+      });
+  }
+
   async changeContent(): Promise<void>{
     const { error } = await this.supabase
       .from('contents')

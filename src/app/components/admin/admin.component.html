@@ -39,7 +39,7 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
       <div class="card mb-4">
         <div class="card-body">
           <h5 class="card-title">{{ content.heading }}
-          <button class ="favorite-btn" data-bs-toggle="modal" (click)="saveCurrentId(content.id)" data-bs-target="#editModal"> <i class="fas fa-pen"></i></button>
+          <button class ="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(content.id)" data-bs-target="#editModal"> <i class="fas fa-pen"></i></button>
           </h5>
           <p class="card-text">{{ content.description }}</p>
           <a (click)="downloadFile(content.pdf_file_url)" class="btn btn-primary" target="_blank"
