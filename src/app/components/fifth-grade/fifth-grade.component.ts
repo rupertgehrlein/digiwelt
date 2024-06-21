@@ -1,22 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as bootstrap from 'bootstrap';
+
 @Component({
   selector: 'app-fifth-grade',
   templateUrl: './fifth-grade.component.html',
   styleUrl: './fifth-grade.component.scss'
 })
 export class FifthGradeComponent implements OnInit {
+  @ViewChild('commentModal') commentModal: ElementRef;
   supabase: SupabaseClient;
   contents: any[] = [];
   favoriteContentIds = [];
   gradeLevel = 'fifth';
+  changeForm: FormGroup;
+  isAdmin = false;
+  currentId;
+  private modalInstance: bootstrap.Modal;
 
-  constructor(private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
+  constructor(private formBuilder: FormBuilder, 
+    private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
+
+    ngAfterViewInit(): void {
+      const modalElement = this.commentModal.nativeElement;
+      this.modalInstance = new bootstrap.Modal(modalElement);
+    }
 
   async ngOnInit() {
     await this.fetchFavorites();
     await this.fetchContents();
+    this.isAdmin = await this.supabaseFactory.isAdmin();
+
+    this.changeForm = this.formBuilder.group({
+      heading: ['', Validators.required],
+      description: ['', Validators.required],
+      gradeLevel: ['', Validators.required],
+      topic: ['', Validators.required],
+    });
   }
 
   //Funktion zum Laden der Inhalte
@@ -70,6 +92,54 @@ export class FifthGradeComponent implements OnInit {
 
   isFavorite(contentId): boolean {
     return this.favoriteContentIds.includes(contentId);
+  }
+
+  saveCurrentId(id) {
+    this.currentId = id;
+  }
+
+  async changeContent(): Promise<void>{
+    const { error } = await this.supabase
+      .from('contents')
+      .update({ 
+        heading: this.changeForm.value.heading,
+        description: this.changeForm.value.description,
+        grade_level: this.changeForm.value.gradeLevel,
+        topic: this.changeForm.value.topic,
+       })
+      .eq('id', this.currentId)
+
+      console.log(this.currentId);
+
+    if (error) {
+      console.error('Error updating content approval status:', error);
+      return;
+    }
+
+    this.changeForm.reset();
+    this.modalInstance.hide();
+
+    location.reload()
+  }
+  async createContentForm(id): Promise<void> {
+    this.saveCurrentId(id);
+
+    const { data, error } = await this.supabase
+      .from('contents')
+      .select('*')
+      .eq('id', this.currentId)
+
+      if (error) {
+        console.error('Error fetching contents:', error);
+        return;
+      }
+
+      this.changeForm = this.formBuilder.group({
+        heading: [data[0].heading, Validators.required],
+        description: [data[0].description, Validators.required],
+        gradeLevel: [data[0].grade_level, Validators.required],
+        topic: [data[0].topic, Validators.required],
+      });
   }
 
   async toggleFavorite(contentId) {
