@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,11 +10,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  @ViewChild('changeModal') changeModal: ElementRef;
   supabase: SupabaseClient;
   rejectedContents: any[] = [];
   currentUser: any;
   uploadForm: FormGroup;
+  changeForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
   selectedFile;
@@ -29,6 +30,13 @@ export class DashboardComponent {
     await this.fetchFavoriteContents();
 
     this.uploadForm = this.formBuilder.group({
+      heading: ['', Validators.required],
+      description: ['', Validators.required],
+      gradeLevel: ['', Validators.required],
+      topic: ['', Validators.required],
+    });
+
+    this.changeForm = this.formBuilder.group({
       heading: ['', Validators.required],
       description: ['', Validators.required],
       gradeLevel: ['', Validators.required],
@@ -210,6 +218,53 @@ export class DashboardComponent {
       alert('Error generating download link.');
     }
   }
+
+  async createContentForm(id): Promise<void> {
+    this.saveCurrentId(id);
+
+    const { data, error } = await this.supabase
+      .from('contents')
+      .select('*')
+      .eq('id', this.currentId)
+
+      if (error) {
+        console.error('Error fetching contents:', error);
+        return;
+      }
+
+      this.changeForm = this.formBuilder.group({
+        heading: [data[0].heading, Validators.required],
+        description: [data[0].description, Validators.required],
+        gradeLevel: [data[0].grade_level, Validators.required],
+        topic: [data[0].topic, Validators.required],
+      });
+  }
+
+  async changeContent(): Promise<void>{
+    const { error } = await this.supabase
+      .from('contents')
+      .update({ 
+        heading: this.changeForm.value.heading,
+        description: this.changeForm.value.description,
+        grade_level: this.changeForm.value.gradeLevel,
+        topic: this.changeForm.value.topic,
+       })
+      .eq('id', this.currentId)
+
+      console.log(this.currentId);
+
+    if (error) {
+      console.error('Error updating content approval status:', error);
+      return;
+    }
+
+    this.changeForm.reset();
+    this.modalInstance.hide();
+
+    location.reload()
+  }
+
 }
+
 
 

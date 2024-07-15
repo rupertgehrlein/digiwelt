@@ -18,10 +18,54 @@
             <p class="card-text">{{ content.description }}</p>
             <img [src]="content.file_format ? '../../assets/filetypepics/' + content.file_format + '.png' : '../../assets/filetypepics/sonst.png'" class="file-format-img">
           </div>
-          <div class="d-flex justify-content-start align-items-end">
+          <div class="d-flex justify-content-between align-items-start">
             <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
+            <button *ngIf="isAdmin" class ="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(content.id)" data-bs-target="#editModal">
+              <img src="assets/edit-pencil.png">
+           </button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-2" aria-labelledby="editModalLabel" aria-hidden="true"
+#editModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+       <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="changeForm" (ngSubmit)="changeContent()">
+          <div class="mb-3">
+            <label for="heading" class="form-label">Überschrift</label>
+            <input type="text" class="form-control" id="heading" formControlName="heading">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Beschreibung</label>
+            <textarea class="form-control" id="description" formControlName="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label">Klassenstufe</label>
+            <select class="form-select" id="gradeLevel" formControlName="gradeLevel">
+              <option value="fifth">5. Klasse</option>
+              <option value="sixth">6. Klasse</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="topic" class="form-label">Thema</label>
+            <select class="form-select" id="topic" formControlName="topic">
+              <option value="topic1">Computer überall</option>
+              <option value="topic2">Informationen und Daten</option>
+              <option value="topic3">Grundlagen der Programmierung</option>
+              <option value="topic4">Vernetzung</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!changeForm.valid">Übernehmen</button>
+        </form>
       </div>
     </div>
   </div>
