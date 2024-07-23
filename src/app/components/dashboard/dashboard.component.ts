@@ -26,8 +26,12 @@ export class DashboardComponent {
   }
 
   async ngOnInit() {
-    await this.getCurrentUserAndFetchContents();
-    await this.fetchFavoriteContents();
+    this.changeForm = this.formBuilder.group({
+      heading: ['', Validators.required],
+      description: ['', Validators.required],
+      gradeLevel: ['', Validators.required],
+      topic: ['', Validators.required],
+    });
 
     this.uploadForm = this.formBuilder.group({
       heading: ['', Validators.required],
@@ -36,12 +40,8 @@ export class DashboardComponent {
       topic: ['', Validators.required],
     });
 
-    this.changeForm = this.formBuilder.group({
-      heading: ['', Validators.required],
-      description: ['', Validators.required],
-      gradeLevel: ['', Validators.required],
-      topic: ['', Validators.required],
-    });
+    await this.getCurrentUserAndFetchContents();
+    await this.fetchFavoriteContents();
   }
 
   async getCurrentUserAndFetchContents() {
