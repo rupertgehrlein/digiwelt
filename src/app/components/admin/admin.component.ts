@@ -189,7 +189,7 @@ export class AdminComponent {
       return;
     }
 
-    this.disapproveForm.reset();
+    this.changeForm.reset();
     this.modalInstance.hide();
 
     location.reload()
