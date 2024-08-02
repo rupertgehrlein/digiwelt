@@ -11,9 +11,15 @@
               <a class="btn">6. Klasse</a>
             </div>
             <div class="colum">
+              <a class="btn">Computer Überall</a>
+            </div>
+            <div class="colum">
               <a class="btn">CompUberAnwendung</a>
               <a class="btn">CompUberWirkung</a>
               <a class="btn">CompUberTechnologie</a>
+            </div>
+            <div class="colum">
+              <a class="btn">Information und Daten</a>
             </div>
             <div class="colum">
               <a class="btn">InfoDatenAnwendung</a>
@@ -21,14 +27,25 @@
               <a class="btn">InfoDatenTechnologie</a>
             </div>
             <div class="colum">
+              <a class="btn">Grundlagen der Programmierung</a>
+            </div>
+            <div class="colum">
               <a class="btn">GrundProgAnwendung</a>
               <a class="btn">GrundProgWirkung</a>
               <a class="btn">GrundProgTechnologie</a>
             </div>
             <div class="colum">
+              <a class="btn">Vernetzung</a>
+            </div>
+            <div class="colum">
               <a class="btn">VernetzungAnwendung</a>
               <a class="btn">VernetzungWirkung</a>
               <a class="btn">VernetzungTechnologie</a>
+            </div>
+            <div class="colum">
+              <a class="btn">Anwendung</a>
+              <a class="btn">Wirkung</a>
+              <a class="btn">Technologie</a>
             </div>
           </div>
         </div>
@@ -111,6 +128,14 @@
             </select>
           </div>
           <div class="mb-3">
+            <label for="aspect" class="form-label">Perspektive</label>
+            <select class="form-select" id="aspect" formControlName="aspect">
+              <option value="aspect1">Technologie</option>
+              <option value="aspect2">Anwendung</option>
+              <option value="aspect3">Wirkung</option>
+            </select>
+          </div>
+          <div class="mb-3">
             <label for="pdfFile" class="form-label">Datei hochladen*</label>
             <input type="file" class="form-control" id="pdfFile" (change)="onFileSelected($event)">
           </div>
@@ -169,6 +194,14 @@
               <option value="topic2">Informationen und Daten</option>
               <option value="topic3">Grundlagen der Programmierung</option>
               <option value="topic4">Vernetzung</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="aspect" class="form-label">Perspektive</label>
+            <select class="form-select" id="aspect" formControlName="aspect">
+              <option value="aspect1">Technologie</option>
+              <option value="aspect2">Anwendung</option>
+              <option value="aspect3">Wirkung</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary" [disabled]="!changeForm.valid">Übernehmen</button>

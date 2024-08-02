@@ -16,6 +16,9 @@ export class ContentsComponent implements OnInit {
   uploadForm: FormGroup;
   selectedFile: File | null = null;
   contents: any[] = [];
+  filterGrade: any = null;
+  filterTopic: any = null;
+  filterAspect: any = null;
   favoriteContentIds = [];
   changeForm: FormGroup;
   isAdmin = false;
@@ -36,6 +39,7 @@ export class ContentsComponent implements OnInit {
       description: ['', Validators.required],
       gradeLevel: ['', Validators.required],
       topic: ['', Validators.required],
+      aspect: ['', Validators.required],
       commitment: [false, Validators.requiredTrue]
     });
 
@@ -49,6 +53,7 @@ export class ContentsComponent implements OnInit {
       description: ['', Validators.required],
       gradeLevel: ['', Validators.required],
       topic: ['', Validators.required],
+      aspect: ['', Validators.required],
     });
     
     await this.fetchFavorites();
@@ -117,6 +122,7 @@ export class ContentsComponent implements OnInit {
           pdf_file_url: pdfFileUrl,
           file_format: this.selectedFile.type,
           topic: this.uploadForm.value.topic,
+          aspect: this.uploadForm.value.aspect,
         },
       ]);
 
@@ -132,10 +138,17 @@ export class ContentsComponent implements OnInit {
   }
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
-    const { data, error } = await this.supabase
+
+    let query = this.supabase
       .from('contents')
       .select('*')
       .eq('is_approved', true)
+
+      if (this.filterGrade){query = query.eq('grade_level', this.filterGrade)}
+      if (this.filterTopic){query = query.eq('topic', this.filterTopic)}
+      if (this.filterAspect){query = query.eq('aspect', this.filterAspect)}
+
+    const { data, error } = await query
 
     if (error) {
       console.error('Error fetching contents:', error);
@@ -143,6 +156,7 @@ export class ContentsComponent implements OnInit {
     }
 
     this.contents = data || [];
+    //this.applyFilter();
   }
 
   async fetchFavorites(): Promise<void> {
@@ -152,6 +166,35 @@ export class ContentsComponent implements OnInit {
       console.error('Error fetching favorites:', error);
     }
   }
+
+  //////Filter/////
+  changeFilterGrade(grade){
+    this.filterGrade = grade;
+  }
+  changeFilterTopic(topic){
+    this.filterTopic = topic;
+  }
+  changeFilterAspect(aspect){
+    this.filterAspect = aspect;
+  }
+
+  clearFilterGrade(){
+    this.filterGrade = null;
+  }
+  clearFilterTopic(){
+    this.filterAspect = null;
+  }
+  clearFilterAspect(){
+    this.filterTopic = null;
+  }
+
+  clearFilters(){
+    this.filterGrade = null;
+    this.filterAspect = null;
+    this.filterTopic = null;
+  }
+
+
 
   //Funktion zur Generierung von gesicherten Download-URLs
   async generateSignedUrl(filePath: string): Promise<string | null> {
@@ -187,6 +230,7 @@ export class ContentsComponent implements OnInit {
   }
 
   async changeContent(): Promise<void>{
+
     const { error } = await this.supabase
       .from('contents')
       .update({ 
@@ -194,6 +238,7 @@ export class ContentsComponent implements OnInit {
         description: this.changeForm.value.description,
         grade_level: this.changeForm.value.gradeLevel,
         topic: this.changeForm.value.topic,
+        aspect: this.changeForm.value.aspect,
        })
       .eq('id', this.currentId)
 
@@ -227,6 +272,7 @@ export class ContentsComponent implements OnInit {
         description: [data[0].description, Validators.required],
         gradeLevel: [data[0].grade_level, Validators.required],
         topic: [data[0].topic, Validators.required],
+        aspect: [data[0].aspect, Validators.required],
       });
   }
 
