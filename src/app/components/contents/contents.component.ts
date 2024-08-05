@@ -139,6 +139,7 @@ export class ContentsComponent implements OnInit {
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
 
+    // Für das filtern wird die query hier ausgeführt
     let query = this.supabase
       .from('contents')
       .select('*')
@@ -148,6 +149,7 @@ export class ContentsComponent implements OnInit {
       if (this.filterTopic){query = query.eq('topic', this.filterTopic)}
       if (this.filterAspect){query = query.eq('aspect', this.filterAspect)}
 
+    // und hier werden die Daten an die data Variable übergeben
     const { data, error } = await query
 
     if (error) {
@@ -170,28 +172,35 @@ export class ContentsComponent implements OnInit {
   //////Filter/////
   changeFilterGrade(grade){
     this.filterGrade = grade;
+    this.fetchContents()
   }
   changeFilterTopic(topic){
     this.filterTopic = topic;
+    this.fetchContents()
   }
   changeFilterAspect(aspect){
     this.filterAspect = aspect;
+    this.fetchContents()
   }
 
   clearFilterGrade(){
     this.filterGrade = null;
+    this.fetchContents()
   }
   clearFilterTopic(){
     this.filterAspect = null;
+    this.fetchContents()
   }
   clearFilterAspect(){
     this.filterTopic = null;
+    this.fetchContents()
   }
 
   clearFilters(){
     this.filterGrade = null;
     this.filterAspect = null;
     this.filterTopic = null;
+    this.fetchContents()
   }
 
 

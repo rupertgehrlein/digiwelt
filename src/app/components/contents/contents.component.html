@@ -7,45 +7,48 @@
           <h5 class="card-title">Filter</h5>
           <div class="row">
             <div class="colum">
-              <a class="btn">5. Klasse</a>
-              <a class="btn">6. Klasse</a>
+              <a class="btn" (click)="changeFilterGrade('fifth')">5. Klasse</a>
+              <a class="btn" (click)="changeFilterGrade('sixth')">6. Klasse</a>
             </div>
             <div class="colum">
-              <a class="btn">Computer Überall</a>
+              <a class="btn" (click)="changeFilterTopic('topic1')">Computer Überall</a>
             </div>
             <div class="colum">
-              <a class="btn">CompUberAnwendung</a>
-              <a class="btn">CompUberWirkung</a>
-              <a class="btn">CompUberTechnologie</a>
+              <a class="btn" (click)="changeFilterTopic('topic1')" (click)="changeFilterAspect('aspect1')">CompUberAnwendung</a>
+              <a class="btn" (click)="changeFilterTopic('topic1')" (click)="changeFilterAspect('aspect2')">CompUberWirkung</a>
+              <a class="btn" (click)="changeFilterTopic('topic1')" (click)="changeFilterAspect('aspect3')">CompUberTechnologie</a>
             </div>
             <div class="colum">
-              <a class="btn">Information und Daten</a>
+              <a class="btn" (click)="changeFilterTopic('topic2')">Information und Daten</a>
             </div>
             <div class="colum">
-              <a class="btn">InfoDatenAnwendung</a>
-              <a class="btn">InfoDatenWirkung</a>
-              <a class="btn">InfoDatenTechnologie</a>
+              <a class="btn"(click)="changeFilterTopic('topic2')" (click)="changeFilterAspect('aspect1')">InfoDatenAnwendung</a>
+              <a class="btn"(click)="changeFilterTopic('topic2')" (click)="changeFilterAspect('aspect2')">InfoDatenWirkung</a>
+              <a class="btn"(click)="changeFilterTopic('topic2')" (click)="changeFilterAspect('aspect3')">InfoDatenTechnologie</a>
             </div>
             <div class="colum">
-              <a class="btn">Grundlagen der Programmierung</a>
+              <a class="btn"(click)="changeFilterTopic('topic3')">Grundlagen der Programmierung</a>
             </div>
             <div class="colum">
-              <a class="btn">GrundProgAnwendung</a>
-              <a class="btn">GrundProgWirkung</a>
-              <a class="btn">GrundProgTechnologie</a>
+              <a class="btn"(click)="changeFilterTopic('topic3')" (click)="changeFilterAspect('aspect1')">GrundProgAnwendung</a>
+              <a class="btn"(click)="changeFilterTopic('topic3')" (click)="changeFilterAspect('aspect2')">GrundProgWirkung</a>
+              <a class="btn"(click)="changeFilterTopic('topic3')" (click)="changeFilterAspect('aspect3')">GrundProgTechnologie</a>
             </div>
             <div class="colum">
-              <a class="btn">Vernetzung</a>
+              <a class="btn" (click)="changeFilterTopic('topic4')">Vernetzung</a>
             </div>
             <div class="colum">
-              <a class="btn">VernetzungAnwendung</a>
-              <a class="btn">VernetzungWirkung</a>
-              <a class="btn">VernetzungTechnologie</a>
+              <a class="btn"(click)="changeFilterTopic('topic4')" (click)="changeFilterAspect('aspect1')">VernetzungAnwendung</a>
+              <a class="btn"(click)="changeFilterTopic('topic4')" (click)="changeFilterAspect('aspect2')">VernetzungWirkung</a>
+              <a class="btn"(click)="changeFilterTopic('topic4')" (click)="changeFilterAspect('aspect3')">VernetzungTechnologie</a>
             </div>
             <div class="colum">
-              <a class="btn">Anwendung</a>
-              <a class="btn">Wirkung</a>
-              <a class="btn">Technologie</a>
+              <a class="btn" (click)="changeFilterAspect('aspect1')">Anwendung</a>
+              <a class="btn" (click)="changeFilterAspect('aspect2')">Wirkung</a>
+              <a class="btn" (click)="changeFilterAspect('aspect3')">Technologie</a>
+            </div>
+            <div class="colum">
+              <a class="btn" (click)="clearFilters()">Filter Zurücksetzen</a>
             </div>
           </div>
         </div>
