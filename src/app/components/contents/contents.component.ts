@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import * as bootstrap from 'bootstrap';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -19,6 +19,12 @@ export class ContentsComponent implements OnInit {
   filterGrade: any = null;
   filterTopic: any = null;
   filterAspect: any = null;
+  filterAnwendung: boolean = null;
+  filterTechnologie: boolean = null;
+  filterWirkung: boolean = null;
+  checkAnwendungBool: boolean = false;
+  checkTechnologieBool: boolean = false;
+  checkWirkungBool: boolean = false;
   favoriteContentIds = [];
   changeForm: FormGroup;
   isAdmin = false;
@@ -39,7 +45,6 @@ export class ContentsComponent implements OnInit {
       description: ['', Validators.required],
       gradeLevel: ['', Validators.required],
       topic: ['', Validators.required],
-      aspect: ['', Validators.required],
       commitment: [false, Validators.requiredTrue]
     });
 
@@ -53,7 +58,6 @@ export class ContentsComponent implements OnInit {
       description: ['', Validators.required],
       gradeLevel: ['', Validators.required],
       topic: ['', Validators.required],
-      aspect: ['', Validators.required],
     });
     
     await this.fetchFavorites();
@@ -122,7 +126,9 @@ export class ContentsComponent implements OnInit {
           pdf_file_url: pdfFileUrl,
           file_format: this.selectedFile.type,
           topic: this.uploadForm.value.topic,
-          aspect: this.uploadForm.value.aspect,
+          aspectAnwendung: this.checkAnwendungBool,
+          aspectTechnologie: this.checkTechnologieBool,
+          aspectWirkung: this.checkWirkungBool,
         },
       ]);
 
@@ -135,6 +141,10 @@ export class ContentsComponent implements OnInit {
     this.uploadForm.reset();
     this.selectedFile = null;
     this.modalInstance.hide();
+
+    this.checkAnwendungBool = false;
+    this.checkTechnologieBool = false;
+    this.checkWirkungBool = false;
   }
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
@@ -147,7 +157,9 @@ export class ContentsComponent implements OnInit {
 
       if (this.filterGrade){query = query.eq('grade_level', this.filterGrade)}
       if (this.filterTopic){query = query.eq('topic', this.filterTopic)}
-      if (this.filterAspect){query = query.eq('aspect', this.filterAspect)}
+      if (this.filterAnwendung){query = query.eq('aspectAnwendung', this.filterAnwendung)}
+      if (this.filterTechnologie){query = query.eq('aspectTechnologie', this.filterTechnologie)}
+      if (this.filterWirkung){query = query.eq('aspectWirkung', this.filterWirkung)}
 
     // und hier werden die Daten an die data Variable übergeben
     const { data, error } = await query
@@ -171,38 +183,69 @@ export class ContentsComponent implements OnInit {
 
   //////Filter/////
   changeFilterGrade(grade){
+    if (this.filterGrade == grade){
+      this.filterGrade = null;
+    }
+    else{
     this.filterGrade = grade;
+  }
     this.fetchContents()
   }
   changeFilterTopic(topic){
-    this.filterTopic = topic;
+    if (this.filterTopic == topic){
+      this.filterTopic = null;
+    }
+    else{
+      this.filterTopic = topic;
+    }
     this.fetchContents()
   }
   changeFilterAspect(aspect){
-    this.filterAspect = aspect;
-    this.fetchContents()
-  }
-
-  clearFilterGrade(){
-    this.filterGrade = null;
-    this.fetchContents()
-  }
-  clearFilterTopic(){
-    this.filterAspect = null;
-    this.fetchContents()
-  }
-  clearFilterAspect(){
-    this.filterTopic = null;
+    if (aspect == 'aspect1'){
+      this.filterAnwendung = (this.filterAnwendung !== true)
+    }
+    if (aspect == 'aspect2'){
+      this.filterWirkung = (this.filterWirkung !== true)
+    }
+    if (aspect == 'aspect3'){
+      this.filterTechnologie = (this.filterTechnologie !== true)
+    }
     this.fetchContents()
   }
 
   clearFilters(){
     this.filterGrade = null;
-    this.filterAspect = null;
     this.filterTopic = null;
+    this.filterAnwendung = null;
+    this.filterTechnologie = null;
+    this.filterWirkung = null;
     this.fetchContents()
   }
 
+/// Checkbox Funktions
+  AnwendungChange(event: any){
+    if(event.target.checked){
+      this.checkAnwendungBool = true;
+    }else{
+      this.checkAnwendungBool = false;
+    }
+  }
+
+  TechnologieChange(event: any){
+    if(event.target.checked){
+      this.checkTechnologieBool= true;
+    }else{
+      this.checkTechnologieBool = false;
+    }
+  }
+
+  WirkungChange(event: any){
+    if(event.target.checked){
+      this.checkWirkungBool= true;
+    }else{
+      this.checkWirkungBool = false;
+    }
+  }
 
 
   //Funktion zur Generierung von gesicherten Download-URLs
@@ -247,7 +290,9 @@ export class ContentsComponent implements OnInit {
         description: this.changeForm.value.description,
         grade_level: this.changeForm.value.gradeLevel,
         topic: this.changeForm.value.topic,
-        aspect: this.changeForm.value.aspect,
+        aspectAnwendung: this.checkAnwendungBool,
+        aspectTechnologie: this.checkTechnologieBool,
+        aspectWirkung: this.checkWirkungBool,
        })
       .eq('id', this.currentId)
 
@@ -261,8 +306,14 @@ export class ContentsComponent implements OnInit {
     this.changeForm.reset();
     this.modalInstance.hide();
 
+    this.checkAnwendungBool = false;
+    this.checkTechnologieBool = false;
+    this.checkWirkungBool = false;
+
     location.reload()
   }
+
+
   async createContentForm(id): Promise<void> {
     this.saveCurrentId(id);
 
@@ -281,7 +332,9 @@ export class ContentsComponent implements OnInit {
         description: [data[0].description, Validators.required],
         gradeLevel: [data[0].grade_level, Validators.required],
         topic: [data[0].topic, Validators.required],
-        aspect: [data[0].aspect, Validators.required],
+        checkAnwendung: [data[0].aspectAnwendung],
+        checkTechnologie: [data[0].aspectTechnologie],
+        checkWirkung: [data[0].aspectWirkung],
       });
   }
 
