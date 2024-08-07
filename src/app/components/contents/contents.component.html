@@ -85,6 +85,15 @@
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
+            <a *ngIf="content.grade_level=='fifth'" title="5. Klasse"> <img src="assets/Klasse5.png" width="40" height="40"> </a>
+            <a *ngIf="content.grade_level=='sixth'" title="6. Klasse"> <img src="assets/Klasse6.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic1'" title="Computer Überall"> <img src="assets/CompUber.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic2'" title="Information und Daten"> <img src="assets/InfoDaten.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic3'" title="Grundlagen der Programmierung"> <img src="assets/GrundProg.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic4'" title="Vernetzung"> <img src="assets/Vernetzung.png" width="40" height="40"> </a>
+            <a *ngIf="content.aspectAnwendung" title="Anwendung"> <img src="assets/Anwendung.png" width="40" height="40"> </a>
+            <a *ngIf="content.aspectTechnologie" title="Technologie"> <img src="assets/Technologie.png" width="40" height="40"> </a>
+            <a *ngIf="content.aspectWirkung" title="Wirkung"> <img src="assets/Wirkung.png" width="40" height="40"> </a>
             <button *ngIf="isAdmin" class ="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(content.id)" data-bs-target="#editModal">
               <img src="assets/edit-pencil.png">
            </button>
