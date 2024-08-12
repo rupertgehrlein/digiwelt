@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import * as bootstrap from 'bootstrap';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -7,8 +7,9 @@ import { SupabaseClient } from '@supabase/supabase-js';
 @Component({
   selector: 'app-contents',
   templateUrl: './contents.component.html',
-  styleUrls: ['./contents.component.scss']
+  styleUrls: ['./contents.component.scss'],
 })
+
 export class ContentsComponent implements OnInit {
   @ViewChild('uploadModal') uploadModal: ElementRef;
 
@@ -16,6 +17,8 @@ export class ContentsComponent implements OnInit {
   uploadForm: FormGroup;
   selectedFile: File | null = null;
   contents: any[] = [];
+  contentTitles: any[] = [];
+  filterTitle: String = '';
   filterGrade: any = null;
   filterTopic: any = null;
   filterAspect: any = null;
@@ -169,8 +172,15 @@ export class ContentsComponent implements OnInit {
       return;
     }
 
-    this.contents = data || [];
-    //this.applyFilter();
+    //this.contents = data || [];
+
+    for(let i = 0; i < data.length; i++ ){
+      if((data[i].heading.includes(this.filterTitle))){
+        this.contents.push(data[i]);
+      }
+    }
+    console.log(this.contents);
+    console.log(this.contentTitles);
   }
 
   async fetchFavorites(): Promise<void> {
@@ -182,6 +192,12 @@ export class ContentsComponent implements OnInit {
   }
 
   //////Filter/////
+  changeFilterTitle(){
+    var inputValue = (<HTMLInputElement>document.getElementById('filterText')).value;
+    this.filterTitle = inputValue;
+    this.fetchContents()
+  }
+
   changeFilterGrade(grade){
     if (this.filterGrade == grade){
       this.filterGrade = null;
@@ -214,6 +230,7 @@ export class ContentsComponent implements OnInit {
   }
 
   clearFilters(){
+    this.filterTitle = '';
     this.filterGrade = null;
     this.filterTopic = null;
     this.filterAnwendung = null;
