@@ -56,7 +56,15 @@
       </div>
     </div>
   </div>
+  <img src="assets/dagstuhl_dreieck.png" width="1000" height="1000" alt="dagstuhl" usemap="#dagmap">
 </div>
+
+<map name="dagmap">
+  <area shape="rect" coords="428,297,571,347" alt="Computer Überall" (click)="changeFilterTopic('topic1')">
+  <area shape="rect" coords="424,207,571,262" alt="Information und Daten" (click)="changeFilterTopic('topic2')">
+  <area shape="rect" coords="424,106,568,165" alt="Grundlagen der Programmierung" (click)="changeFilterTopic('topic3')">
+  <area shape="rect" coords="428,13,575,68" alt="Vernetzung" (click)="changeFilterTopic('topic4')">
+</map>
 
 <!--Button zum öffnen des Modals zum Upload-->
 <button type="button" class="round-button btn" data-bs-toggle="modal" data-bs-target="#uploadModal">

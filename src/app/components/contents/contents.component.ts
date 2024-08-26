@@ -172,15 +172,15 @@ export class ContentsComponent implements OnInit {
       return;
     }
 
-    //this.contents = data || [];
-
+    this.contents = data || [];
+/** 
     for(let i = 0; i < data.length; i++ ){
       if((data[i].heading.includes(this.filterTitle))){
         this.contents.push(data[i]);
       }
     }
     console.log(this.contents);
-    console.log(this.contentTitles);
+    console.log(this.contentTitles);*/
   }
 
   async fetchFavorites(): Promise<void> {
