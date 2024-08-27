@@ -229,6 +229,143 @@ export class ContentsComponent implements OnInit {
     this.fetchContents()
   }
 
+  changefilterCombo(combo){
+    switch(combo){
+      case 11:{
+        this.filterTopic = "topic1";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+      }
+      case 12:{
+        this.filterTopic = "topic1";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+       
+        break
+        
+      }
+      case 13:{
+        this.filterTopic = "topic1";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+        
+        break
+        
+      }
+      case 21:{
+        this.filterTopic = "topic2";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+        
+      }
+      case 22:{
+        this.filterTopic = "topic2";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 23:{
+        this.filterTopic = "topic2";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+
+        break
+        
+      }
+      case 31:{
+        this.filterTopic = "topic3";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+        
+      }
+      case 32:{
+        this.filterTopic = "topic3";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+        
+      }
+      case 33:{
+        this.filterTopic = "topic3";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 41:{
+        this.filterTopic = "topic4";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+        
+      }
+      case 42:{
+        this.filterTopic = "topic4";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+        
+      }
+      case 43:{
+        this.filterTopic = "topic4";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+
+        break
+        
+      }
+    }
+
+  }
+
   clearFilters(){
     this.filterTitle = '';
     this.filterGrade = null;
