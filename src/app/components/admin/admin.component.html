@@ -115,14 +115,28 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
               <option value="sixth">6. Klasse</option>
             </select>
           </div>
-          <div class="mb-3">
-            <label for="topic" class="form-label">Thema</label>
-            <select class="form-select" id="topic" formControlName="topic">
-              <option value="topic1">Computer überall</option>
-              <option value="topic2">Informationen und Daten</option>
-              <option value="topic3">Grundlagen der Programmierung</option>
-              <option value="topic4">Vernetzung</option>
-            </select>
+          <div>
+            <label for="aspect" class="form-label">Perspektiven*</label>
+            <div class ="row">
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung" (change)="AnwendungChange($event)" >
+                <label class="form-check-label" for="checkAnwendung">
+                  Anwendung
+                </label>
+              </div>
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkTechno" (change)="TechnologieChange($event)">
+                <label class="form-check-label" for="checkTechno">
+                  Technologie
+                </label>
+              </div>
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkWirkung" (change)="WirkungChange($event)">
+                <label class="form-check-label" for="checkWirkung">
+                  Wirkung
+                </label>
+              </div>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary" [disabled]="!changeForm.valid">Übernehmen</button>
         </form>

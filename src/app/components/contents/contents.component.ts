@@ -363,7 +363,6 @@ export class ContentsComponent implements OnInit {
         
       }
     }
-
   }
 
   clearFilters(){

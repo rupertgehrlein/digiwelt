@@ -11,44 +11,10 @@
               <a class="btn" (click)="changeFilterGrade('sixth')">6. Klasse</a>
             </div>
             <div class="colum">
-              <a class="btn" (click)="changeFilterTopic('topic1')">Computer Überall</a>
-            </div>
-            <div class="colum">
-              <a class="btn" (click)="changeFilterTopic('topic1')" (click)="changeFilterAspect('aspect1')">CompUberAnwendung</a>
-              <a class="btn" (click)="changeFilterTopic('topic1')" (click)="changeFilterAspect('aspect2')">CompUberWirkung</a>
-              <a class="btn" (click)="changeFilterTopic('topic1')" (click)="changeFilterAspect('aspect3')">CompUberTechnologie</a>
-            </div>
-            <div class="colum">
-              <a class="btn" (click)="changeFilterTopic('topic2')">Information und Daten</a>
-            </div>
-            <div class="colum">
-              <a class="btn"(click)="changeFilterTopic('topic2')" (click)="changeFilterAspect('aspect1')">InfoDatenAnwendung</a>
-              <a class="btn"(click)="changeFilterTopic('topic2')" (click)="changeFilterAspect('aspect2')">InfoDatenWirkung</a>
-              <a class="btn"(click)="changeFilterTopic('topic2')" (click)="changeFilterAspect('aspect3')">InfoDatenTechnologie</a>
-            </div>
-            <div class="colum">
-              <a class="btn"(click)="changeFilterTopic('topic3')">Grundlagen der Programmierung</a>
-            </div>
-            <div class="colum">
-              <a class="btn"(click)="changeFilterTopic('topic3')" (click)="changeFilterAspect('aspect1')">GrundProgAnwendung</a>
-              <a class="btn"(click)="changeFilterTopic('topic3')" (click)="changeFilterAspect('aspect2')">GrundProgWirkung</a>
-              <a class="btn"(click)="changeFilterTopic('topic3')" (click)="changeFilterAspect('aspect3')">GrundProgTechnologie</a>
-            </div>
-            <div class="colum">
-              <a class="btn" (click)="changeFilterTopic('topic4')">Vernetzung</a>
-            </div>
-            <div class="colum">
-              <a class="btn"(click)="changeFilterTopic('topic4')" (click)="changeFilterAspect('aspect1')">VernetzungAnwendung</a>
-              <a class="btn"(click)="changeFilterTopic('topic4')" (click)="changeFilterAspect('aspect2')">VernetzungWirkung</a>
-              <a class="btn"(click)="changeFilterTopic('topic4')" (click)="changeFilterAspect('aspect3')">VernetzungTechnologie</a>
-            </div>
-            <div class="colum">
-              <a class="btn" (click)="changeFilterAspect('aspect1')">Anwendung</a>
-              <a class="btn" (click)="changeFilterAspect('aspect2')">Wirkung</a>
-              <a class="btn" (click)="changeFilterAspect('aspect3')">Technologie</a>
-            </div>
-            <div class="colum">
               <a class="btn" (click)="clearFilters()">Filter Zurücksetzen</a>
+            </div>
+            <div>
+             <img src="assets/dagstuhl_dreieck.png" width="1000" height="1000" alt="dagstuhl" usemap="#dagmap">
             </div>
           </div>
           <input type="text" id="filterText" class="form-control" (ngModelChange)="changeFilterTitle()">
@@ -56,7 +22,6 @@
       </div>
     </div>
   </div>
-  <img src="assets/dagstuhl_dreieck.png" width="1000" height="1000" alt="dagstuhl" usemap="#dagmap">
 </div>
 
 <map name="dagmap">
