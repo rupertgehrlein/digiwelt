@@ -16,6 +16,9 @@ export class DashboardComponent {
   uploadForm: FormGroup;
   changeForm: FormGroup;
   private modalInstance: bootstrap.Modal;
+  checkAnwendungBool: boolean = false;
+  checkTechnologieBool: boolean = false;
+  checkWirkungBool: boolean = false;
   currentId;
   selectedFile;
   fileName;
@@ -26,8 +29,12 @@ export class DashboardComponent {
   }
 
   async ngOnInit() {
-    await this.getCurrentUserAndFetchContents();
-    await this.fetchFavoriteContents();
+    this.changeForm = this.formBuilder.group({
+      heading: ['', Validators.required],
+      description: ['', Validators.required],
+      gradeLevel: ['', Validators.required],
+      topic: ['', Validators.required],
+    });
 
     this.uploadForm = this.formBuilder.group({
       heading: ['', Validators.required],
@@ -36,12 +43,8 @@ export class DashboardComponent {
       topic: ['', Validators.required],
     });
 
-    this.changeForm = this.formBuilder.group({
-      heading: ['', Validators.required],
-      description: ['', Validators.required],
-      gradeLevel: ['', Validators.required],
-      topic: ['', Validators.required],
-    });
+    await this.getCurrentUserAndFetchContents();
+    await this.fetchFavoriteContents();
   }
 
   async getCurrentUserAndFetchContents() {
@@ -240,7 +243,33 @@ export class DashboardComponent {
       });
   }
 
+  /// Checkbox Funktions
+  AnwendungChange(event: any){
+    if(event.target.checked){
+      this.checkAnwendungBool = true;
+    }else{
+      this.checkAnwendungBool = false;
+    }
+  }
+
+  TechnologieChange(event: any){
+    if(event.target.checked){
+      this.checkTechnologieBool= true;
+    }else{
+      this.checkTechnologieBool = false;
+    }
+  }
+
+  WirkungChange(event: any){
+    if(event.target.checked){
+      this.checkWirkungBool= true;
+    }else{
+      this.checkWirkungBool = false;
+    }
+  }
+
   async changeContent(): Promise<void>{
+
     const { error } = await this.supabase
       .from('contents')
       .update({ 
@@ -248,6 +277,9 @@ export class DashboardComponent {
         description: this.changeForm.value.description,
         grade_level: this.changeForm.value.gradeLevel,
         topic: this.changeForm.value.topic,
+        aspectAnwendung: this.checkAnwendungBool,
+        aspectTechnologie: this.checkTechnologieBool,
+        aspectWirkung: this.checkWirkungBool,
        })
       .eq('id', this.currentId)
 
@@ -260,6 +292,10 @@ export class DashboardComponent {
 
     this.changeForm.reset();
     this.modalInstance.hide();
+
+    this.checkAnwendungBool = false;
+    this.checkTechnologieBool = false;
+    this.checkWirkungBool = false;
 
     location.reload()
   }

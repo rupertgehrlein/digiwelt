@@ -4,28 +4,99 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">5. Klasse</h5>
-          <!-- <p class="card-text">Click to view content for fifth grade.</p> -->
-          <a routerLink="/contents/fifth-grade" class="btn">Gehe zu 5. Klasse</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">6. Klasse</h5>
-          <!-- <p class="card-text">Click to view content for sixth grade.</p> -->
-          <a routerLink="/contents/sixth-grade" class="btn">Gehe zu 6. Klasse</a>
+          <h5 class="card-title">Filter</h5>
+          <div class="row">
+            <div class="colum">
+              <a class="btn" (click)="changeFilterGrade('fifth')">5. Klasse</a>
+              <a class="btn" (click)="changeFilterGrade('sixth')">6. Klasse</a>
+            </div>
+            <div class="colum">
+              <a class="btn" (click)="clearFilters()">Filter Zurücksetzen</a>
+            </div>
+            <div>
+             <img src="assets/dagstuhl_dreieck.png" width="1000" height="1000" alt="dagstuhl" usemap="#dagmap">
+            </div>
+          </div>
+          <input type="text" id="filterText" class="form-control" (ngModelChange)="changeFilterTitle()">
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<map name="dagmap">
+  <area shape="rect" coords="428,297,571,347" alt="Computer Überall" (click)="changeFilterTopic('topic1')">
+  <area shape="rect" coords="424,207,571,262" alt="Information und Daten" (click)="changeFilterTopic('topic2')">
+  <area shape="rect" coords="424,106,568,165" alt="Grundlagen der Programmierung" (click)="changeFilterTopic('topic3')">
+  <area shape="rect" coords="428,13,575,68" alt="Vernetzung" (click)="changeFilterTopic('topic4')">
+
+  <area shape="poly" coords="500,350,500,493,627,571" alt="Anwendung" (click)="changeFilterAspect('aspect1')">
+  <area shape="poly" coords="372,572,500,494,627,572" alt="Wirkung" (click)="changeFilterAspect('aspect2')">
+  <area shape="poly" coords="371,571,499,494,499,350" alt="Technologie" (click)="changeFilterAspect('aspect3')">
+
+  <area shape="poly" coords="500,349,572,348,572,297,682,327,684,390,708,457,707,533,678,603,627,572" alt="CompAnw" (click)="changefilterCombo(11)">
+  <area shape="poly" coords="627,572,678,603,642,645,590,679,500,698,425,684,368,651,326,605,371,573" alt="CompWirk" (click)="changefilterCombo(12)">
+  <area shape="poly" coords="371,571,325,603,296,534,294,462,325,380,372,329,426,299,426,349,497,349" alt="CompTech" (click)="changefilterCombo(13)">
+
+  <area shape="poly" coords="500,285,500,262,572,262,572,206,501,206,501,190,572,199,656,232,721,284,771,352,800,433,802,543,758,653,678,603,707,533,708,457,684,390,628,327,572,297" alt="InfoAnw" (click)="changefilterCombo(21)">
+  <area shape="poly" coords="678,603,758,654,699,721,622,768,500,793,404,779,319,736,245,660,326,605,368,651,425,684,500,698,590,678,642,645" alt="InfoWirk" (click)="changefilterCombo(22)">
+  <area shape="poly" coords="325,603,244,658,205,577,195,459,237,336,339,234,420,200,499,190,499,206,424,206,424,262,499,262,499,285,428,296,426,299,372,329,325,380,294,462,296,534" alt="InfoTech" (click)="changefilterCombo(23)">
+
+  <area shape="poly" coords="501,190,501,166,569,166,569,105,501,105,501,92,570,97,645,118,718,154,795,217,872,334,901,440,894,579,839,705,758,653,802,543,800,433,771,352,721,284,656,232,572,199" alt="GrundAnw" (click)="changefilterCombo(31)">
+  <area shape="poly" coords="758,653,839,705,761,792,651,857,501,885,380,867,257,804,169,712,245,660,319,736,404,779,500,793,622,769,699,721" alt="GrundWirk" (click)="changefilterCombo(32)">
+  <area shape="poly" coords="244,658,205,577,195,459,237,336,339,234,420,200,499,190,498,166,423,165,423,105,498,105,498,92,423,99,303,143,157,282,101,449,115,601,168,710" alt="GrundTech" (click)="changefilterCombo(33)">
+
+  <area shape="poly" coords="501,92,570,97,645,118,718,154,795,217,872,334,901,440,894,579,839,705,920,755,986,597,997,507,995,438,962,308,866,159,781,86,684,35,578,6,501,1,501,12,576,12,576,69,501,69" alt="VernAnw" (click)="changefilterCombo(41)">
+  <area shape="poly" coords="839,705,761,792,651,857,501,885,380,867,257,804,169,712,86,768,195,882,345,960,499,983,686,947,825,863,918,757" alt="VernWirk" (click)="changefilterCombo(42)">
+  <area shape="poly" coords="498,92,423,99,303,143,157,282,101,449,115,601,168,710,86,768,19,628,0,492,19,357,74,234,172,120,302,40,428,5,498,1,499,12,427,13,427,69,498,69" alt="VernTech" (click)="changefilterCombo(43)">
+</map>
+
 <!--Button zum öffnen des Modals zum Upload-->
 <button type="button" class="round-button btn" data-bs-toggle="modal" data-bs-target="#uploadModal">
   <i class="fas fa-plus"></i>
 </button>
+
+
+<div class="container container-top">
+  <div class="row">
+    <div class="col-md-6 col-lg-6" *ngFor="let content of contents">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <h5 class="card-title">{{ content.heading }}</h5>
+            <button class="favorite-btn" (click)="toggleFavorite(content.id)">
+              <ng-container *ngIf="isFavorite(content.id); else notFavorited">
+                <img src="assets/heart-filled.png" alt="Favorited">
+              </ng-container>
+              <ng-template #notFavorited>
+                <img src="assets/heart-outline.png" alt="Not Favorited">
+              </ng-template>
+            </button>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="card-text">{{ content.description }}</p>
+            <img [src]="content.file_format ? '../../assets/filetypepics/' + content.file_format + '.png' : '../../assets/filetypepics/sonst.png'" class="file-format-img">
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
+            <a *ngIf="content.grade_level=='fifth'" title="5. Klasse"> <img src="assets/Klasse5.png" width="40" height="40"> </a>
+            <a *ngIf="content.grade_level=='sixth'" title="6. Klasse"> <img src="assets/Klasse6.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic1'" title="Computer Überall"> <img src="assets/CompUber.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic2'" title="Information und Daten"> <img src="assets/InfoDaten.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic3'" title="Grundlagen der Programmierung"> <img src="assets/GrundProg.png" width="40" height="40"> </a>
+            <a *ngIf="content.topic=='topic4'" title="Vernetzung"> <img src="assets/Vernetzung.png" width="40" height="40"> </a>
+            <a *ngIf="content.aspectAnwendung" title="Anwendung"> <img src="assets/Anwendung.png" width="40" height="40"> </a>
+            <a *ngIf="content.aspectTechnologie" title="Technologie"> <img src="assets/Technologie.png" width="40" height="40"> </a>
+            <a *ngIf="content.aspectWirkung" title="Wirkung"> <img src="assets/Wirkung.png" width="40" height="40"> </a>
+            <button *ngIf="isAdmin" class ="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(content.id)" data-bs-target="#editModal">
+              <img src="assets/edit-pencil.png">
+           </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--Modal für den Upload von neuem Content-->
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true"
@@ -62,6 +133,29 @@
               <option value="topic4">Vernetzung</option>
             </select>
           </div>
+          <div>
+            <label for="aspect" class="form-label">Perspektiven*</label>
+            <div class ="row">
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung" (change)="AnwendungChange($event)">
+                <label class="form-check-label" for="checkAnwendung">
+                  Anwendung
+                </label>
+              </div>
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkTechno" (change)="TechnologieChange($event)">
+                <label class="form-check-label" for="checkTechno">
+                  Technologie
+                </label>
+              </div>
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkWirkung" (change)="WirkungChange($event)">
+                <label class="form-check-label" for="checkWirkung">
+                  Wirkung
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="mb-3">
             <label for="pdfFile" class="form-label">Datei hochladen*</label>
             <input type="file" class="form-control" id="pdfFile" (change)="onFileSelected($event)">
@@ -88,5 +182,69 @@
   </div>
 </div>
 
-<!--Router Outlet, der je nachdem ausgewählten Inhalt zeigt-->
-<router-outlet></router-outlet>
+<!--Modal für das Bearbeiten von Content-->
+<div class="modal fade" id="editModal" tabindex="-2" aria-labelledby="editModalLabel" aria-hidden="true"
+#editModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+       <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="changeForm" (ngSubmit)="changeContent()">
+          <div class="mb-3">
+            <label for="heading" class="form-label">Überschrift</label>
+            <input type="text" class="form-control" id="heading" formControlName="heading">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Beschreibung</label>
+            <textarea class="form-control" id="description" formControlName="description"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label">Klassenstufe</label>
+            <select class="form-select" id="gradeLevel" formControlName="gradeLevel">
+              <option value="fifth">5. Klasse</option>
+              <option value="sixth">6. Klasse</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="topic" class="form-label">Thema</label>
+            <select class="form-select" id="topic" formControlName="topic">
+              <option value="topic1">Computer überall</option>
+              <option value="topic2">Informationen und Daten</option>
+              <option value="topic3">Grundlagen der Programmierung</option>
+              <option value="topic4">Vernetzung</option>
+            </select>
+          </div>
+          <div>
+            <label for="aspect" class="form-label">Perspektiven*</label>
+            <div class ="row">
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung" (change)="AnwendungChange($event)" >
+                <label class="form-check-label" for="checkAnwendung">
+                  Anwendung
+                </label>
+              </div>
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkTechno" (change)="TechnologieChange($event)">
+                <label class="form-check-label" for="checkTechno">
+                  Technologie
+                </label>
+              </div>
+              <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="checkWirkung" (change)="WirkungChange($event)">
+                <label class="form-check-label" for="checkWirkung">
+                  Wirkung
+                </label>
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!changeForm.valid">Übernehmen</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+

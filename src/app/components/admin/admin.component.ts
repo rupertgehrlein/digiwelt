@@ -19,6 +19,9 @@ export class AdminComponent {
   changeForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
+  checkAnwendungBool: boolean = false;
+  checkTechnologieBool: boolean = false;
+  checkWirkungBool: boolean = false;
   reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges']
   showCommentField: boolean = false;
 
@@ -170,30 +173,61 @@ export class AdminComponent {
         topic: [data[0].topic, Validators.required],
       });
   }
-
-  async changeContent(): Promise<void>{
-    const { error } = await this.supabase
-      .from('contents')
-      .update({ 
-        heading: this.changeForm.value.heading,
-        description: this.changeForm.value.description,
-        grade_level: this.changeForm.value.gradeLevel,
-        topic: this.changeForm.value.topic,
-       })
-      .eq('id', this.currentId)
-
-      console.log(this.currentId);
-
-    if (error) {
-      console.error('Error updating content approval status:', error);
-      return;
-    }
-
-    this.disapproveForm.reset();
-    this.modalInstance.hide();
-
-    location.reload()
+  /// Checkbox Funktions
+AnwendungChange(event: any){
+  if(event.target.checked){
+    this.checkAnwendungBool = true;
+  }else{
+    this.checkAnwendungBool = false;
   }
+}
+
+TechnologieChange(event: any){
+  if(event.target.checked){
+    this.checkTechnologieBool= true;
+  }else{
+    this.checkTechnologieBool = false;
+  }
+}
+
+WirkungChange(event: any){
+  if(event.target.checked){
+    this.checkWirkungBool= true;
+  }else{
+    this.checkWirkungBool = false;
+  }
+}
+async changeContent(): Promise<void>{
+
+  const { error } = await this.supabase
+    .from('contents')
+    .update({ 
+      heading: this.changeForm.value.heading,
+      description: this.changeForm.value.description,
+      grade_level: this.changeForm.value.gradeLevel,
+      topic: this.changeForm.value.topic,
+      aspectAnwendung: this.checkAnwendungBool,
+      aspectTechnologie: this.checkTechnologieBool,
+      aspectWirkung: this.checkWirkungBool,
+     })
+    .eq('id', this.currentId)
+
+    console.log(this.currentId);
+
+  if (error) {
+    console.error('Error updating content approval status:', error);
+    return;
+  }
+
+  this.changeForm.reset();
+  this.modalInstance.hide();
+
+  this.checkAnwendungBool = false;
+  this.checkTechnologieBool = false;
+  this.checkWirkungBool = false;
+
+  location.reload()
+}
 
   changeReason(event) {
     const selectedReason = event.target.value;

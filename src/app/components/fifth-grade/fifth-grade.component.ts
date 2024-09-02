@@ -29,16 +29,16 @@ export class FifthGradeComponent implements OnInit {
     }
 
   async ngOnInit() {
-    await this.fetchFavorites();
-    await this.fetchContents();
-    this.isAdmin = await this.supabaseFactory.isAdmin();
-
     this.changeForm = this.formBuilder.group({
       heading: ['', Validators.required],
       description: ['', Validators.required],
       gradeLevel: ['', Validators.required],
       topic: ['', Validators.required],
     });
+    
+    await this.fetchFavorites();
+    await this.fetchContents();
+    this.isAdmin = await this.supabaseFactory.isAdmin();
   }
 
   //Funktion zum Laden der Inhalte
