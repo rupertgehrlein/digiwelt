@@ -54,6 +54,25 @@ export class SupabaseFactoryService {
     }
   }
 
+  async changeUserMail(oldEmail, newEmail){
+    const { data: existingUser, error: userError } = await this.client
+      .from('users')
+      .select('email')
+      .eq('email', oldEmail)
+      .maybeSingle();
+
+    if(existingUser){
+      const { data, error } = await this.client
+        .from('users')
+        .update({email: newEmail})
+        .eq("email", oldEmail)
+
+      alert("Mailadresse des Nutzers erfolgreich geändert.")
+    } else {
+      alert("Es gibt ein Problem: Die Mailadresse konnte nicht geändert werden.")
+    }
+  }
+
   listenForNewUser() {
     return this.client.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {

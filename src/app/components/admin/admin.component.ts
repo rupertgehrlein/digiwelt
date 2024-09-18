@@ -27,6 +27,10 @@ export class AdminComponent {
   adminForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.required]]
   });
+  userForm: FormGroup = this.formBuilder.group({
+    oldEmail: ['', [Validators.required]],
+    newEmail: ['', [Validators.required]]
+  });
   loading = false;
 
   constructor(private formBuilder: FormBuilder,
@@ -180,9 +184,13 @@ export class AdminComponent {
 
   async promoteToAdmin() {
     const email = this.adminForm.value.email as string;
-
     await this.supabaseFactory.promoteToAdmin(email);
+  }
 
+  async changeUserMail(){
+    const oldEmail = this.userForm.value.oldEmail;
+    const newEmail = this.userForm.value.newEmail;
+    await this.supabaseFactory.changeUserMail(oldEmail, newEmail);
   }
 
   /// Checkbox Funktions

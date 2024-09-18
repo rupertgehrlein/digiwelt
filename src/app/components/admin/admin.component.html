@@ -19,7 +19,7 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="rollen" data-bs-toggle="tab" data-bs-target="#rollen-tab-pane" type="button"
-            role="tab" aria-controls="rollen-tab-pane" aria-selected="false">Neue Rollen</button>
+            role="tab" aria-controls="rollen-tab-pane" aria-selected="false">Weitere Funktionen</button>
         </li>
       </ul>
 
@@ -92,6 +92,31 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
                 </div>
                 <div class="col-12 col-lg-4">
                   <button class="btn" type="submit" [disabled]="loading || !adminForm.valid">{{ loading ? 'Lade...' : 'Zum Admin machen' }}</button>
+                </div>
+              </div>
+            </form>
+
+            <hr>
+
+            <h3 style="margin: 1rem 0;">Nutzermail ändern:</h3>
+            <form [formGroup]="userForm" (ngSubmit)="changeUserMail()">
+              <div class="row">
+                <div class="col-12 col-lg-2">
+                  <label class="form-label">Vorherige Email</label>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <input class="form-control" type="email" #email placeholder="mustermann@web.de" id="oldEmail" formControlName="oldEmail">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-lg-2">
+                  <label class="form-label">Neue Email</label>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <input class="form-control" type="email" #email placeholder="mustermann@web.de" id="newEmail" formControlName="newEmail">
+                </div>
+                <div class="col-12 col-lg-4">
+                  <button class="btn" type="submit" [disabled]="loading || !userForm.valid">{{ loading ? 'Lade...' : 'Mailadresse ändern' }}</button>
                 </div>
               </div>
             </form>
