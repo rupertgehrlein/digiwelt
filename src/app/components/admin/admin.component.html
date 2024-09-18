@@ -2,7 +2,95 @@
 Für jeden zu prüfenden Upload wird eine Karte erstellt mit den wichtigen Infos,
 einem Download-Button und einem Button, der den Datenbankeintrag von is_approved auf true setzt -->
 
-<div class="container">
+<div class="container container-top">
+  <h1 class="display-4">Adminpanel</h1>
+  <div class="row align-items-center">
+    <div class="col">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="inhalte" data-bs-toggle="tab" data-bs-target="#inhalte-tab-pane"
+            type="button" role="tab" aria-controls="inhalte-tab-pane" aria-selected="true">Neue Inhalte <span
+              class="badge" *ngIf="contents.length > 0">{{contents.length}}</span> </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="anmeldungen" data-bs-toggle="tab" data-bs-target="#anmeldungen-tab-pane"
+            type="button" role="tab" aria-controls="anmeldungen-tab-pane" aria-selected="false">Neue Anmeldungen <span
+              class="badge" *ngIf="unregisteredUsers.length > 0">{{unregisteredUsers.length}}</span></button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="rollen" data-bs-toggle="tab" data-bs-target="#rollen-tab-pane" type="button"
+            role="tab" aria-controls="rollen-tab-pane" aria-selected="false">Neue Rollen</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="inhalte-tab-pane" role="tabpanel" aria-labelledby="inhalte"
+          tabindex="0">
+          <div class="container tabs">
+            <div class="row" *ngFor="let content of contents">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">{{ content.heading }} </h5>
+                    <button class="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(content.id)"
+                      data-bs-target="#editModal">
+                      <img src="assets/edit-pencil.png">
+                    </button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-start"></div>
+                  <p class="card-text">{{ content.description }}</p>
+                  <div style="float: right;">
+                    <a (click)="downloadFile(content.pdf_file_url)" class="btn btn-primary" target="_blank"
+                      rel="noopener noreferrer">Download</a>
+                    <a (click)="setApproved(content.id)" class="btn btn-success">Geprüft</a>
+                    <a data-bs-toggle="modal" data-bs-target="#commentModal" class="btn btn-danger"
+                      (click)="saveCurrentId(content.id)">Ablehnen</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="anmeldungen-tab-pane" role="tabpanel" aria-labelledby="anmeldungen" tabindex="0">
+          <div class="container tabs">
+            <table *ngIf="unregisteredUsers.length > 0" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Vorname</th>
+                  <th>Nachname</th>
+                  <th>Schulnummer</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of unregisteredUsers">
+                  <td><a href="mailto:{{user.email}}">{{ user.email }}</a></td>
+                  <td>{{ user.firstname }}</td>
+                  <td>{{ user.lastname }}</td>
+                  <td>{{ user.school_number }}</td>
+                  <td><button (click)="acceptNewUser(user.email)" class="btn btn-success">Annehmen</button></td>
+                  <td><button (click)="declineNewUser(user.id)" class="btn btn-danger">Ablehnen</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="rollen-tab-pane" role="tabpanel" aria-labelledby="rollen" tabindex="0">
+          <div class="container tabs">
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- <div class="container">
   <h2 *ngIf="unregisteredUsers.length > 0">Unregistrierte Benutzer</h2>
   <table *ngIf="unregisteredUsers.length > 0" class="table table-striped">
     <thead>
@@ -17,7 +105,7 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
     </thead>
     <tbody>
       <tr *ngFor="let user of unregisteredUsers">
-        <td>{{ user.email }}</td>
+        <td><a href="mailto:{{user.email}}">{{ user.email }}</a></td>
         <td>{{ user.firstname }}</td>
         <td>{{ user.lastname }}</td>
         <td>{{ user.school_number }}</td>
@@ -55,7 +143,7 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true"
   #commentModal>
@@ -90,12 +178,11 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
 </div>
 
 
-<div class="modal fade" id="editModal" tabindex="-2" aria-labelledby="editModalLabel" aria-hidden="true"
-#editModal>
+<div class="modal fade" id="editModal" tabindex="-2" aria-labelledby="editModalLabel" aria-hidden="true" #editModal>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-       <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
+        <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -117,21 +204,24 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
           </div>
           <div>
             <label for="aspect" class="form-label">Perspektiven*</label>
-            <div class ="row">
+            <div class="row">
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung" (change)="AnwendungChange($event)" >
+                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung"
+                  (change)="AnwendungChange($event)">
                 <label class="form-check-label" for="checkAnwendung">
                   Anwendung
                 </label>
               </div>
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkTechno" (change)="TechnologieChange($event)">
+                <input class="form-check-input" type="checkbox" value="" id="checkTechno"
+                  (change)="TechnologieChange($event)">
                 <label class="form-check-label" for="checkTechno">
                   Technologie
                 </label>
               </div>
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkWirkung" (change)="WirkungChange($event)">
+                <input class="form-check-input" type="checkbox" value="" id="checkWirkung"
+                  (change)="WirkungChange($event)">
                 <label class="form-check-label" for="checkWirkung">
                   Wirkung
                 </label>

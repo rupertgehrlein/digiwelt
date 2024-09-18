@@ -272,7 +272,7 @@ export class DashboardComponent {
 
     const { error } = await this.supabase
       .from('contents')
-      .update({ 
+      .update({
         heading: this.changeForm.value.heading,
         description: this.changeForm.value.description,
         grade_level: this.changeForm.value.gradeLevel,
