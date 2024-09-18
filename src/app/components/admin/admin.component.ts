@@ -24,6 +24,10 @@ export class AdminComponent {
   checkWirkungBool: boolean = false;
   reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges']
   showCommentField: boolean = false;
+  adminForm: FormGroup = this.formBuilder.group({
+    email: ['', [Validators.required]]
+  });
+  loading = false;
 
   constructor(private formBuilder: FormBuilder,
     private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
@@ -173,6 +177,14 @@ export class AdminComponent {
         topic: [data[0].topic, Validators.required],
       });
   }
+
+  async promoteToAdmin() {
+    const email = this.adminForm.value.email as string;
+
+    await this.supabaseFactory.promoteToAdmin(email);
+
+  }
+
   /// Checkbox Funktions
 AnwendungChange(event: any){
   if(event.target.checked){

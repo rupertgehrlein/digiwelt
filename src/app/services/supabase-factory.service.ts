@@ -35,6 +35,25 @@ export class SupabaseFactoryService {
     return data ? data.is_admin : false;
   }
 
+  async promoteToAdmin(email) {
+    const { data: existingUser, error: userError } = await this.client
+      .from('users')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (existingUser) {
+      const { data, error } = await this.client
+        .from('users')
+        .update({ is_admin: true })
+        .eq("email", email)
+
+      alert("Der Nutzer wurde erfolgreich zum Admin befördert.");
+    } else {
+      alert("Der Nutzer konnte nicht zum Admin gemacht werden. Checken Sie die Schreibweise der Mailadresse oder fragen Sie beim Nutzer nach, ob die angegebene Email-Adresse auch wirklich registriert ist.");
+    }
+  }
+
   listenForNewUser() {
     return this.client.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
@@ -127,15 +146,15 @@ export class SupabaseFactoryService {
 
     const authId = (await this.client.auth.getUser()).data.user.id;
 
-    if(idData[0].id !== authId) {
+    if (idData[0].id !== authId) {
       await this.client
         .from('users')
-        .update({id: authId})
+        .update({ id: authId })
         .eq('id', idData[0].id)
     }
   }
 
-  async getFavorites(){
+  async getFavorites() {
     await this.updateId();
     const userID = (await this.client.auth.getUser()).data.user.id;
     const { data, error } = await this.client

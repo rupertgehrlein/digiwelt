@@ -81,7 +81,20 @@ einem Download-Button und einem Button, der den Datenbankeintrag von is_approved
 
         <div class="tab-pane fade" id="rollen-tab-pane" role="tabpanel" aria-labelledby="rollen" tabindex="0">
           <div class="container tabs">
-
+            <h3 style="margin: 1rem 0;">Neuen Admin hinzufügen:</h3>
+            <form [formGroup]="adminForm" (ngSubmit)="promoteToAdmin()">
+              <div class="row">
+                <div class="col-12 col-lg-2">
+                  <label class="form-label">Email</label>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <input class="form-control" type="email" #email placeholder="mustermann@web.de" id="email" formControlName="email">
+                </div>
+                <div class="col-12 col-lg-4">
+                  <button class="btn" type="submit" [disabled]="loading || !adminForm.valid">{{ loading ? 'Lade...' : 'Zum Admin machen' }}</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
