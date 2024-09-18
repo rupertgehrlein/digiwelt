@@ -69,7 +69,7 @@ export class SupabaseFactoryService {
 
       alert("Mailadresse des Nutzers erfolgreich geändert.")
     } else {
-      alert("Es gibt ein Problem: Die Mailadresse konnte nicht geändert werden.")
+      alert("Es gibt ein Problem: Die Mailadresse konnte nicht geändert werden. Wahrscheinlich ist diese Mailadresse nicht registriert.")
     }
   }
 
@@ -252,6 +252,37 @@ export class SupabaseFactoryService {
     }
 
     return data;
+  }
+
+  async getOwnContentDetails(){
+    const { data: ownContents, error: ownContentsError } = await this.client
+      .from('contents')
+      .select('id')
+      .eq('creator_id', (await this.client.auth.getUser()).data.user.id);
+
+    if (ownContentsError) {
+      console.error('Error fetching favorites:', ownContentsError.message);
+      throw ownContentsError;
+    }
+
+    const ownIds = ownContents.map(own => own.id);
+
+    if (ownIds.length === 0) {
+      return [];
+    }
+
+    const { data: contents, error: contentError } = await this.client
+      .from('contents')
+      .select('*')
+      .eq('is_approved', true)
+      .in('id', ownIds);
+
+    if (contentError) {
+      console.error('Error fetching content details:', contentError.message);
+      throw contentError;
+    }
+
+    return contents;
   }
 
 }

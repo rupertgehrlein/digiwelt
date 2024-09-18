@@ -23,6 +23,7 @@ export class DashboardComponent {
   selectedFile;
   fileName;
   favoriteContents: any[] = [];
+  ownContents: any[] = [];
 
   constructor(private formBuilder: FormBuilder, private supabaseFactory: SupabaseFactoryService) {
     this.supabase = supabaseFactory.getClient();
@@ -45,6 +46,7 @@ export class DashboardComponent {
 
     await this.getCurrentUserAndFetchContents();
     await this.fetchFavoriteContents();
+    await this.fetchOwnContents();
   }
 
   async getCurrentUserAndFetchContents() {
@@ -96,6 +98,15 @@ export class DashboardComponent {
         this.favoriteContents.push(favoriteDetails);
       }
     }
+  }
+
+  async fetchOwnContents() {
+    try {
+      this.ownContents = await this.supabaseFactory.getOwnContentDetails();
+    } catch (error) {
+      console.error('Error fetching own contents:', error);
+    }
+    console.log(this.ownContents);
   }
 
   //Check ob Dateityp passt
