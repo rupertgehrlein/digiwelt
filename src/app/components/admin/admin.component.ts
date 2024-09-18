@@ -24,6 +24,14 @@ export class AdminComponent {
   checkWirkungBool: boolean = false;
   reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges']
   showCommentField: boolean = false;
+  adminForm: FormGroup = this.formBuilder.group({
+    email: ['', [Validators.required]]
+  });
+  userForm: FormGroup = this.formBuilder.group({
+    oldEmail: ['', [Validators.required]],
+    newEmail: ['', [Validators.required]]
+  });
+  loading = false;
 
   constructor(private formBuilder: FormBuilder,
     private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient(); }
@@ -173,6 +181,18 @@ export class AdminComponent {
         topic: [data[0].topic, Validators.required],
       });
   }
+
+  async promoteToAdmin() {
+    const email = this.adminForm.value.email as string;
+    await this.supabaseFactory.promoteToAdmin(email);
+  }
+
+  async changeUserMail(){
+    const oldEmail = this.userForm.value.oldEmail;
+    const newEmail = this.userForm.value.newEmail;
+    await this.supabaseFactory.changeUserMail(oldEmail, newEmail);
+  }
+
   /// Checkbox Funktions
 AnwendungChange(event: any){
   if(event.target.checked){
@@ -201,7 +221,7 @@ async changeContent(): Promise<void>{
 
   const { error } = await this.supabase
     .from('contents')
-    .update({ 
+    .update({
       heading: this.changeForm.value.heading,
       description: this.changeForm.value.description,
       grade_level: this.changeForm.value.gradeLevel,
@@ -246,8 +266,8 @@ async changeContent(): Promise<void>{
     this.fetchRegisteredUsers();
   }
 
-  async declineNewUser(id) {
-    await this.supabaseFactory.removeUnregisteredUser(id);
+  async declineNewUser(email) {
+    await this.supabaseFactory.removeUnregisteredUser(email);
     this.fetchRegisteredUsers();
   }
 }

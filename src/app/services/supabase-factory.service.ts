@@ -35,6 +35,44 @@ export class SupabaseFactoryService {
     return data ? data.is_admin : false;
   }
 
+  async promoteToAdmin(email) {
+    const { data: existingUser, error: userError } = await this.client
+      .from('users')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (existingUser) {
+      const { data, error } = await this.client
+        .from('users')
+        .update({ is_admin: true })
+        .eq("email", email)
+
+      alert("Der Nutzer wurde erfolgreich zum Admin befördert.");
+    } else {
+      alert("Der Nutzer konnte nicht zum Admin gemacht werden. Checken Sie die Schreibweise der Mailadresse oder fragen Sie beim Nutzer nach, ob die angegebene Email-Adresse auch wirklich registriert ist.");
+    }
+  }
+
+  async changeUserMail(oldEmail, newEmail){
+    const { data: existingUser, error: userError } = await this.client
+      .from('users')
+      .select('email')
+      .eq('email', oldEmail)
+      .maybeSingle();
+
+    if(existingUser){
+      const { data, error } = await this.client
+        .from('users')
+        .update({email: newEmail})
+        .eq("email", oldEmail)
+
+      alert("Mailadresse des Nutzers erfolgreich geändert.")
+    } else {
+      alert("Es gibt ein Problem: Die Mailadresse konnte nicht geändert werden. Wahrscheinlich ist diese Mailadresse nicht registriert.")
+    }
+  }
+
   listenForNewUser() {
     return this.client.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
@@ -127,15 +165,15 @@ export class SupabaseFactoryService {
 
     const authId = (await this.client.auth.getUser()).data.user.id;
 
-    if(idData[0].id !== authId) {
+    if (idData[0].id !== authId) {
       await this.client
         .from('users')
-        .update({id: authId})
+        .update({ id: authId })
         .eq('id', idData[0].id)
     }
   }
 
-  async getFavorites(){
+  async getFavorites() {
     await this.updateId();
     const userID = (await this.client.auth.getUser()).data.user.id;
     const { data, error } = await this.client
@@ -214,6 +252,37 @@ export class SupabaseFactoryService {
     }
 
     return data;
+  }
+
+  async getOwnContentDetails(){
+    const { data: ownContents, error: ownContentsError } = await this.client
+      .from('contents')
+      .select('id')
+      .eq('creator_id', (await this.client.auth.getUser()).data.user.id);
+
+    if (ownContentsError) {
+      console.error('Error fetching favorites:', ownContentsError.message);
+      throw ownContentsError;
+    }
+
+    const ownIds = ownContents.map(own => own.id);
+
+    if (ownIds.length === 0) {
+      return [];
+    }
+
+    const { data: contents, error: contentError } = await this.client
+      .from('contents')
+      .select('*')
+      .eq('is_approved', true)
+      .in('id', ownIds);
+
+    if (contentError) {
+      console.error('Error fetching content details:', contentError.message);
+      throw contentError;
+    }
+
+    return contents;
   }
 
 }

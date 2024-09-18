@@ -17,13 +17,16 @@
 }
 
 :root {
-  --primary-color: #003087;
-  --secondary-color: #b3f2db;
-  --accent-color: #b3f2db;
-  --accent-color-hover: #425850;
-  --text-color: #16191f;
-  --primary-text-color: #fff;
+  --primary-color: #6678a0;
+  --primary-color-hover: #414d68;
+  --secondary-color: #b8afcd;
+  --accent-color: #a28eb9;
+  --accent-color-hover: #6d5f7c;
+  --text-color: #06070a;
+  --background-color: #f7f8fa;
+  --primary-text-color: #f7f8fa;
   --danger-color: rgb(178, 34, 34);
+  --card-color: #eff1f5;
 }
 
 html,
@@ -36,7 +39,6 @@ body {
   font-family: "Titillium Web", sans-serif;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-color: #fff;
   color: var(--text-color);
 }
 
@@ -44,15 +46,19 @@ body {
   color: var(--text-color);
 }
 
+.row {
+  padding: 10px;
+}
+
 .btn {
-  background-color: var(--accent-color);
-  color: var(--text-color);
-  border-color: var(--accent-color);
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
+  border-color: var(--primary-color);
 }
 
 .btn:hover {
-  background-color: var(--accent-color-hover);
-  border-color: var(--accent-color-hover);
+  background-color: var(--primary-color-hover);
+  border-color: var(--primary-color-hover);
   color: var(--primary-text-color);
 }
 
@@ -84,9 +90,9 @@ a:hover {
 
 .card,
 .modal-content {
-  background-color: var(--primary-color);
-  border-color: #fff;
-  color: var(--primary-text-color);
+  background-color: var(--card-color);
+  border-color: var(--card-color);
+  color: var(--text-color);
 }
 
 .modal {
@@ -165,4 +171,27 @@ a:hover {
 .card-text {
   margin: 15px 0;
   flex: 1;
+}
+
+button.nav-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-text-color);
+}
+
+button.nav-link:hover {
+  background-color: var(--primary-color-hover);
+  border-color: var(--primary-color-hover);
+  color: var(--primary-text-color);
+}
+
+button.nav-link.active {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.badge {
+  background-color: var(--danger-color);
+  color: var(--primary-text-color);
+  border-radius: 50px;
 }
