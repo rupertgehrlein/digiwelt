@@ -266,8 +266,8 @@ async changeContent(): Promise<void>{
     this.fetchRegisteredUsers();
   }
 
-  async declineNewUser(id) {
-    await this.supabaseFactory.removeUnregisteredUser(id);
+  async declineNewUser(email) {
+    await this.supabaseFactory.removeUnregisteredUser(email);
     this.fetchRegisteredUsers();
   }
 }
