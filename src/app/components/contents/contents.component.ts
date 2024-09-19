@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as bootstrap from 'bootstrap';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { SupabaseClient } from '@supabase/supabase-js';
@@ -34,26 +34,25 @@ export class ContentsComponent implements OnInit {
   currentId;
   private modalInstance: bootstrap.Modal;
 
+  selectedGradeLevels: string[] = [];
+  selectedTopics: string[] = [];
+  selectedAspects: string[] = [];
+  gradeLevels = ['5. Klasse', '6. Klasse'];
+  topics = ['Computer überall', 'Informationen und Daten', 'Grundlagen der Programmierung', 'Vernetzung'];
+  aspects = ['Anwendung', 'Technologie', 'Wirkung'];
+
   constructor(private formBuilder: FormBuilder, private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient() }
 
   ngAfterViewInit(): void {
     const modalElement = this.uploadModal.nativeElement;
     this.modalInstance = new bootstrap.Modal(modalElement);
-    //modalInstance.show();
   }
 
   async ngOnInit() {
     this.uploadForm = this.formBuilder.group({
       heading: ['', Validators.required],
       description: ['', Validators.required],
-      gradeLevel: ['', Validators.required],
-      topic: ['', Validators.required],
       commitment: [false, Validators.requiredTrue]
-    });
-
-    // Debugging: Log form state changes
-    this.uploadForm.valueChanges.subscribe(formState => {
-      console.log('Form state changed:', formState);
     });
 
     this.changeForm = this.formBuilder.group({
@@ -62,10 +61,59 @@ export class ContentsComponent implements OnInit {
       gradeLevel: ['', Validators.required],
       topic: ['', Validators.required],
     });
-    
+
     await this.fetchFavorites();
     await this.fetchContents();
     this.isAdmin = await this.supabaseFactory.isAdmin();
+  }
+
+  // Änderungen für Klassenstufen speichern
+  onGradeChange(event: any): void {
+    const selectedGrade = event.target.value;
+    if (event.target.checked) {
+      this.selectedGradeLevels.push(selectedGrade);
+    } else {
+      const index = this.selectedGradeLevels.indexOf(selectedGrade);
+      if (index > -1) {
+        this.selectedGradeLevels.splice(index, 1);
+      }
+    }
+    this.isValidSelection();
+  }
+
+  // Änderungen für Themen speichern
+  onTopicChange(event: any): void {
+    const selectedTopic = event.target.value;
+    if (event.target.checked) {
+      this.selectedTopics.push(selectedTopic);
+    } else {
+      const index = this.selectedTopics.indexOf(selectedTopic);
+      if (index > -1) {
+        this.selectedTopics.splice(index, 1);
+      }
+    }
+    this.isValidSelection();
+  }
+
+  // Änderungen für Perspektiven speichern
+  onAspectChange(event: any): void {
+    const selectedAspect = event.target.value;
+    if (event.target.checked) {
+      this.selectedAspects.push(selectedAspect);
+    } else {
+      const index = this.selectedAspects.indexOf(selectedAspect);
+      if (index > -1) {
+        this.selectedAspects.splice(index, 1);
+      }
+    }
+    this.isValidSelection();
+  }
+
+  // Validierung für mindestens eine Auswahl pro Kategorie
+  isValidSelection(): boolean {
+    return this.selectedGradeLevels.length > 0 &&
+      this.selectedTopics.length > 0 &&
+      this.selectedAspects.length > 0;
   }
 
   //Check ob Dateityp passt
@@ -75,7 +123,7 @@ export class ContentsComponent implements OnInit {
       const fileType = file.type;
       console.log(fileType);
       // windows zeigt mir an, dass die Dateien .zip files sind, aber anscheinend sind sie bei mir x-zip. Möglicherweise, müssen in Zukunft eventuell noch andere zip MIME zip typen hinzugefügt werden
-      const allowedTypes = ['application/pdf', 'application/zip','application/x-zip-compressed' ,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      const allowedTypes = ['application/pdf', 'application/zip', 'application/x-zip-compressed', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
       if (!allowedTypes.includes(fileType)) {
         alert('Bitte laden Sie nur .pdf, .zip, .doc oder .docx Dateien hoch.');
         return;
@@ -102,52 +150,19 @@ export class ContentsComponent implements OnInit {
     formData.append('file', this.selectedFile, uniqueFileName);
     formData.append('path', uniqueFileName);
 
-    //Packt Datei in den Backend Storage Bucket
-    const { data, error } = await this.supabase
-      .storage
-      .from('pdf_uploads')
-      .upload(uniqueFileName, formData);
+    const heading = this.uploadForm.value.heading;
+    const description = this.uploadForm.value.description;
+    const gradeLevel = this.selectedGradeLevels;
+    const file_format = this.selectedFile.type;
+    const topic = this.selectedTopics;
+    const perspective = this.selectedAspects;
 
-    if (error) {
-      console.error('Error uploading file:', error);
-      return;
-    }
-
-    const pdfFileUrl = data?.path;
-
-    //Datenbank-Eintrag mit allen nötigen Spalten
-    const { data: contentData, error: contentError } = await this.supabase
-      .from('contents')
-      .insert([
-        {
-          heading: this.uploadForm.value.heading,
-          description: this.uploadForm.value.description,
-          grade_level: this.uploadForm.value.gradeLevel,
-          creator_id: (await this.supabase.auth.getUser()).data.user.id,
-          is_approved: false,
-          is_disapproved: false,
-          pdf_file_url: pdfFileUrl,
-          file_format: this.selectedFile.type,
-          topic: this.uploadForm.value.topic,
-          aspectAnwendung: this.checkAnwendungBool,
-          aspectTechnologie: this.checkTechnologieBool,
-          aspectWirkung: this.checkWirkungBool,
-        },
-      ]);
-
-    if (contentError) {
-      console.error('Error inserting content:', contentError);
-      return;
-    }
+    await this.supabaseFactory.uploadContent(uniqueFileName, formData, heading, description, gradeLevel, file_format, topic, perspective);
 
     //Alles wieder auf Anfang und Modal wird geschlossen
     this.uploadForm.reset();
     this.selectedFile = null;
     this.modalInstance.hide();
-
-    this.checkAnwendungBool = false;
-    this.checkTechnologieBool = false;
-    this.checkWirkungBool = false;
   }
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
@@ -158,11 +173,11 @@ export class ContentsComponent implements OnInit {
       .select('*')
       .eq('is_approved', true)
 
-      if (this.filterGrade){query = query.eq('grade_level', this.filterGrade)}
-      if (this.filterTopic){query = query.eq('topic', this.filterTopic)}
-      if (this.filterAnwendung){query = query.eq('aspectAnwendung', this.filterAnwendung)}
-      if (this.filterTechnologie){query = query.eq('aspectTechnologie', this.filterTechnologie)}
-      if (this.filterWirkung){query = query.eq('aspectWirkung', this.filterWirkung)}
+    if (this.filterGrade) { query = query.eq('grade_level', this.filterGrade) }
+    if (this.filterTopic) { query = query.eq('topic', this.filterTopic) }
+    if (this.filterAnwendung) { query = query.eq('aspectAnwendung', this.filterAnwendung) }
+    if (this.filterTechnologie) { query = query.eq('aspectTechnologie', this.filterTechnologie) }
+    if (this.filterWirkung) { query = query.eq('aspectWirkung', this.filterWirkung) }
 
     // und hier werden die Daten an die data Variable übergeben
     const { data, error } = await query
@@ -173,14 +188,14 @@ export class ContentsComponent implements OnInit {
     }
 
     this.contents = data || [];
-/** 
-    for(let i = 0; i < data.length; i++ ){
-      if((data[i].heading.includes(this.filterTitle))){
-        this.contents.push(data[i]);
-      }
-    }
-    console.log(this.contents);
-    console.log(this.contentTitles);*/
+    /**
+        for(let i = 0; i < data.length; i++ ){
+          if((data[i].heading.includes(this.filterTitle))){
+            this.contents.push(data[i]);
+          }
+        }
+        console.log(this.contents);
+        console.log(this.contentTitles);*/
   }
 
   async fetchFavorites(): Promise<void> {
@@ -190,216 +205,6 @@ export class ContentsComponent implements OnInit {
       console.error('Error fetching favorites:', error);
     }
   }
-
-  //////Filter/////
-  changeFilterTitle(){
-    var inputValue = (<HTMLInputElement>document.getElementById('filterText')).value;
-    this.filterTitle = inputValue;
-    this.fetchContents()
-  }
-
-  changeFilterGrade(grade){
-    if (this.filterGrade == grade){
-      this.filterGrade = null;
-    }
-    else{
-    this.filterGrade = grade;
-  }
-    this.fetchContents()
-  }
-  changeFilterTopic(topic){
-    if (this.filterTopic == topic){
-      this.filterTopic = null;
-    }
-    else{
-      this.filterTopic = topic;
-    }
-    this.fetchContents()
-  }
-  changeFilterAspect(aspect){
-    if (aspect == 'aspect1'){
-      this.filterAnwendung = (this.filterAnwendung !== true)
-    }
-    if (aspect == 'aspect2'){
-      this.filterWirkung = (this.filterWirkung !== true)
-    }
-    if (aspect == 'aspect3'){
-      this.filterTechnologie = (this.filterTechnologie !== true)
-    }
-    this.fetchContents()
-  }
-
-  changefilterCombo(combo){
-    switch(combo){
-      case 11:{
-        this.filterTopic = "topic1";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-      }
-      case 12:{
-        this.filterTopic = "topic1";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-       
-        break
-        
-      }
-      case 13:{
-        this.filterTopic = "topic1";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-        
-        break
-        
-      }
-      case 21:{
-        this.filterTopic = "topic2";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-        
-      }
-      case 22:{
-        this.filterTopic = "topic2";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 23:{
-        this.filterTopic = "topic2";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-
-        break
-        
-      }
-      case 31:{
-        this.filterTopic = "topic3";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-        
-      }
-      case 32:{
-        this.filterTopic = "topic3";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-        
-      }
-      case 33:{
-        this.filterTopic = "topic3";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 41:{
-        this.filterTopic = "topic4";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-        
-      }
-      case 42:{
-        this.filterTopic = "topic4";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-        
-      }
-      case 43:{
-        this.filterTopic = "topic4";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-
-        break
-        
-      }
-    }
-  }
-
-  clearFilters(){
-    this.filterTitle = '';
-    this.filterGrade = null;
-    this.filterTopic = null;
-    this.filterAnwendung = null;
-    this.filterTechnologie = null;
-    this.filterWirkung = null;
-    this.fetchContents()
-  }
-
-/// Checkbox Funktions
-  AnwendungChange(event: any){
-    if(event.target.checked){
-      this.checkAnwendungBool = true;
-    }else{
-      this.checkAnwendungBool = false;
-    }
-  }
-
-  TechnologieChange(event: any){
-    if(event.target.checked){
-      this.checkTechnologieBool= true;
-    }else{
-      this.checkTechnologieBool = false;
-    }
-  }
-
-  WirkungChange(event: any){
-    if(event.target.checked){
-      this.checkWirkungBool= true;
-    }else{
-      this.checkWirkungBool = false;
-    }
-  }
-
 
   //Funktion zur Generierung von gesicherten Download-URLs
   async generateSignedUrl(filePath: string): Promise<string | null> {
@@ -434,11 +239,11 @@ export class ContentsComponent implements OnInit {
     this.currentId = id;
   }
 
-  async changeContent(): Promise<void>{
+  async changeContent(): Promise<void> {
 
     const { error } = await this.supabase
       .from('contents')
-      .update({ 
+      .update({
         heading: this.changeForm.value.heading,
         description: this.changeForm.value.description,
         grade_level: this.changeForm.value.gradeLevel,
@@ -446,10 +251,10 @@ export class ContentsComponent implements OnInit {
         aspectAnwendung: this.checkAnwendungBool,
         aspectTechnologie: this.checkTechnologieBool,
         aspectWirkung: this.checkWirkungBool,
-       })
+      })
       .eq('id', this.currentId)
 
-      console.log(this.currentId);
+    console.log(this.currentId);
 
     if (error) {
       console.error('Error updating content approval status:', error);
@@ -475,20 +280,20 @@ export class ContentsComponent implements OnInit {
       .select('*')
       .eq('id', this.currentId)
 
-      if (error) {
-        console.error('Error fetching contents:', error);
-        return;
-      }
+    if (error) {
+      console.error('Error fetching contents:', error);
+      return;
+    }
 
-      this.changeForm = this.formBuilder.group({
-        heading: [data[0].heading, Validators.required],
-        description: [data[0].description, Validators.required],
-        gradeLevel: [data[0].grade_level, Validators.required],
-        topic: [data[0].topic, Validators.required],
-        checkAnwendung: [data[0].aspectAnwendung],
-        checkTechnologie: [data[0].aspectTechnologie],
-        checkWirkung: [data[0].aspectWirkung],
-      });
+    this.changeForm = this.formBuilder.group({
+      heading: [data[0].heading, Validators.required],
+      description: [data[0].description, Validators.required],
+      gradeLevel: [data[0].grade_level, Validators.required],
+      topic: [data[0].topic, Validators.required],
+      checkAnwendung: [data[0].aspectAnwendung],
+      checkTechnologie: [data[0].aspectTechnologie],
+      checkWirkung: [data[0].aspectWirkung],
+    });
   }
 
   async toggleFavorite(contentId) {
@@ -498,6 +303,215 @@ export class ContentsComponent implements OnInit {
     } else {
       await this.supabaseFactory.addFavorite(contentId);
       this.favoriteContentIds.push(contentId);
+    }
+  }
+
+  //////Filter - ÜBERARBEITEN/////
+  changeFilterTitle() {
+    var inputValue = (<HTMLInputElement>document.getElementById('filterText')).value;
+    this.filterTitle = inputValue;
+    this.fetchContents()
+  }
+
+  changeFilterGrade(grade) {
+    if (this.filterGrade == grade) {
+      this.filterGrade = null;
+    }
+    else {
+      this.filterGrade = grade;
+    }
+    this.fetchContents()
+  }
+  changeFilterTopic(topic) {
+    if (this.filterTopic == topic) {
+      this.filterTopic = null;
+    }
+    else {
+      this.filterTopic = topic;
+    }
+    this.fetchContents()
+  }
+  changeFilterAspect(aspect) {
+    if (aspect == 'aspect1') {
+      this.filterAnwendung = (this.filterAnwendung !== true)
+    }
+    if (aspect == 'aspect2') {
+      this.filterWirkung = (this.filterWirkung !== true)
+    }
+    if (aspect == 'aspect3') {
+      this.filterTechnologie = (this.filterTechnologie !== true)
+    }
+    this.fetchContents()
+  }
+
+  changefilterCombo(combo) {
+    switch (combo) {
+      case 11: {
+        this.filterTopic = "topic1";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+      }
+      case 12: {
+        this.filterTopic = "topic1";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 13: {
+        this.filterTopic = "topic1";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 21: {
+        this.filterTopic = "topic2";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 22: {
+        this.filterTopic = "topic2";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 23: {
+        this.filterTopic = "topic2";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 31: {
+        this.filterTopic = "topic3";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 32: {
+        this.filterTopic = "topic3";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 33: {
+        this.filterTopic = "topic3";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 41: {
+        this.filterTopic = "topic4";
+        this.filterAnwendung = true;
+        this.filterWirkung = false;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 42: {
+        this.filterTopic = "topic4";
+        this.filterAnwendung = false;
+        this.filterWirkung = true;
+        this.filterTechnologie = false;
+
+        this.fetchContents();
+
+        break
+
+      }
+      case 43: {
+        this.filterTopic = "topic4";
+        this.filterAnwendung = false;
+        this.filterWirkung = false;
+        this.filterTechnologie = true;
+
+        this.fetchContents();
+
+        break
+
+      }
+    }
+  }
+
+  clearFilters() {
+    this.filterTitle = '';
+    this.filterGrade = null;
+    this.filterTopic = null;
+    this.filterAnwendung = null;
+    this.filterTechnologie = null;
+    this.filterWirkung = null;
+    this.fetchContents()
+  }
+
+  /// Checkbox Funktions
+  AnwendungChange(event: any) {
+    if (event.target.checked) {
+      this.checkAnwendungBool = true;
+    } else {
+      this.checkAnwendungBool = false;
+    }
+  }
+
+  TechnologieChange(event: any) {
+    if (event.target.checked) {
+      this.checkTechnologieBool = true;
+    } else {
+      this.checkTechnologieBool = false;
+    }
+  }
+
+  WirkungChange(event: any) {
+    if (event.target.checked) {
+      this.checkWirkungBool = true;
+    } else {
+      this.checkWirkungBool = false;
     }
   }
 }
