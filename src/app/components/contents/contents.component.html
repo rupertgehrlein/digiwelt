@@ -1,5 +1,5 @@
 <!--Auswahl-Übersicht für die Klassenstufen mit passendem Routing s.u.-->
-<div class="container">
+<!-- <div class="container">
   <div class="row">
     <div class="col-md-6">
       <div class="card">
@@ -49,7 +49,7 @@
   <area shape="poly" coords="501,92,570,97,645,118,718,154,795,217,872,334,901,440,894,579,839,705,920,755,986,597,997,507,995,438,962,308,866,159,781,86,684,35,578,6,501,1,501,12,576,12,576,69,501,69" alt="VernAnw" (click)="changefilterCombo(41)">
   <area shape="poly" coords="839,705,761,792,651,857,501,885,380,867,257,804,169,712,86,768,195,882,345,960,499,983,686,947,825,863,918,757" alt="VernWirk" (click)="changefilterCombo(42)">
   <area shape="poly" coords="498,92,423,99,303,143,157,282,101,449,115,601,168,710,86,768,19,628,0,492,19,357,74,234,172,120,302,40,428,5,498,1,499,12,427,13,427,69,498,69" alt="VernTech" (click)="changefilterCombo(43)">
-</map>
+</map> -->
 
 <!--Button zum öffnen des Modals zum Upload-->
 <button type="button" class="round-button btn" data-bs-toggle="modal" data-bs-target="#uploadModal">
@@ -57,7 +57,7 @@
 </button>
 
 
-<div class="container container-top">
+<!-- <div class="container container-top">
   <div class="row">
     <div class="col-md-6 col-lg-6" *ngFor="let content of contents">
       <div class="card mb-4">
@@ -75,22 +75,67 @@
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <p class="card-text">{{ content.description }}</p>
-            <img [src]="content.file_format ? '../../assets/filetypepics/' + content.file_format + '.png' : '../../assets/filetypepics/sonst.png'" class="file-format-img">
+            <img
+              [src]="content.file_format ? '../../assets/filetypepics/' + content.file_format + '.png' : '../../assets/filetypepics/sonst.png'"
+              class="file-format-img">
           </div>
           <div class="d-flex justify-content-between align-items-center">
-            <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank" rel="noopener noreferrer">Download</a>
-            <a *ngIf="content.grade_level=='fifth'" title="5. Klasse"> <img src="assets/Klasse5.png" width="40" height="40"> </a>
-            <a *ngIf="content.grade_level=='sixth'" title="6. Klasse"> <img src="assets/Klasse6.png" width="40" height="40"> </a>
-            <a *ngIf="content.topic=='topic1'" title="Computer Überall"> <img src="assets/CompUber.png" width="40" height="40"> </a>
-            <a *ngIf="content.topic=='topic2'" title="Information und Daten"> <img src="assets/InfoDaten.png" width="40" height="40"> </a>
-            <a *ngIf="content.topic=='topic3'" title="Grundlagen der Programmierung"> <img src="assets/GrundProg.png" width="40" height="40"> </a>
-            <a *ngIf="content.topic=='topic4'" title="Vernetzung"> <img src="assets/Vernetzung.png" width="40" height="40"> </a>
-            <a *ngIf="content.aspectAnwendung" title="Anwendung"> <img src="assets/Anwendung.png" width="40" height="40"> </a>
-            <a *ngIf="content.aspectTechnologie" title="Technologie"> <img src="assets/Technologie.png" width="40" height="40"> </a>
-            <a *ngIf="content.aspectWirkung" title="Wirkung"> <img src="assets/Wirkung.png" width="40" height="40"> </a>
-            <button *ngIf="isAdmin" class ="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(content.id)" data-bs-target="#editModal">
+            <button *ngIf="isAdmin" class="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(content.id)"
+              data-bs-target="#editModal">
               <img src="assets/edit-pencil.png">
-           </button>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="container container-top">
+  <div class="row" *ngFor="let content of contents">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="row">
+            <div class="col-5">
+              <h5 class="card-title">{{ content.heading }}</h5>
+            </div>
+            <div class="col-4">
+              <!-- Platz für Pillen -->
+            </div>
+            <div class="col-3">
+              <button *ngIf="isAdmin" class="favorite-btn" data-bs-toggle="modal"
+                (click)="createContentForm(content.id)" data-bs-target="#editModal">
+                <img src="assets/edit-pencil.png">
+              </button>
+              <button class="favorite-btn" (click)="toggleFavorite(content.id)">
+                <ng-container *ngIf="isFavorite(content.id); else notFavorited">
+                  <img src="assets/heart-filled.png" alt="Favorited">
+                </ng-container>
+                <ng-template #notFavorited>
+                  <img src="assets/heart-outline.png" alt="Not Favorited">
+                </ng-template>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-8">
+              <p>{{ content.description }}</p>
+            </div>
+            <div class="col-4">
+              <img
+                [src]="content.file_format ? '../../assets/filetypepics/' + content.file_format + '.png' : '../../assets/filetypepics/sonst.png'"
+                class="file-format-img" style="float: right;">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank"
+              rel="noopener noreferrer">Download</a>
+            </div>
           </div>
         </div>
       </div>
@@ -99,7 +144,8 @@
 </div>
 
 <!--Modal für den Upload von neuem Content-->
-<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true" #uploadModal>
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true"
+  #uploadModal>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -157,7 +203,8 @@
           </div>
           <div class="mb-3">
             <label for="commitment" class="form-check-label">
-              Ich bestätige, dass der Inhalt von mir erstellt ist und wenn Fremdmaterial enthalten ist, dieses korrekt gekennzeichnet wurde.
+              Ich bestätige, dass der Inhalt von mir erstellt ist und wenn Fremdmaterial enthalten ist, dieses korrekt
+              gekennzeichnet wurde.
             </label>
             <input type="checkbox" class="form-check-input" id="commitment" formControlName="commitment">
           </div>
@@ -256,12 +303,11 @@
 </div> -->
 
 <!--Modal für das Bearbeiten von Content-->
-<div class="modal fade" id="editModal" tabindex="-2" aria-labelledby="editModalLabel" aria-hidden="true"
-#editModal>
+<div class="modal fade" id="editModal" tabindex="-2" aria-labelledby="editModalLabel" aria-hidden="true" #editModal>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-       <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
+        <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -292,21 +338,24 @@
           </div>
           <div>
             <label for="aspect" class="form-label">Perspektiven*</label>
-            <div class ="row">
+            <div class="row">
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung" (change)="AnwendungChange($event)" >
+                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung"
+                  (change)="AnwendungChange($event)">
                 <label class="form-check-label" for="checkAnwendung">
                   Anwendung
                 </label>
               </div>
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkTechno" (change)="TechnologieChange($event)">
+                <input class="form-check-input" type="checkbox" value="" id="checkTechno"
+                  (change)="TechnologieChange($event)">
                 <label class="form-check-label" for="checkTechno">
                   Technologie
                 </label>
               </div>
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkWirkung" (change)="WirkungChange($event)">
+                <input class="form-check-input" type="checkbox" value="" id="checkWirkung"
+                  (change)="WirkungChange($event)">
                 <label class="form-check-label" for="checkWirkung">
                   Wirkung
                 </label>
@@ -319,5 +368,3 @@
     </div>
   </div>
 </div>
-
-

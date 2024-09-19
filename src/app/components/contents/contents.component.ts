@@ -111,9 +111,6 @@ export class ContentsComponent implements OnInit {
 
   // Validierung für mindestens eine Auswahl pro Kategorie
   isValidSelection(): boolean {
-    console.log(this.selectedGradeLevels.length > 0 &&
-      this.selectedTopics.length > 0 &&
-      this.selectedAspects.length > 0);
     return this.selectedGradeLevels.length > 0 &&
       this.selectedTopics.length > 0 &&
       this.selectedAspects.length > 0;
@@ -209,7 +206,107 @@ export class ContentsComponent implements OnInit {
     }
   }
 
-  //////Filter/////
+  //Funktion zur Generierung von gesicherten Download-URLs
+  async generateSignedUrl(filePath: string): Promise<string | null> {
+    const { data, error } = await this.supabase
+      .storage
+      .from('pdf_uploads')
+      .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
+
+    if (error) {
+      console.error('Error generating signed URL:', error);
+      return null;
+    }
+
+    return data?.signedUrl;
+  }
+
+  //Funktion für den File Download
+  async downloadFile(filePath: string): Promise<void> {
+    const signedUrl = await this.generateSignedUrl(filePath);
+    if (signedUrl) {
+      window.open(signedUrl, '_blank');
+    } else {
+      alert('Error generating download link.');
+    }
+  }
+
+  isFavorite(contentId): boolean {
+    return this.favoriteContentIds.includes(contentId);
+  }
+
+  saveCurrentId(id) {
+    this.currentId = id;
+  }
+
+  async changeContent(): Promise<void> {
+
+    const { error } = await this.supabase
+      .from('contents')
+      .update({
+        heading: this.changeForm.value.heading,
+        description: this.changeForm.value.description,
+        grade_level: this.changeForm.value.gradeLevel,
+        topic: this.changeForm.value.topic,
+        aspectAnwendung: this.checkAnwendungBool,
+        aspectTechnologie: this.checkTechnologieBool,
+        aspectWirkung: this.checkWirkungBool,
+      })
+      .eq('id', this.currentId)
+
+    console.log(this.currentId);
+
+    if (error) {
+      console.error('Error updating content approval status:', error);
+      return;
+    }
+
+    this.changeForm.reset();
+    this.modalInstance.hide();
+
+    this.checkAnwendungBool = false;
+    this.checkTechnologieBool = false;
+    this.checkWirkungBool = false;
+
+    location.reload()
+  }
+
+
+  async createContentForm(id): Promise<void> {
+    this.saveCurrentId(id);
+
+    const { data, error } = await this.supabase
+      .from('contents')
+      .select('*')
+      .eq('id', this.currentId)
+
+    if (error) {
+      console.error('Error fetching contents:', error);
+      return;
+    }
+
+    this.changeForm = this.formBuilder.group({
+      heading: [data[0].heading, Validators.required],
+      description: [data[0].description, Validators.required],
+      gradeLevel: [data[0].grade_level, Validators.required],
+      topic: [data[0].topic, Validators.required],
+      checkAnwendung: [data[0].aspectAnwendung],
+      checkTechnologie: [data[0].aspectTechnologie],
+      checkWirkung: [data[0].aspectWirkung],
+    });
+  }
+
+  async toggleFavorite(contentId) {
+    if (this.isFavorite(contentId)) {
+      await this.supabaseFactory.removeFavorite(contentId);
+      this.favoriteContentIds = this.favoriteContentIds.filter(id => id !== contentId);
+    } else {
+      await this.supabaseFactory.addFavorite(contentId);
+      this.favoriteContentIds.push(contentId);
+    }
+  }
+
+  //////Filter - ÜBERARBEITEN/////
   changeFilterTitle() {
     var inputValue = (<HTMLInputElement>document.getElementById('filterText')).value;
     this.filterTitle = inputValue;
@@ -415,107 +512,6 @@ export class ContentsComponent implements OnInit {
       this.checkWirkungBool = true;
     } else {
       this.checkWirkungBool = false;
-    }
-  }
-
-
-  //Funktion zur Generierung von gesicherten Download-URLs
-  async generateSignedUrl(filePath: string): Promise<string | null> {
-    const { data, error } = await this.supabase
-      .storage
-      .from('pdf_uploads')
-      .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
-
-    if (error) {
-      console.error('Error generating signed URL:', error);
-      return null;
-    }
-
-    return data?.signedUrl;
-  }
-
-  //Funktion für den File Download
-  async downloadFile(filePath: string): Promise<void> {
-    const signedUrl = await this.generateSignedUrl(filePath);
-    if (signedUrl) {
-      window.open(signedUrl, '_blank');
-    } else {
-      alert('Error generating download link.');
-    }
-  }
-
-  isFavorite(contentId): boolean {
-    return this.favoriteContentIds.includes(contentId);
-  }
-
-  saveCurrentId(id) {
-    this.currentId = id;
-  }
-
-  async changeContent(): Promise<void> {
-
-    const { error } = await this.supabase
-      .from('contents')
-      .update({
-        heading: this.changeForm.value.heading,
-        description: this.changeForm.value.description,
-        grade_level: this.changeForm.value.gradeLevel,
-        topic: this.changeForm.value.topic,
-        aspectAnwendung: this.checkAnwendungBool,
-        aspectTechnologie: this.checkTechnologieBool,
-        aspectWirkung: this.checkWirkungBool,
-      })
-      .eq('id', this.currentId)
-
-    console.log(this.currentId);
-
-    if (error) {
-      console.error('Error updating content approval status:', error);
-      return;
-    }
-
-    this.changeForm.reset();
-    this.modalInstance.hide();
-
-    this.checkAnwendungBool = false;
-    this.checkTechnologieBool = false;
-    this.checkWirkungBool = false;
-
-    location.reload()
-  }
-
-
-  async createContentForm(id): Promise<void> {
-    this.saveCurrentId(id);
-
-    const { data, error } = await this.supabase
-      .from('contents')
-      .select('*')
-      .eq('id', this.currentId)
-
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return;
-    }
-
-    this.changeForm = this.formBuilder.group({
-      heading: [data[0].heading, Validators.required],
-      description: [data[0].description, Validators.required],
-      gradeLevel: [data[0].grade_level, Validators.required],
-      topic: [data[0].topic, Validators.required],
-      checkAnwendung: [data[0].aspectAnwendung],
-      checkTechnologie: [data[0].aspectTechnologie],
-      checkWirkung: [data[0].aspectWirkung],
-    });
-  }
-
-  async toggleFavorite(contentId) {
-    if (this.isFavorite(contentId)) {
-      await this.supabaseFactory.removeFavorite(contentId);
-      this.favoriteContentIds = this.favoriteContentIds.filter(id => id !== contentId);
-    } else {
-      await this.supabaseFactory.addFavorite(contentId);
-      this.favoriteContentIds.push(contentId);
     }
   }
 }
