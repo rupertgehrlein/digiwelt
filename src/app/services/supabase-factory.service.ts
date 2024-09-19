@@ -285,7 +285,44 @@ export class SupabaseFactoryService {
     return contents;
   }
 
+  async uploadContent(uniqueFileName, formData, heading, description, gradeLevel, file_format, topic, perspective){
+    const { data, error } = await this.client
+      .storage
+      .from('pdf_uploads')
+      .upload(uniqueFileName, formData);
+
+    if (error) {
+      console.error('Error uploading file:', error);
+      return;
+    }
+
+    const pdfFileUrl = data?.path;
+
+    const { data: contentData, error: contentError } = await this.client
+      .from('contents')
+      .insert([
+        {
+          created_at: (new Date()).toISOString(),
+          heading: heading,
+          description: description,
+          grade_level: gradeLevel,
+          creator_id: (await this.client.auth.getUser()).data.user.id,
+          is_approved: false,
+          is_disapproved: false,
+          pdf_file_url: pdfFileUrl,
+          file_format: file_format,
+          topic: topic,
+          perspective: perspective
+        },
+      ]);
+
+    if (contentError) {
+      console.error('Error inserting content:', contentError);
+      return;
+    }
+  }
 }
+
 
 
 /* import { Injectable } from '@angular/core';
