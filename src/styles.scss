@@ -106,8 +106,8 @@ a:hover {
   width: 60px; /* Width of the button */
   height: 60px; /* Height of the button */
   border-radius: 50%; /* Makes the button round */
-  background-color: var(--accent-color); /* Background color of the button */
-  color: var(--text-color); /* Color of the plus icon */
+  background-color: var(--primary-color); /* Background color of the button */
+  color: var(--primary-text-color); /* Color of the plus icon */
   border: none; /* Removes the default button border */
   cursor: pointer; /* Changes the cursor to a pointer when hovering over the button */
   display: flex; /* Allows for flexbox styling */
@@ -122,7 +122,7 @@ a:hover {
 }
 
 .round-button:hover {
-  background-color: var(--accent-color-hover);
+  background-color: var(--primary-color-hover);
 }
 
 /* .btn {
