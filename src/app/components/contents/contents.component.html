@@ -92,6 +92,22 @@
 </div> -->
 
 <div class="container container-top">
+  <div class="row">
+    <div class="col-8">
+      <div class="input-group rounded">
+        <input type="search" class="form-control rounded" placeholder="Suche" aria-label="Search" aria-describedby="search-addon" />
+        <span class="input-group-text border-0" id="search-addon">
+          <button class="btn" (click)="search()"><i class="fas fa-search"></i></button>
+        </span>
+      </div>
+    </div>
+    <div class="col-4">
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#uploadModal" style="float: right; font-size: larger;">Neuen Inhalt hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
   <div class="row" *ngFor="let content of contents">
     <div class="col">
       <div class="card">

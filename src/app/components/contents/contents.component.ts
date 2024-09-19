@@ -306,6 +306,8 @@ export class ContentsComponent implements OnInit {
     }
   }
 
+  async search(){}
+
   //////Filter - ÜBERARBEITEN/////
   changeFilterTitle() {
     var inputValue = (<HTMLInputElement>document.getElementById('filterText')).value;
