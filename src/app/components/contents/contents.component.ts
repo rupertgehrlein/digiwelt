@@ -166,21 +166,10 @@ export class ContentsComponent implements OnInit {
   }
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
-
-    // Für das filtern wird die query hier ausgeführt
-    let query = this.supabase
+    const {data, error} = await this.supabase
       .from('contents')
       .select('*')
       .eq('is_approved', true)
-
-    if (this.filterGrade) { query = query.eq('grade_level', this.filterGrade) }
-    if (this.filterTopic) { query = query.eq('topic', this.filterTopic) }
-    if (this.filterAnwendung) { query = query.eq('aspectAnwendung', this.filterAnwendung) }
-    if (this.filterTechnologie) { query = query.eq('aspectTechnologie', this.filterTechnologie) }
-    if (this.filterWirkung) { query = query.eq('aspectWirkung', this.filterWirkung) }
-
-    // und hier werden die Daten an die data Variable übergeben
-    const { data, error } = await query
 
     if (error) {
       console.error('Error fetching contents:', error);
@@ -188,14 +177,7 @@ export class ContentsComponent implements OnInit {
     }
 
     this.contents = data || [];
-    /**
-        for(let i = 0; i < data.length; i++ ){
-          if((data[i].heading.includes(this.filterTitle))){
-            this.contents.push(data[i]);
-          }
-        }
-        console.log(this.contents);
-        console.log(this.contentTitles);*/
+    console.log(this.contents);
   }
 
   async fetchFavorites(): Promise<void> {
@@ -306,9 +288,27 @@ export class ContentsComponent implements OnInit {
     }
   }
 
+  // muss noch überarbeitet werden, damit gezielte Filter möglich sind
+  filterContent(): void {
+    const filteredContents = this.contents.filter(content => {
+      const matchesGradeLevel = this.selectedGradeLevels.length === 0 ||
+        content.grade_level.some((level: string) => this.selectedGradeLevels.includes(level));
+
+      const matchesTopic = this.selectedTopics.length === 0 ||
+        content.topic.some((topic: string) => this.selectedTopics.includes(topic));
+
+      const matchesAspect = this.selectedAspects.length === 0 ||
+        content.perspective.some((aspect: string) => this.selectedAspects.includes(aspect));
+
+      return matchesGradeLevel && matchesTopic && matchesAspect;
+    });
+
+    this.contents = filteredContents;
+  }
+
   async search(){}
 
-  //////Filter - ÜBERARBEITEN/////
+  /* //////Filter - ÜBERARBEITEN/////
   changeFilterTitle() {
     var inputValue = (<HTMLInputElement>document.getElementById('filterText')).value;
     this.filterTitle = inputValue;
@@ -515,6 +515,6 @@ export class ContentsComponent implements OnInit {
     } else {
       this.checkWirkungBool = false;
     }
-  }
+  }*/
 }
 
