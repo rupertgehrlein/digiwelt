@@ -1,28 +1,103 @@
 <div class="container container-top">
   <h1 class="display-4">Dashboard</h1>
-  <div class="container">
-    <div class="container">
-      <h3 class="display-6" *ngIf="rejectedContents.length > 0">Abgelehnte Einreichungen:</h3>
-      <div class="row">
-        <div class="col-md-6" *ngFor="let rejectedContent of rejectedContents">
-          <div class="card mb-6">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start">
+  <div *ngIf="rejectedContents.length > 0">
+    <h3 class="display-6">Abgelehnte Einreichungen:</h3>
+    <div class="row">
+      <div class="col-md-6" *ngFor="let rejectedContent of rejectedContents">
+        <div class="card mb-6">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
               <h5 class="card-title">{{ rejectedContent.heading }}</h5>
-              <button class ="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(rejectedContent.id)" data-bs-target="#editModal">
+              <button class="favorite-btn" data-bs-toggle="modal" (click)="createContentForm(rejectedContent.id)"
+                data-bs-target="#editModal">
                 <img src="assets/edit-pencil.png">
-             </button>
+              </button>
             </div>
-              <p class="card-text"> {{ rejectedContent.admin_comment }} </p>
-              <a (click)="deleteContent(rejectedContent.id)" class="btn btn-primary">Inhalt löschen</a>
-              <!-- <a data-bs-toggle="modal" data-bs-target="#changeModal" class="btn btn-primary"
+            <p class="card-text"> {{ rejectedContent.admin_comment }} </p>
+            <a (click)="deleteContent(rejectedContent.id)" class="btn btn-primary">Inhalt löschen</a>
+            <!-- <a data-bs-toggle="modal" data-bs-target="#changeModal" class="btn btn-primary"
                 (click)="saveCurrentId(content.id)">Inhalt bearbeiten</a> -->
-            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="container container-top">
+  </div>
+
+  <div class="row align-items-center">
+    <div class="col">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="favoriten" data-bs-toggle="tab" data-bs-target="#favoriten-tab-pane"
+            type="button" role="tab" aria-controls="favoriten-tab-pane" aria-selected="true">Favoriten</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="eigeneInhalte" data-bs-toggle="tab" data-bs-target="#eigeneInhalte-tab-pane"
+            type="button" role="tab" aria-controls="eigeneInhalte-tab-pane" aria-selected="false">Eigene
+            Inhalte</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="favoriten-tab-pane" role="tabpanel" aria-labelledby="favoriten"
+          tabindex="0">
+          <div class="container tabs">
+            <div class="row" *ngFor="let favorite of favoriteContents">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">{{ favorite.heading }}</h5>
+                    <button class="favorite-btn" (click)="toggleFavorite(favorite.id)">
+                      <ng-container *ngIf="isFavorite(favorite.id); else notFavorited">
+                        <img src="assets/heart-filled.png" alt="Favorited">
+                      </ng-container>
+                      <ng-template #notFavorited>
+                        <img src="assets/heart-outline.png" alt="Not Favorited">
+                      </ng-template>
+                    </button>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <p class="card-text">{{ favorite.description }}</p>
+                    <img
+                      [src]="favorite.file_format ? '../../assets/filetypepics/' + favorite.file_format + '.png' : '../../assets/filetypepics/sonst.png'"
+                      class="file-format-img">
+                  </div>
+                  <div class="d-flex justify-content-start align-items-end">
+                    <a (click)="downloadFile(favorite.pdf_file_url)" class="btn" target="_blank"
+                      rel="noopener noreferrer">Download</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="eigeneInhalte-tab-pane" role="tabpanel" aria-labelledby="eigeneInhalte"
+          tabindex="0">
+          <div class="container tabs">
+            <div class="row" *ngFor="let ownContent of ownContents">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title">{{ ownContent.heading }} </h5>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-start"></div>
+                  <p class="card-text">{{ ownContent.description }}</p>
+                  <div style="float: right;">
+                    <a (click)="downloadFile(ownContent.pdf_file_url)" class="btn btn-primary" target="_blank"
+                      rel="noopener noreferrer">Download</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- <div class="container container-top">
       <h3 class="display-6" *ngIf="favoriteContents.length > 0">Favoriten:</h3>
       <div class="row">
         <div class="col-md-6" *ngFor="let favorite of favoriteContents">
@@ -50,16 +125,14 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div> -->
 </div>
 
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"
-#editModal>
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" #editModal>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-       <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
+        <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -90,21 +163,24 @@
           </div>
           <div>
             <label for="aspect" class="form-label">Perspektiven*</label>
-            <div class ="row">
+            <div class="row">
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung" (change)="AnwendungChange($event)" >
+                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung"
+                  (change)="AnwendungChange($event)">
                 <label class="form-check-label" for="checkAnwendung">
                   Anwendung
                 </label>
               </div>
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkTechno" (change)="TechnologieChange($event)">
+                <input class="form-check-input" type="checkbox" value="" id="checkTechno"
+                  (change)="TechnologieChange($event)">
                 <label class="form-check-label" for="checkTechno">
                   Technologie
                 </label>
               </div>
               <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkWirkung" (change)="WirkungChange($event)">
+                <input class="form-check-input" type="checkbox" value="" id="checkWirkung"
+                  (change)="WirkungChange($event)">
                 <label class="form-check-label" for="checkWirkung">
                   Wirkung
                 </label>
