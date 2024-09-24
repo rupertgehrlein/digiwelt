@@ -18,16 +18,6 @@ export class ContentsComponent implements OnInit {
   selectedFile: File | null = null;
   contents: any[] = [];
   contentTitles: any[] = [];
-  filterTitle: String = '';
-  filterGrade: any = null;
-  filterTopic: any = null;
-  filterAspect: any = null;
-  filterAnwendung: boolean = null;
-  filterTechnologie: boolean = null;
-  filterWirkung: boolean = null;
-  checkAnwendungBool: boolean = false;
-  checkTechnologieBool: boolean = false;
-  checkWirkungBool: boolean = false;
   favoriteContentIds = [];
   changeForm: FormGroup;
   isAdmin = false;
@@ -58,8 +48,6 @@ export class ContentsComponent implements OnInit {
     this.changeForm = this.formBuilder.group({
       heading: ['', Validators.required],
       description: ['', Validators.required],
-      gradeLevel: ['', Validators.required],
-      topic: ['', Validators.required],
     });
 
     await this.fetchFavorites();
@@ -221,39 +209,24 @@ export class ContentsComponent implements OnInit {
     this.currentId = id;
   }
 
+  // Muss Angepasst werden
   async changeContent(): Promise<void> {
 
-    const { error } = await this.supabase
-      .from('contents')
-      .update({
-        heading: this.changeForm.value.heading,
-        description: this.changeForm.value.description,
-        grade_level: this.changeForm.value.gradeLevel,
-        topic: this.changeForm.value.topic,
-        aspectAnwendung: this.checkAnwendungBool,
-        aspectTechnologie: this.checkTechnologieBool,
-        aspectWirkung: this.checkWirkungBool,
-      })
-      .eq('id', this.currentId)
+    const heading = this.changeForm.value.heading;
+    const description = this.changeForm.value.description;      
+    const gradeLevel = this.selectedGradeLevels;
+    const topic = this.selectedTopics;
+    const perspective = this.selectedAspects;
+    const id = this.currentId;
 
-    console.log(this.currentId);
-
-    if (error) {
-      console.error('Error updating content approval status:', error);
-      return;
-    }
+    await this.supabaseFactory.updateContent(heading, description, gradeLevel, topic, perspective, id)
 
     this.changeForm.reset();
     this.modalInstance.hide();
-
-    this.checkAnwendungBool = false;
-    this.checkTechnologieBool = false;
-    this.checkWirkungBool = false;
-
     location.reload()
   }
 
-
+  //Muss angepasst werden
   async createContentForm(id): Promise<void> {
     this.saveCurrentId(id);
 
@@ -270,11 +243,6 @@ export class ContentsComponent implements OnInit {
     this.changeForm = this.formBuilder.group({
       heading: [data[0].heading, Validators.required],
       description: [data[0].description, Validators.required],
-      gradeLevel: [data[0].grade_level, Validators.required],
-      topic: [data[0].topic, Validators.required],
-      checkAnwendung: [data[0].aspectAnwendung],
-      checkTechnologie: [data[0].aspectTechnologie],
-      checkWirkung: [data[0].aspectWirkung],
     });
   }
 
@@ -307,214 +275,4 @@ export class ContentsComponent implements OnInit {
   }
 
   async search(){}
-
-  /* //////Filter - ÜBERARBEITEN/////
-  changeFilterTitle() {
-    var inputValue = (<HTMLInputElement>document.getElementById('filterText')).value;
-    this.filterTitle = inputValue;
-    this.fetchContents()
-  }
-
-  changeFilterGrade(grade) {
-    if (this.filterGrade == grade) {
-      this.filterGrade = null;
-    }
-    else {
-      this.filterGrade = grade;
-    }
-    this.fetchContents()
-  }
-  changeFilterTopic(topic) {
-    if (this.filterTopic == topic) {
-      this.filterTopic = null;
-    }
-    else {
-      this.filterTopic = topic;
-    }
-    this.fetchContents()
-  }
-  changeFilterAspect(aspect) {
-    if (aspect == 'aspect1') {
-      this.filterAnwendung = (this.filterAnwendung !== true)
-    }
-    if (aspect == 'aspect2') {
-      this.filterWirkung = (this.filterWirkung !== true)
-    }
-    if (aspect == 'aspect3') {
-      this.filterTechnologie = (this.filterTechnologie !== true)
-    }
-    this.fetchContents()
-  }
-
-  changefilterCombo(combo) {
-    switch (combo) {
-      case 11: {
-        this.filterTopic = "topic1";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-      }
-      case 12: {
-        this.filterTopic = "topic1";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 13: {
-        this.filterTopic = "topic1";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 21: {
-        this.filterTopic = "topic2";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 22: {
-        this.filterTopic = "topic2";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 23: {
-        this.filterTopic = "topic2";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 31: {
-        this.filterTopic = "topic3";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 32: {
-        this.filterTopic = "topic3";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 33: {
-        this.filterTopic = "topic3";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 41: {
-        this.filterTopic = "topic4";
-        this.filterAnwendung = true;
-        this.filterWirkung = false;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 42: {
-        this.filterTopic = "topic4";
-        this.filterAnwendung = false;
-        this.filterWirkung = true;
-        this.filterTechnologie = false;
-
-        this.fetchContents();
-
-        break
-
-      }
-      case 43: {
-        this.filterTopic = "topic4";
-        this.filterAnwendung = false;
-        this.filterWirkung = false;
-        this.filterTechnologie = true;
-
-        this.fetchContents();
-
-        break
-
-      }
-    }
-  }
-
-  clearFilters() {
-    this.filterTitle = '';
-    this.filterGrade = null;
-    this.filterTopic = null;
-    this.filterAnwendung = null;
-    this.filterTechnologie = null;
-    this.filterWirkung = null;
-    this.fetchContents()
-  }
-
-  /// Checkbox Funktions
-  AnwendungChange(event: any) {
-    if (event.target.checked) {
-      this.checkAnwendungBool = true;
-    } else {
-      this.checkAnwendungBool = false;
-    }
-  }
-
-  TechnologieChange(event: any) {
-    if (event.target.checked) {
-      this.checkTechnologieBool = true;
-    } else {
-      this.checkTechnologieBool = false;
-    }
-  }
-
-  WirkungChange(event: any) {
-    if (event.target.checked) {
-      this.checkWirkungBool = true;
-    } else {
-      this.checkWirkungBool = false;
-    }
-  }*/
 }
-
