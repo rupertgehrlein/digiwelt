@@ -209,7 +209,6 @@ export class ContentsComponent implements OnInit {
     this.currentId = id;
   }
 
-  // Muss Angepasst werden
   async changeContent(): Promise<void> {
 
     const heading = this.changeForm.value.heading;
@@ -226,7 +225,6 @@ export class ContentsComponent implements OnInit {
     location.reload()
   }
 
-  //Muss angepasst werden
   async createContentForm(id): Promise<void> {
     this.saveCurrentId(id);
 
@@ -256,20 +254,24 @@ export class ContentsComponent implements OnInit {
     }
   }
 
-  // muss noch überarbeitet werden, damit gezielte Filter möglich sind
+  // Filterfunktion für die Inhalte
   filterContent(): void {
     const filteredContents = this.contents.filter(content => {
       const matchesGradeLevel = this.selectedGradeLevels.length === 0 ||
-        content.grade_level.some((level: string) => this.selectedGradeLevels.includes(level));
+        this.selectedGradeLevels.every((level: string) => content.grade_level.includes(level)); // "AND" Filter
+        //content.grade_level.some((level: string) => this.selectedGradeLevels.includes(level)); "OR" Filter
 
       const matchesTopic = this.selectedTopics.length === 0 ||
-        content.topic.some((topic: string) => this.selectedTopics.includes(topic));
+      this.selectedTopics.every((topic: string) => content.topic.includes(topic)); // "AND" Filter
+        //content.topic.some((topic: string) => this.selectedTopics.includes(topic)); "OR" Filter
 
       const matchesAspect = this.selectedAspects.length === 0 ||
-        content.perspective.some((aspect: string) => this.selectedAspects.includes(aspect));
+      this.selectedAspects.every((aspect: string) => content.perspective.includes(aspect)); // "AND" Filter
+        //content.perspective.some((aspect: string) => this.selectedAspects.includes(aspect)); "OR" Filter
 
       return matchesGradeLevel && matchesTopic && matchesAspect;
     });
+    
 
     this.contents = filteredContents;
   }
