@@ -72,6 +72,7 @@ export class ContentsComponent implements OnInit {
   // Änderungen für Themen speichern
   onTopicChange(event: any): void {
     const selectedTopic = event.target.value;
+    console.log(event.target.value);
     if (event.target.checked) {
       this.selectedTopics.push(selectedTopic);
     } else {
@@ -237,11 +238,41 @@ export class ContentsComponent implements OnInit {
       console.error('Error fetching contents:', error);
       return;
     }
+    
+    this.selectedGradeLevels = [];
+    this.selectedTopics = [];
+    this.selectedAspects = [];
+
+    const heading = data[0].heading;
+    const description = data[0].description;
+
+    this.gradeLevels.forEach(grade => { 
+      if(data[0].grade_level.includes(grade)){
+        this.selectedGradeLevels.push(grade);
+      }
+      console.log(this.selectedGradeLevels);
+    });
+
+    this.topics.forEach(topic => { 
+      if(data[0].topic.includes(topic)){
+        this.selectedTopics.push(topic);
+      }
+      console.log(this.selectedTopics);
+    });
+
+    this.aspects.forEach(aspect => { 
+      if(data[0].perspective.includes(aspect)){
+        this.selectedAspects.push(aspect);
+      }
+      console.log(this.selectedAspects);
+    });
 
     this.changeForm = this.formBuilder.group({
-      heading: [data[0].heading, Validators.required],
-      description: [data[0].description, Validators.required],
+      heading: [heading, Validators.required],
+      description: [description, Validators.required],
     });
+
+
   }
 
   async toggleFavorite(contentId) {
