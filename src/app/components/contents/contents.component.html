@@ -252,7 +252,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="changeModalLabel">Neuen Inhalt hochladen</h5>
+        <h5 class="modal-title" id="changeModalLabel">Inhalt Bearbeiten</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -272,7 +272,7 @@
           <div class="mb-3">
             <label for="gradeLevel" class="form-label">Klassenstufe*</label>
             <div class="form-check" *ngFor="let grade of gradeLevels">
-              <input class="form-check-input" type="checkbox" [value]="grade" (change)="onGradeChange($event)">
+              <input class="form-check-input" type="checkbox" [value]="grade" id="{{grade}}" (change)="onGradeChange($event)">
               <label class="form-check-label">{{grade}}</label>
             </div>
           </div>
@@ -281,7 +281,7 @@
           <div class="mb-3">
             <label for="topic" class="form-label">Thema*</label>
             <div class="form-check" *ngFor="let topic of topics">
-              <input class="form-check-input" type="checkbox" [value]="topic" (change)="onTopicChange($event)">
+              <input class="form-check-input" type="checkbox" [value]="topic" id="{{topic}}" (change)="onTopicChange($event)">
               <label class="form-check-label">{{topic}}</label>
             </div>
           </div>
@@ -290,7 +290,7 @@
           <div class="mb-3">
             <label for="aspect" class="form-label">Perspektiven*</label>
             <div class="form-check" *ngFor="let aspect of aspects">
-              <input class="form-check-input" type="checkbox" [value]="aspect" (change)="onAspectChange($event)">
+              <input class="form-check-input" type="checkbox" [value]="aspect" id="{{aspect}}" (change)="onAspectChange($event)">
               <label class="form-check-label">{{aspect}}</label>
             </div>
           </div>

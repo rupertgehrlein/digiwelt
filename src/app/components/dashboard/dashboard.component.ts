@@ -250,15 +250,40 @@ export class DashboardComponent {
       .select('*')
       .eq('id', this.currentId)
 
-      if (error) {
-        console.error('Error fetching contents:', error);
-        return;
-      }
+    if (error) {
+      console.error('Error fetching contents:', error);
+      return;
+    }
+    
+    this.selectedGradeLevels = [];
+    this.selectedTopics = [];
+    this.selectedAspects = [];
 
-      this.changeForm = this.formBuilder.group({
-        heading: [data[0].heading, Validators.required],
-        description: [data[0].description, Validators.required],
-      });
+    const heading = data[0].heading;
+    const description = data[0].description;
+
+    this.gradeLevels.forEach(grade => { 
+      if(data[0].grade_level.includes(grade)){
+        document.getElementById(grade).click();
+      }
+    });
+
+    this.topics.forEach(topic => { 
+      if(data[0].topic.includes(topic)){
+        document.getElementById(topic).click();
+      }
+    });
+
+    this.aspects.forEach(aspect => { 
+      if(data[0].perspective.includes(aspect)){
+        document.getElementById(aspect).click();
+      }
+    });
+
+    this.changeForm = this.formBuilder.group({
+      heading: [heading, Validators.required],
+      description: [description, Validators.required],
+    });
   }
 
   async changeContent(): Promise<void> {
@@ -269,12 +294,12 @@ export class DashboardComponent {
     const topic = this.selectedTopics;
     const perspective = this.selectedAspects;
     const id = this.currentId;
-  
-    await this.supabaseFactory.updateDisapprovedContent(heading, description, gradeLevel, topic, perspective, id);
-  
+
+    await this.supabaseFactory.updateContent(heading, description, gradeLevel, topic, perspective, id)
+
     this.changeForm.reset();
     this.modalInstance.hide();
-    location.reload();
+    location.reload()
   }
 
   // Änderungen für Klassenstufen speichern

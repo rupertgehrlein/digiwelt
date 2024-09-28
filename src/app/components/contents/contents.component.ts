@@ -248,31 +248,26 @@ export class ContentsComponent implements OnInit {
 
     this.gradeLevels.forEach(grade => { 
       if(data[0].grade_level.includes(grade)){
-        this.selectedGradeLevels.push(grade);
+        document.getElementById(grade).click();
       }
-      console.log(this.selectedGradeLevels);
     });
 
     this.topics.forEach(topic => { 
       if(data[0].topic.includes(topic)){
-        this.selectedTopics.push(topic);
+        document.getElementById(topic).click();
       }
-      console.log(this.selectedTopics);
     });
 
     this.aspects.forEach(aspect => { 
       if(data[0].perspective.includes(aspect)){
-        this.selectedAspects.push(aspect);
+        document.getElementById(aspect).click();
       }
-      console.log(this.selectedAspects);
     });
 
     this.changeForm = this.formBuilder.group({
       heading: [heading, Validators.required],
       description: [description, Validators.required],
     });
-
-
   }
 
   async toggleFavorite(contentId) {
