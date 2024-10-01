@@ -302,5 +302,12 @@ export class ContentsComponent implements OnInit {
     this.contents = filteredContents;
   }
 
-  async search(){}
+  async search(headingFilter){
+    const filteredContents = this.contents.filter(content =>{
+      const filterHeading = content.heading.includes(headingFilter);
+      return filterHeading;
+    });
+
+    this.contents = filteredContents;
+  }
 }
