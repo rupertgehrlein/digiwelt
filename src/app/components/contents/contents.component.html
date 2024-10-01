@@ -135,7 +135,7 @@
             </div>
             <div class="col-3">
               <button *ngIf="isAdmin" class="favorite-btn" data-bs-toggle="modal"
-                (click)="createContentForm(content.id)" data-bs-target="#editModal">
+                (click)="createContentForm(content.id)" data-bs-target="#changeModal">
                 <img src="assets/edit-pencil.png">
               </button>
               <button class="favorite-btn" (click)="toggleFavorite(content.id)">
@@ -246,68 +246,57 @@
   </div>
 </div>
 
-
 <!--Modal für das Bearbeiten von Content-->
-<div class="modal fade" id="editModal" tabindex="-2" aria-labelledby="editModalLabel" aria-hidden="true" #editModal>
+<div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true"
+  #changeModal>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Inhalt bearbeiten</h5>
+        <h5 class="modal-title" id="changeModalLabel">Inhalt Bearbeiten</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form [formGroup]="changeForm" (ngSubmit)="changeContent()">
+
+          <!-- Überschrift und Beschreibung -->
           <div class="mb-3">
-            <label for="heading" class="form-label">Überschrift</label>
+            <label for="heading" class="form-label">Überschrift*</label>
             <input type="text" class="form-control" id="heading" formControlName="heading">
           </div>
           <div class="mb-3">
-            <label for="description" class="form-label">Beschreibung</label>
+            <label for="description" class="form-label">Beschreibung*</label>
             <textarea class="form-control" id="description" formControlName="description"></textarea>
           </div>
+
+          <!-- Mehrfachauswahl für Klassenstufe -->
           <div class="mb-3">
-            <label for="gradeLevel" class="form-label">Klassenstufe</label>
-            <select class="form-select" id="gradeLevel" formControlName="gradeLevel">
-              <option value="fifth">5. Klasse</option>
-              <option value="sixth">6. Klasse</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="topic" class="form-label">Thema</label>
-            <select class="form-select" id="topic" formControlName="topic">
-              <option value="topic1">Computer überall</option>
-              <option value="topic2">Informationen und Daten</option>
-              <option value="topic3">Grundlagen der Programmierung</option>
-              <option value="topic4">Vernetzung</option>
-            </select>
-          </div>
-          <!-- <div>
-            <label for="aspect" class="form-label">Perspektiven*</label>
-            <div class="row">
-              <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkAnwendung"
-                  (change)="AnwendungChange($event)">
-                <label class="form-check-label" for="checkAnwendung">
-                  Anwendung
-                </label>
-              </div>
-              <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkTechno"
-                  (change)="TechnologieChange($event)">
-                <label class="form-check-label" for="checkTechno">
-                  Technologie
-                </label>
-              </div>
-              <div class="mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="checkWirkung"
-                  (change)="WirkungChange($event)">
-                <label class="form-check-label" for="checkWirkung">
-                  Wirkung
-                </label>
-              </div>
+            <label for="gradeLevel" class="form-label">Klassenstufe*</label>
+            <div class="form-check" *ngFor="let grade of gradeLevels">
+              <input class="form-check-input" type="checkbox" [value]="grade" id="{{grade}}" (change)="onGradeChange($event)">
+              <label class="form-check-label">{{grade}}</label>
             </div>
-          </div> -->
-          <button type="submit" class="btn btn-primary" [disabled]="!changeForm.valid">Übernehmen</button>
+          </div>
+
+          <!-- Mehrfachauswahl für Thema -->
+          <div class="mb-3">
+            <label for="topic" class="form-label">Thema*</label>
+            <div class="form-check" *ngFor="let topic of topics">
+              <input class="form-check-input" type="checkbox" [value]="topic" id="{{topic}}" (change)="onTopicChange($event)">
+              <label class="form-check-label">{{topic}}</label>
+            </div>
+          </div>
+
+          <!-- Mehrfachauswahl für Perspektiven -->
+          <div class="mb-3">
+            <label for="aspect" class="form-label">Perspektiven*</label>
+            <div class="form-check" *ngFor="let aspect of aspects">
+              <input class="form-check-input" type="checkbox" [value]="aspect" id="{{aspect}}" (change)="onAspectChange($event)">
+              <label class="form-check-label">{{aspect}}</label>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn" [disabled]="!changeForm.valid || !isValidSelection()">Hochladen</button>
         </form>
       </div>
     </div>

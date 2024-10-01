@@ -321,10 +321,52 @@ export class SupabaseFactoryService {
       return;
     }
   }
+
+  async updateContent(heading, description, gradeLevel, topic, perspective, id){
+    
+    const { data: contentData, error: contentError } = await this.client
+      .from('contents')
+      .update([
+        {
+          heading: heading,
+          description: description,
+          grade_level: gradeLevel,
+          topic: topic,
+          perspective: perspective
+        },
+      ])
+      .eq('id', id);
+
+    if (contentError) {
+      console.error('Error inserting content:', contentError);
+      return;
+    }
+  }
+
+
+  async updateDisapprovedContent(heading, description, gradeLevel, topic, perspective, id){
+      
+    const { data: contentData, error: contentError } = await this.client
+      .from('contents')
+      .update([
+        {
+          heading: heading,
+          description: description,
+          grade_level: gradeLevel,
+          topic: topic,
+          perspective: perspective,
+          is_disapproved: false,
+        },
+      ])
+      .eq('id', id);
+
+    if (contentError) {
+      console.error('Error inserting content:', contentError);
+      return;
+    }
+  }
+
 }
-
-
-
 /* import { Injectable } from '@angular/core';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';

@@ -19,9 +19,12 @@ export class AdminComponent {
   changeForm: FormGroup;
   private modalInstance: bootstrap.Modal;
   currentId;
-  checkAnwendungBool: boolean = false;
-  checkTechnologieBool: boolean = false;
-  checkWirkungBool: boolean = false;
+  selectedGradeLevels: string[] = [];
+  selectedTopics: string[] = [];
+  selectedAspects: string[] = [];
+  gradeLevels = ['5. Klasse', '6. Klasse'];
+  topics = ['Computer überall', 'Informationen und Daten', 'Grundlagen der Programmierung', 'Vernetzung'];
+  aspects = ['Anwendung', 'Technologie', 'Wirkung'];
   reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges']
   showCommentField: boolean = false;
   adminForm: FormGroup = this.formBuilder.group({
@@ -58,8 +61,6 @@ export class AdminComponent {
     this.changeForm = this.formBuilder.group({
       heading: ['', Validators.required],
       description: ['', Validators.required],
-      gradeLevel: ['', Validators.required],
-      topic: ['', Validators.required],
     });
 
   }
@@ -169,17 +170,40 @@ export class AdminComponent {
       .select('*')
       .eq('id', this.currentId)
 
-      if (error) {
-        console.error('Error fetching contents:', error);
-        return;
-      }
+    if (error) {
+      console.error('Error fetching contents:', error);
+      return;
+    }
+    
+    this.selectedGradeLevels = [];
+    this.selectedTopics = [];
+    this.selectedAspects = [];
 
-      this.changeForm = this.formBuilder.group({
-        heading: [data[0].heading, Validators.required],
-        description: [data[0].description, Validators.required],
-        gradeLevel: [data[0].grade_level, Validators.required],
-        topic: [data[0].topic, Validators.required],
-      });
+    const heading = data[0].heading;
+    const description = data[0].description;
+
+    this.gradeLevels.forEach(grade => { 
+      if(data[0].grade_level.includes(grade)){
+        document.getElementById(grade).click();
+      }
+    });
+
+    this.topics.forEach(topic => { 
+      if(data[0].topic.includes(topic)){
+        document.getElementById(topic).click();
+      }
+    });
+
+    this.aspects.forEach(aspect => { 
+      if(data[0].perspective.includes(aspect)){
+        document.getElementById(aspect).click();
+      }
+    });
+
+    this.changeForm = this.formBuilder.group({
+      heading: [heading, Validators.required],
+      description: [description, Validators.required],
+    });
   }
 
   async promoteToAdmin() {
@@ -193,60 +217,69 @@ export class AdminComponent {
     await this.supabaseFactory.changeUserMail(oldEmail, newEmail);
   }
 
-  /// Checkbox Funktions
-AnwendungChange(event: any){
-  if(event.target.checked){
-    this.checkAnwendungBool = true;
-  }else{
-    this.checkAnwendungBool = false;
-  }
-}
+async changeContent(): Promise<void> {
 
-TechnologieChange(event: any){
-  if(event.target.checked){
-    this.checkTechnologieBool= true;
-  }else{
-    this.checkTechnologieBool = false;
-  }
-}
+  const heading = this.changeForm.value.heading;
+  const description = this.changeForm.value.description;      
+  const gradeLevel = this.selectedGradeLevels;
+  const topic = this.selectedTopics;
+  const perspective = this.selectedAspects;
+  const id = this.currentId;
 
-WirkungChange(event: any){
-  if(event.target.checked){
-    this.checkWirkungBool= true;
-  }else{
-    this.checkWirkungBool = false;
-  }
-}
-async changeContent(): Promise<void>{
-
-  const { error } = await this.supabase
-    .from('contents')
-    .update({
-      heading: this.changeForm.value.heading,
-      description: this.changeForm.value.description,
-      grade_level: this.changeForm.value.gradeLevel,
-      topic: this.changeForm.value.topic,
-      aspectAnwendung: this.checkAnwendungBool,
-      aspectTechnologie: this.checkTechnologieBool,
-      aspectWirkung: this.checkWirkungBool,
-     })
-    .eq('id', this.currentId)
-
-    console.log(this.currentId);
-
-  if (error) {
-    console.error('Error updating content approval status:', error);
-    return;
-  }
+  await this.supabaseFactory.updateContent(heading, description, gradeLevel, topic, perspective, id)
 
   this.changeForm.reset();
   this.modalInstance.hide();
-
-  this.checkAnwendungBool = false;
-  this.checkTechnologieBool = false;
-  this.checkWirkungBool = false;
-
   location.reload()
+}
+
+// Änderungen für Klassenstufen speichern
+onGradeChange(event: any): void {
+  const selectedGrade = event.target.value;
+  if (event.target.checked) {
+    this.selectedGradeLevels.push(selectedGrade);
+  } else {
+    const index = this.selectedGradeLevels.indexOf(selectedGrade);
+    if (index > -1) {
+      this.selectedGradeLevels.splice(index, 1);
+    }
+  }
+  this.isValidSelection();
+}
+
+// Änderungen für Themen speichern
+onTopicChange(event: any): void {
+  const selectedTopic = event.target.value;
+  if (event.target.checked) {
+    this.selectedTopics.push(selectedTopic);
+  } else {
+    const index = this.selectedTopics.indexOf(selectedTopic);
+    if (index > -1) {
+      this.selectedTopics.splice(index, 1);
+    }
+  }
+  this.isValidSelection();
+}
+
+// Änderungen für Perspektiven speichern
+onAspectChange(event: any): void {
+  const selectedAspect = event.target.value;
+  if (event.target.checked) {
+    this.selectedAspects.push(selectedAspect);
+  } else {
+    const index = this.selectedAspects.indexOf(selectedAspect);
+    if (index > -1) {
+      this.selectedAspects.splice(index, 1);
+    }
+  }
+  this.isValidSelection();
+}
+
+// Validierung für mindestens eine Auswahl pro Kategorie
+isValidSelection(): boolean {
+  return this.selectedGradeLevels.length > 0 &&
+    this.selectedTopics.length > 0 &&
+    this.selectedAspects.length > 0;
 }
 
   changeReason(event) {
