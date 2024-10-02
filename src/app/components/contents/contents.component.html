@@ -164,6 +164,15 @@
             <div class="col">
               <a (click)="downloadFile(content.pdf_file_url)" class="btn" target="_blank"
               rel="noopener noreferrer">Download</a>
+              <button class="tag_grade" *ngIf="content.grade_level.includes('5. Klasse')">5. Klasse</button>
+              <button class="tag_grade" *ngIf="content.grade_level.includes('6. Klasse')">6. Klasse</button>
+              <button class="tag_topic" *ngIf="content.topic.includes('Grundlagen der Programmierung')" > Grundlagen der Programmierung  </button>
+              <button class="tag_topic" *ngIf="content.topic.includes('Computer überall')" > Computer Überall  </button>
+              <button class="tag_topic" *ngIf="content.topic.includes('Informationen und Daten')"> Information und Daten  </button>
+              <button class="tag_topic" *ngIf="content.topic.includes('Vernetzung')" > Vernetzung  </button>
+              <button class="tag_perspective" *ngIf="content.perspective.includes('Technologie')"> Technologie  </button>
+              <button class="tag_perspective" *ngIf="content.perspective.includes('Anwendung')"> Anwendung  </button>
+              <button class="tag_perspective" *ngIf="content.perspective.includes('Wirkung')"> Wirkung  </button>
             </div>
           </div>
         </div>
