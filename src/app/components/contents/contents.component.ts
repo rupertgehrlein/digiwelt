@@ -11,12 +11,14 @@ import { SupabaseClient } from '@supabase/supabase-js';
 })
 
 export class ContentsComponent implements OnInit {
+
   @ViewChild('uploadModal') uploadModal: ElementRef;
 
   supabase: SupabaseClient;
   uploadForm: FormGroup;
   selectedFile: File | null = null;
-  contents: any[] = [];
+  fetchedContents: any[] = [];
+  filteredContents: any[] = [];
   contentTitles: any[] = [];
   favoriteContentIds = [];
   changeForm: FormGroup;
@@ -155,7 +157,7 @@ export class ContentsComponent implements OnInit {
   }
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
-    const {data, error} = await this.supabase
+    const { data, error } = await this.supabase
       .from('contents')
       .select('*')
       .eq('is_approved', true)
@@ -165,8 +167,12 @@ export class ContentsComponent implements OnInit {
       return;
     }
 
-    this.contents = data || [];
-    console.log(this.contents);
+    this.fetchedContents = data || [];
+    this.filteredContents = this.fetchedContents;
+  }
+
+  resetContents(){
+    this.filteredContents = this.fetchedContents;
   }
 
   async fetchFavorites(): Promise<void> {
@@ -177,7 +183,7 @@ export class ContentsComponent implements OnInit {
     }
   }
 
-  //Funktion zur Generierung von gesicherten Download-URLs
+  //Funktion zur Generierung von gesicherten Download-URLs -> sollte man eventuell auslagern in services
   async generateSignedUrl(filePath: string): Promise<string | null> {
     const { data, error } = await this.supabase
       .storage
@@ -213,7 +219,7 @@ export class ContentsComponent implements OnInit {
   async changeContent(): Promise<void> {
 
     const heading = this.changeForm.value.heading;
-    const description = this.changeForm.value.description;      
+    const description = this.changeForm.value.description;
     const gradeLevel = this.selectedGradeLevels;
     const topic = this.selectedTopics;
     const perspective = this.selectedAspects;
@@ -226,6 +232,7 @@ export class ContentsComponent implements OnInit {
     location.reload()
   }
 
+  //bestimmt repetetiv und sollte in services ausgelagert werden
   async createContentForm(id): Promise<void> {
     this.saveCurrentId(id);
 
@@ -238,7 +245,7 @@ export class ContentsComponent implements OnInit {
       console.error('Error fetching contents:', error);
       return;
     }
-    
+
     this.selectedGradeLevels = [];
     this.selectedTopics = [];
     this.selectedAspects = [];
@@ -246,20 +253,20 @@ export class ContentsComponent implements OnInit {
     const heading = data[0].heading;
     const description = data[0].description;
 
-    this.gradeLevels.forEach(grade => { 
-      if(data[0].grade_level.includes(grade)){
+    this.gradeLevels.forEach(grade => {
+      if (data[0].grade_level.includes(grade)) {
         document.getElementById(grade).click();
       }
     });
 
-    this.topics.forEach(topic => { 
-      if(data[0].topic.includes(topic)){
+    this.topics.forEach(topic => {
+      if (data[0].topic.includes(topic)) {
         document.getElementById(topic).click();
       }
     });
 
-    this.aspects.forEach(aspect => { 
-      if(data[0].perspective.includes(aspect)){
+    this.aspects.forEach(aspect => {
+      if (data[0].perspective.includes(aspect)) {
         document.getElementById(aspect).click();
       }
     });
@@ -282,32 +289,42 @@ export class ContentsComponent implements OnInit {
 
   // Filterfunktion für die Inhalte
   filterContent(): void {
-    const filteredContents = this.contents.filter(content => {
+    const contents = this.fetchedContents;
+    const filteredContents = contents.filter(content => {
       const matchesGradeLevel = this.selectedGradeLevels.length === 0 ||
         this.selectedGradeLevels.every((level: string) => content.grade_level.includes(level)); // "AND" Filter
-        //content.grade_level.some((level: string) => this.selectedGradeLevels.includes(level)); "OR" Filter
+      //content.grade_level.some((level: string) => this.selectedGradeLevels.includes(level)); "OR" Filter
 
       const matchesTopic = this.selectedTopics.length === 0 ||
-      this.selectedTopics.every((topic: string) => content.topic.includes(topic)); // "AND" Filter
-        //content.topic.some((topic: string) => this.selectedTopics.includes(topic)); "OR" Filter
+        this.selectedTopics.every((topic: string) => content.topic.includes(topic)); // "AND" Filter
+      //content.topic.some((topic: string) => this.selectedTopics.includes(topic)); "OR" Filter
 
       const matchesAspect = this.selectedAspects.length === 0 ||
-      this.selectedAspects.every((aspect: string) => content.perspective.includes(aspect)); // "AND" Filter
-        //content.perspective.some((aspect: string) => this.selectedAspects.includes(aspect)); "OR" Filter
+        this.selectedAspects.every((aspect: string) => content.perspective.includes(aspect)); // "AND" Filter
+      //content.perspective.some((aspect: string) => this.selectedAspects.includes(aspect)); "OR" Filter
 
       return matchesGradeLevel && matchesTopic && matchesAspect;
     });
-    
 
-    this.contents = filteredContents;
+
+    this.filteredContents = filteredContents;
   }
 
-  async search(headingFilter){
-    const filteredContents = this.contents.filter(content =>{
-      const filterHeading = content.heading.includes(headingFilter);
-      return filterHeading;
+  async search(filter: string) {
+    const contents = this.fetchedContents;
+
+    // Filter-String in Kleinbuchstaben und in einzelne Wörter aufteilen
+    const keywords = filter.toLowerCase().split(/\s+/); // Trennung bei Leerzeichen
+
+    const filteredContents = contents.filter(content => {
+      // Überschrift und Beschreibung in Kleinbuchstaben
+      const heading = content.heading.toLowerCase();
+      const description = content.description.toLowerCase();
+
+      // Prüfen, ob jedes Schlüsselwort in Überschrift ODER Beschreibung vorkommt
+      return keywords.every(keyword => heading.includes(keyword) || description.includes(keyword));
     });
 
-    this.contents = filteredContents;
+    this.filteredContents = filteredContents;
   }
 }
