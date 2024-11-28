@@ -20,7 +20,7 @@ export function adminGuardFactory(injector: Injector): CanActivateFn {
     }
 
     const router = injector.get(Router);
-    router.navigate(['/']); // Redirect to homepage if not an admin
+    router.navigate(['/dashboard']); // Redirect to homepage if not an admin
     return false; // Ensure that the function returns false if the user is not an admin
  };
 }
