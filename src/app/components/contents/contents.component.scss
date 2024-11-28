@@ -1,0 +1,61 @@
+.tag_grade {
+    pointer-events: none;
+    background-color: #fac390;
+    border: none;
+    color: #000000;
+    padding: 0.3em 0.5em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 0.2em;
+    margin-left: 1em;
+    margin-bottom: 0.2em;
+    border-radius: 1em;
+    flex: 0 0 auto
+  }
+
+  .tag_topic {
+    pointer-events: none;
+    background-color: #90faf1;
+    border: none;
+    color: #000000;
+    padding: 0.3em 0.5em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 0.2em;
+    margin-left: 1em;
+    margin-bottom: 0.2em;
+    border-radius: 1em;
+    flex: 0 0 auto
+  }
+
+  .tag_perspective {
+    pointer-events: none;
+    background-color: #c8fa90;
+    border: none;
+    color: #000000;
+    padding: 0.3em 0.5em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 0.2em;
+    margin-left: 1em;
+    margin-bottom: 0.2em;
+    border-radius: 1em;
+    flex: 0 0 auto
+  }
+
+  .scrollable-tags{
+    display: flex;
+    flex-wrap: no-wrap;
+    overflow-x: scroll;
+    margin: 0.5em;
+    //outline: 1px solid rgba(0, 81, 255, 0.212)
+  }
+
+  .scrollable-descripton{
+    height: 6em;
+    overflow-y: scroll;
+    //outline: 1px solid rgba(0, 81, 255, 0.212)
+  }
