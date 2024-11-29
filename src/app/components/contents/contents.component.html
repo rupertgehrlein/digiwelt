@@ -114,14 +114,14 @@
     </div>
 
     <div class="col">
-      <button class="btn btn-primary" (click)="fetchContents()">Filter zurücksetzen</button>
+      <button class="btn btn-primary" (click)="resetContents()">Filter zurücksetzen</button>
     </div>
   </div>
 </div>
 
 
 <div class="container">
-  <div class="row" *ngFor="let content of contents">
+  <div class="row" *ngFor="let content of filteredContents">
     <div class="col">
       <div class="card">
         <div class="card-body">
