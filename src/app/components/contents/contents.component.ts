@@ -157,17 +157,8 @@ export class ContentsComponent implements OnInit {
   }
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('contents')
-      .select('*')
-      .eq('is_approved', true)
 
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return;
-    }
-
-    this.fetchedContents = data || [];
+    this.fetchedContents = await this.supabaseFactory.fetchAllContents(true, false) || [];
     this.filteredContents = this.fetchedContents;
   }
 
