@@ -70,18 +70,7 @@ export class DashboardComponent {
   }
 
   async fetchRejectedContents(userId: string): Promise<void> {
-   /**  const { data, error } = await this.supabase
-      .from('contents')
-      .select('*')
-      .eq('is_disapproved', true)
-      .eq('creator_id', userId);
-
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return;
-    }
-    */
-    this.rejectedContents = await this.supabaseFactory.fetchContentsByID(false, true, userId) || [];
+    this.rejectedContents = await this.supabaseFactory.getUserContentByApprovement(false, true, userId) || [];
   }
 
   async fetchFavoriteContents() {

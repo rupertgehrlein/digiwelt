@@ -186,8 +186,8 @@ export class SupabaseFactoryService {
     }
     return data;
   }
+  async getUserContentByApprovement(is_approved: boolean, is_disapproved: boolean,userID: string): Promise<any>{
 
-  async fetchContentsByID(is_approved: boolean, is_disapproved: boolean, userID: string): Promise<any> {
     const { data, error } = await this.client
       .from('contents')
       .select('*')
@@ -199,10 +199,22 @@ export class SupabaseFactoryService {
       console.error('Error fetching contents:', error);
       return;
     }
+  }
+
+  async getContentsByID(ID: string): Promise<any> {
+    const { data, error } = await this.client
+      .from('contents')
+      .select('*')
+      .eq('id', ID);
+
+    if (error) {
+      console.error('Error fetching contents:', error);
+      return;
+    }
     return data;
   }
 
-  async getContentsByID(userID: string): Promise<any> {
+  async getContentsByCreatorID(userID: string): Promise<any> {
     const { data, error } = await this.client
       .from('contents')
       .select('*')
