@@ -157,17 +157,8 @@ export class ContentsComponent implements OnInit {
   }
   //Funktion zum Laden der Inhalte
   async fetchContents(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('contents')
-      .select('*')
-      .eq('is_approved', true)
 
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return;
-    }
-
-    this.fetchedContents = data || [];
+    this.fetchedContents = await this.supabaseFactory.fetchAllContents(true, false) || [];
     this.filteredContents = this.fetchedContents;
   }
 
@@ -183,24 +174,9 @@ export class ContentsComponent implements OnInit {
     }
   }
 
-  //Funktion zur Generierung von gesicherten Download-URLs -> sollte man eventuell auslagern in services
-  async generateSignedUrl(filePath: string): Promise<string | null> {
-    const { data, error } = await this.supabase
-      .storage
-      .from('pdf_uploads')
-      .createSignedUrl(filePath, 3600); // Adjust the expiration time as needed
-
-    if (error) {
-      console.error('Error generating signed URL:', error);
-      return null;
-    }
-
-    return data?.signedUrl;
-  }
-
   //Funktion für den File Download
   async downloadFile(filePath: string): Promise<void> {
-    const signedUrl = await this.generateSignedUrl(filePath);
+    const signedUrl = await this.supabaseFactory.generateSignedUrl(filePath);
     if (signedUrl) {
       window.open(signedUrl, '_blank');
     } else {
@@ -236,15 +212,7 @@ export class ContentsComponent implements OnInit {
   async createContentForm(id): Promise<void> {
     this.saveCurrentId(id);
 
-    const { data, error } = await this.supabase
-      .from('contents')
-      .select('*')
-      .eq('id', this.currentId)
-
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return;
-    }
+    var data = await this.supabaseFactory.getContentsByID(this.currentId);
 
     this.selectedGradeLevels = [];
     this.selectedTopics = [];

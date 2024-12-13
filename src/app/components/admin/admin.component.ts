@@ -67,51 +67,16 @@ export class AdminComponent {
 
   //Funktion zum abrufen der Daten, die in der Spalte is_approved = false stehen haben
   async fetchContents(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('contents')
-      .select('*')
-      .eq('is_approved', false)
-      .eq('is_disapproved', false)
-
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return;
-    }
-
-    this.contents = data || [];
+    this.contents = await this.supabaseFactory.fetchAllContents(false, false) || [];
   }
 
   async fetchRegisteredUsers(): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('unregistered_users')
-      .select('*')
-
-    if (error) {
-      console.error('Fetching unregistered Users failed: ', error);
-      return;
-    }
-
-    this.unregisteredUsers = data || [];
-  }
-
-  // Funktion zur signierten URL Erstellung für den sicheren Datei-Download
-  async generateSignedUrl(filePath: string): Promise<string | null> {
-    const { data, error } = await this.supabase
-      .storage
-      .from('pdf_uploads')
-      .createSignedUrl(filePath, 3600); // Link ist für 1 Stunde gültig, eigentlich in dem SetUp aber egal
-
-    if (error) {
-      console.error('Error generating signed URL:', error);
-      return null;
-    }
-
-    return data?.signedUrl;
+    this.unregisteredUsers = await this.supabaseFactory.fetchRegisteredUsers() || [];
   }
 
   //Funktion zum Aufruf der entsprechenden Datei
   async downloadFile(filePath: string): Promise<void> {
-    const signedUrl = await this.generateSignedUrl(filePath);
+    const signedUrl = await this.supabaseFactory.generateSignedUrl(filePath);
     if (signedUrl) {
       window.open(signedUrl, '_blank');
     } else {
@@ -125,17 +90,7 @@ export class AdminComponent {
 
   //Funktion, die den Wert für is_approved des entsprechenden Eintrags auf true setzt -> dann erst für alle User verfügbar
   async setApproved(id): Promise<void> {
-    const { error } = await this.supabase
-      .from('contents')
-      .update({ is_approved: true })
-      .eq('id', id)
-
-    if (error) {
-      console.error('Error updating content approval status:', error);
-      return;
-    }
-
-    //Seite wird hiermit automatisch "neu geladen"
+    await this.supabaseFactory.setApproved(id);
     this.fetchContents();
   }
 
@@ -145,16 +100,7 @@ export class AdminComponent {
     let commentString: string = '';
     commentString = this.disapproveForm.value.disapprovedReason.concat(' ', this.disapproveForm.value.adminComment);
 
-    const { error } = await this.supabase
-      .from('contents')
-      .update({ is_disapproved: true, admin_comment: commentString })
-      .eq('id', this.currentId)
-      console.log(this.currentId);
-
-    if (error) {
-      console.error('Error updating content approval status:', error);
-      return;
-    }
+    await this.supabaseFactory.setDisapproved(commentString, this.currentId);
 
     this.disapproveForm.reset();
     this.modalInstance.hide();
@@ -164,16 +110,8 @@ export class AdminComponent {
 
   async createContentForm(id): Promise<void> {
     this.saveCurrentId(id);
-
-    const { data, error } = await this.supabase
-      .from('contents')
-      .select('*')
-      .eq('id', this.currentId)
-
-    if (error) {
-      console.error('Error fetching contents:', error);
-      return;
-    }
+    
+    var data = await this.supabaseFactory.getContentsByID(this.currentId);
     
     this.selectedGradeLevels = [];
     this.selectedTopics = [];
