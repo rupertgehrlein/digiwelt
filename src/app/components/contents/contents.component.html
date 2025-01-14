@@ -1,3 +1,134 @@
+<!--Modal für den Upload von neuem Content-->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true"
+  #uploadModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Neuen Inhalt hochladen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+          <!-- Überschrift und Beschreibung -->
+          <div class="mb-3">
+            <label for="heading" class="form-label">Überschrift*</label>
+            <input type="text" class="form-control" id="heading" formControlName="heading">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Beschreibung*</label>
+            <textarea class="form-control" id="description" formControlName="description"></textarea>
+          </div>
+
+          <!-- Mehrfachauswahl für Klassenstufe -->
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label">Klassenstufe*</label>
+            <div class="form-check" *ngFor="let grade of gradeLevels">
+              <input class="form-check-input" type="checkbox" [value]="grade" (change)="onGradeChange($event)">
+              <label class="form-check-label">{{grade}}</label>
+            </div>
+          </div>
+
+          <!-- Mehrfachauswahl für Thema -->
+          <div class="mb-3">
+            <label for="topic" class="form-label">Thema*</label>
+            <div class="form-check" *ngFor="let topic of topics">
+              <input class="form-check-input" type="checkbox" [value]="topic" (change)="onTopicChange($event)">
+              <label class="form-check-label">{{topic}}</label>
+            </div>
+          </div>
+
+          <!-- Mehrfachauswahl für Perspektiven -->
+          <div class="mb-3">
+            <label for="aspect" class="form-label">Perspektiven*</label>
+            <div class="form-check" *ngFor="let aspect of aspects">
+              <input class="form-check-input" type="checkbox" [value]="aspect" (change)="onAspectChange($event)">
+              <label class="form-check-label">{{aspect}}</label>
+            </div>
+          </div>
+
+          <!-- Datei hochladen -->
+          <div class="mb-3">
+            <label for="pdfFile" class="form-label">Datei hochladen*</label>
+            <input type="file" class="form-control" id="pdfFile" (change)="onFileSelected($event)">
+          </div>
+
+          <!-- Bestätigung -->
+          <div class="mb-3">
+            Mit * gekennzeichnete Felder sind verpflichtend.
+          </div>
+          <div class="mb-3">
+            <label for="commitment" class="form-check-label">
+              Ich bestätige, dass der Inhalt von mir erstellt ist und wenn Fremdmaterial enthalten ist, dieses korrekt
+              gekennzeichnet wurde.
+            </label>
+            <input type="checkbox" class="form-check-input" id="commitment" formControlName="commitment">
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn" [disabled]="!uploadForm.valid || !isValidSelection()">Hochladen</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal für das Bearbeiten von Content-->
+<div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true"
+  #changeModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="changeModalLabel">Inhalt Bearbeiten</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="changeForm" (ngSubmit)="changeContent()">
+
+          <!-- Überschrift und Beschreibung -->
+          <div class="mb-3">
+            <label for="heading" class="form-label">Überschrift*</label>
+            <input type="text" class="form-control" id="heading" formControlName="heading">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Beschreibung*</label>
+            <textarea class="form-control" id="description" formControlName="description"></textarea>
+          </div>
+
+          <!-- Mehrfachauswahl für Klassenstufe -->
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label">Klassenstufe*</label>
+            <div class="form-check" *ngFor="let grade of gradeLevels">
+              <input class="form-check-input" type="checkbox" [value]="grade" id="{{grade}}" (change)="onGradeChange($event)">
+              <label class="form-check-label">{{grade}}</label>
+            </div>
+          </div>
+
+          <!-- Mehrfachauswahl für Thema -->
+          <div class="mb-3">
+            <label for="topic" class="form-label">Thema*</label>
+            <div class="form-check" *ngFor="let topic of topics">
+              <input class="form-check-input" type="checkbox" [value]="topic" id="{{topic}}" (change)="onTopicChange($event)">
+              <label class="form-check-label">{{topic}}</label>
+            </div>
+          </div>
+
+          <!-- Mehrfachauswahl für Perspektiven -->
+          <div class="mb-3">
+            <label for="aspect" class="form-label">Perspektiven*</label>
+            <div class="form-check" *ngFor="let aspect of aspects">
+              <input class="form-check-input" type="checkbox" [value]="aspect" id="{{aspect}}" (change)="onAspectChange($event)">
+              <label class="form-check-label">{{aspect}}</label>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn" [disabled]="!changeForm.valid || !isValidSelection()">Hochladen</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!--Button zum öffnen des Modals zum Upload-->
 <button type="button" class="round-button btn" data-bs-toggle="modal" data-bs-target="#uploadModal">
   <i class="fas fa-plus"></i>
@@ -186,137 +317,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--Modal für den Upload von neuem Content-->
-<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true"
-  #uploadModal>
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="uploadModalLabel">Neuen Inhalt hochladen</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-          <!-- Überschrift und Beschreibung -->
-          <div class="mb-3">
-            <label for="heading" class="form-label">Überschrift*</label>
-            <input type="text" class="form-control" id="heading" formControlName="heading">
-          </div>
-          <div class="mb-3">
-            <label for="description" class="form-label">Beschreibung*</label>
-            <textarea class="form-control" id="description" formControlName="description"></textarea>
-          </div>
-
-          <!-- Mehrfachauswahl für Klassenstufe -->
-          <div class="mb-3">
-            <label for="gradeLevel" class="form-label">Klassenstufe*</label>
-            <div class="form-check" *ngFor="let grade of gradeLevels">
-              <input class="form-check-input" type="checkbox" [value]="grade" (change)="onGradeChange($event)">
-              <label class="form-check-label">{{grade}}</label>
-            </div>
-          </div>
-
-          <!-- Mehrfachauswahl für Thema -->
-          <div class="mb-3">
-            <label for="topic" class="form-label">Thema*</label>
-            <div class="form-check" *ngFor="let topic of topics">
-              <input class="form-check-input" type="checkbox" [value]="topic" (change)="onTopicChange($event)">
-              <label class="form-check-label">{{topic}}</label>
-            </div>
-          </div>
-
-          <!-- Mehrfachauswahl für Perspektiven -->
-          <div class="mb-3">
-            <label for="aspect" class="form-label">Perspektiven*</label>
-            <div class="form-check" *ngFor="let aspect of aspects">
-              <input class="form-check-input" type="checkbox" [value]="aspect" (change)="onAspectChange($event)">
-              <label class="form-check-label">{{aspect}}</label>
-            </div>
-          </div>
-
-          <!-- Datei hochladen -->
-          <div class="mb-3">
-            <label for="pdfFile" class="form-label">Datei hochladen*</label>
-            <input type="file" class="form-control" id="pdfFile" (change)="onFileSelected($event)">
-          </div>
-
-          <!-- Bestätigung -->
-          <div class="mb-3">
-            Mit * gekennzeichnete Felder sind verpflichtend.
-          </div>
-          <div class="mb-3">
-            <label for="commitment" class="form-check-label">
-              Ich bestätige, dass der Inhalt von mir erstellt ist und wenn Fremdmaterial enthalten ist, dieses korrekt
-              gekennzeichnet wurde.
-            </label>
-            <input type="checkbox" class="form-check-input" id="commitment" formControlName="commitment">
-          </div>
-
-          <!-- Submit Button -->
-          <button type="submit" class="btn" [disabled]="!uploadForm.valid || !isValidSelection()">Hochladen</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--Modal für das Bearbeiten von Content-->
-<div class="modal fade" id="changeModal" tabindex="-1" aria-labelledby="changeModalLabel" aria-hidden="true"
-  #changeModal>
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="changeModalLabel">Inhalt Bearbeiten</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="changeForm" (ngSubmit)="changeContent()">
-
-          <!-- Überschrift und Beschreibung -->
-          <div class="mb-3">
-            <label for="heading" class="form-label">Überschrift*</label>
-            <input type="text" class="form-control" id="heading" formControlName="heading">
-          </div>
-          <div class="mb-3">
-            <label for="description" class="form-label">Beschreibung*</label>
-            <textarea class="form-control" id="description" formControlName="description"></textarea>
-          </div>
-
-          <!-- Mehrfachauswahl für Klassenstufe -->
-          <div class="mb-3">
-            <label for="gradeLevel" class="form-label">Klassenstufe*</label>
-            <div class="form-check" *ngFor="let grade of gradeLevels">
-              <input class="form-check-input" type="checkbox" [value]="grade" id="{{grade}}" (change)="onGradeChange($event)">
-              <label class="form-check-label">{{grade}}</label>
-            </div>
-          </div>
-
-          <!-- Mehrfachauswahl für Thema -->
-          <div class="mb-3">
-            <label for="topic" class="form-label">Thema*</label>
-            <div class="form-check" *ngFor="let topic of topics">
-              <input class="form-check-input" type="checkbox" [value]="topic" id="{{topic}}" (change)="onTopicChange($event)">
-              <label class="form-check-label">{{topic}}</label>
-            </div>
-          </div>
-
-          <!-- Mehrfachauswahl für Perspektiven -->
-          <div class="mb-3">
-            <label for="aspect" class="form-label">Perspektiven*</label>
-            <div class="form-check" *ngFor="let aspect of aspects">
-              <input class="form-check-input" type="checkbox" [value]="aspect" id="{{aspect}}" (change)="onAspectChange($event)">
-              <label class="form-check-label">{{aspect}}</label>
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <button type="submit" class="btn" [disabled]="!changeForm.valid || !isValidSelection()">Hochladen</button>
-        </form>
       </div>
     </div>
   </div>
