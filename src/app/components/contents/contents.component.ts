@@ -29,7 +29,7 @@ export class ContentsComponent implements OnInit {
   selectedAspects: string[] = [];
   gradeLevels = ['5. Klasse', '6. Klasse'];
   topics = ['Computer überall', 'Informationen und Daten', 'Grundlagen der Programmierung', 'Vernetzung'];
-  aspects = ['Anwendung', 'Technologie', 'Wirkung'];
+  aspects = ['Anwendungsperspektive', 'Technologieperspektive', 'Gesellschaftlich-kulturelle Perspektive'];
 
   constructor(private formBuilder: FormBuilder, 
     private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient()}
