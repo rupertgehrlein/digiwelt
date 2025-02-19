@@ -1,20 +1,19 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as bootstrap from 'bootstrap';
 import { SupabaseFactoryService } from '../../services/supabase-factory.service';
 import { SupabaseClient } from '@supabase/supabase-js';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-contents',
   templateUrl: './contents.component.html',
   styleUrls: ['./contents.component.scss'],
 })
-
 export class ContentsComponent implements OnInit {
-
   @ViewChild('uploadModal') uploadModal: ElementRef;
 
   supabase: SupabaseClient;
+  private modalInstance: bootstrap.Modal;
   uploadForm: FormGroup;
   selectedFile: File | null = null;
   fetchedContents: any[] = [];
@@ -24,21 +23,21 @@ export class ContentsComponent implements OnInit {
   changeForm: FormGroup;
   isAdmin = false;
   currentId;
-  private modalInstance: bootstrap.Modal;
 
   selectedGradeLevels: string[] = [];
   selectedTopics: string[] = [];
   selectedAspects: string[] = [];
   gradeLevels = ['5. Klasse', '6. Klasse'];
   topics = ['Computer überall', 'Informationen und Daten', 'Grundlagen der Programmierung', 'Vernetzung'];
-  aspects = ['Anwendung', 'Technologie', 'Wirkung'];
+  aspects = ['Anwendungsperspektive', 'Technologieperspektive', 'Gesellschaftlich-kulturelle Perspektive'];
 
-  constructor(private formBuilder: FormBuilder, private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient() }
-
+  constructor(private formBuilder: FormBuilder, 
+    private supabaseFactory: SupabaseFactoryService) { this.supabase = supabaseFactory.getClient()}
+  
   ngAfterViewInit(): void {
     const modalElement = this.uploadModal.nativeElement;
     this.modalInstance = new bootstrap.Modal(modalElement);
-  }
+    }
 
   async ngOnInit() {
     this.uploadForm = this.formBuilder.group({

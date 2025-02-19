@@ -24,8 +24,8 @@ export class AdminComponent {
   selectedAspects: string[] = [];
   gradeLevels = ['5. Klasse', '6. Klasse'];
   topics = ['Computer überall', 'Informationen und Daten', 'Grundlagen der Programmierung', 'Vernetzung'];
-  aspects = ['Anwendung', 'Technologie', 'Wirkung'];
-  reasons: any = ['Grund 1', 'Grund 2', 'Grund 3', 'Grund 4', 'Sonstiges']
+  aspects = ['Anwendungsperspektive', 'Technologieperspektive', 'Gesellschaftlich-kulturelle Perspektive'];
+  reasons: any = ['Urheberrechtsverletzung', 'Unpassendes Thema', 'Unpassender Inhalt', 'Nicht für Klassenstufen geeignet', 'Sonstiges']
   showCommentField: boolean = false;
   adminForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.required]]
