@@ -7,6 +7,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { FifthGradeComponent } from './components/fifth-grade/fifth-grade.component';
 import { SixthGradeComponent } from './components/sixth-grade/sixth-grade.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ToolsComponent } from './components/tools/tools.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -30,6 +31,11 @@ const routes: Routes = [
     component: AdminComponent,
     canActivate: ['adminGuard'], //siehe admin.guard.ts
   },
+  {
+    path: 'tools',
+    component: ToolsComponent,
+    canActivate: ['authGuard'],
+  }
 ];
 
 @NgModule({
