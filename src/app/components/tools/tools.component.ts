@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class ToolsComponent {
 
-  CompUberTools: any[] = 
+  CompUberTools: any[] =
   [{
     heading:"Bill's Computer Workshop", 
     description:"Bill's Computer Workshop ist eine immersive Lernumgebung (VR), in der die Lernenden das Innenleben eines Computers erkunden. Im Computer treffen die Lernenden auf Mechaniker Bill dem sie helfen sollen, den Computer zu reparieren. Dabei lernen die Lernenden die verschiedenen Komponenten eines Computers und deren Funktion kennen. Wird mit einer Komponente interagiert, so bekommen die Lernenden mehr Informationen über die Funktion und die Interaktion der Komponente mit dem Rest des Systems.", 
@@ -151,7 +151,7 @@ export class ToolsComponent {
     },
     {
       heading:"schulKI", 
-      description:"Die deutsche Plattform schulKI.de befindet sich momentan in der Beta-Phase. Als eine von Lehrer*innen für Lehrer*innen entwickelte Plattform bietet die Seite die Möglichkeit, ChatGPT sicher in den schulischen Kontext zu holen. ChatGPT bietet bekanntermaßen völlig neue Möglichkeiten in der Unterrichtsvorbereitung als auch während des Unterrichts. Problematisch ist bei der Verwendung des Chatbots mit Schüler*innen, dass die Kinder und Jugendlichen ihre private Handynummer und ihre E-Mail-Adressen bei der Registrierung eingeben müssen. Außerdem werden die eingegebenen Daten auf amerikanische Server des Anbieters OpenAI übertragen. In Schulen stellt das aus datenschutztechnischen Gründen ein großes Problem dar. Die neue Plattform schulKI.de soll nun dabei helfen, den Chatbot sicher im Unterricht einzusetzen.", 
+      description:"Die deutsche Plattform schulKI.de befindet sich momentan in der Beta-Phase. Als eine von Lehrer*innen für Lehrer*innen entwickelte Plattform bietet die Seite die Möglichkeit, ChatGPT sicher in den schulischen Kontext zu holen. ChatGPT bietet bekanntermaßen völlig neue Möglichkeiten in der Unterrichtsvorbereitung als auch während des Unterrichts. Problematisch ist bei der Verwendung des Chatbots mit Schüler*innen, dass die Kinder und Jugendlichen ihre private Handynummer und ihre E-Mail-Adressen bei der Registrierung eingeben müssen. Außerdem werden die eingegebenen Daten auf amerikanische Server des Anbieters OpenAI übertragen. In Schulen stellt das aus datenschutztechnischen Gründen ein großes Problem dar. Die neue Plattform schulKI.de soll nun dabei helfen, den Chatbot sicher im Unterricht einzusetzen.", 
       link: "https://schulki.de"
     }
   ];

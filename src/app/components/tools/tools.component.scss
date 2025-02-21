@@ -1,0 +1,20 @@
+.btnStack {
+    pointer-events: auto;
+    background-color: #b8afcd;
+    border: none;
+    color: #000000;
+    padding: 0.3em 0.5em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 0.2em;
+    margin-left: 0em;
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    border-radius: 0.5em;
+    flex: 0 0 auto
+  }
+  a.btnStack:hover {
+    background-color: #414d68;
+    color: #fff;
+  }
