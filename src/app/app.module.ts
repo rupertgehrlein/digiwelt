@@ -19,6 +19,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { FifthGradeComponent } from './components/fifth-grade/fifth-grade.component';
 import { SixthGradeComponent } from './components/sixth-grade/sixth-grade.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ToolsComponent } from './components/tools/tools.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     AdminComponent,
     FifthGradeComponent,
     SixthGradeComponent,
-    DashboardComponent
+    DashboardComponent,
+    ToolsComponent
   ],
   imports: [
     BrowserModule,

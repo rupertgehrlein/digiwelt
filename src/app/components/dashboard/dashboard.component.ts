@@ -76,6 +76,7 @@ export class DashboardComponent {
   async fetchFavoriteContents() {
     try {
       this.favoriteContents = await this.supabaseFactory.getFavoriteDetails();
+      console.log(this.favoriteContents);
     } catch (error) {
       console.error('Error fetching favorite contents:', error);
     }

@@ -18,6 +18,9 @@
           <a class="nav-link text" routerLink="/contents">Inhalte</a>
         </li>
         <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link text" routerLink="/tools">Tools</a>
+        </li>
+        <li class="nav-item" *ngIf="isLoggedIn">
           <a class="nav-link text" (click)="logout()" routerLink="/">Ausloggen</a>
         </li>
       </ul>
