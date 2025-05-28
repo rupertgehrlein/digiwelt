@@ -73,7 +73,7 @@ export class SupabaseFactoryService {
     }
   }
 
-  listenForNewUser() {
+  listenForNewUser() { //RG: hier eventuell User-Feedback einbauen, wenn etwas schief geht
     return this.client.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
         const { user } = session;
@@ -104,7 +104,7 @@ export class SupabaseFactoryService {
     });
   }
 
-  async isRegistered(email) {
+  async isRegistered(email) { //RG: hier eventuell User-Feedback einbauen, wenn etwas schief geht
     // Schaut ob User schon registriert ist
     const { data: existingUser, error } = await this.client
       .from('users')
@@ -123,7 +123,7 @@ export class SupabaseFactoryService {
     }
   }
 
-  //irgendwie ist das noch ein bisschen buggy...er schmeißt noch die falschen Fehlercodes
+  //RG: irgendwie ist das noch ein bisschen buggy: falsche Fehlercodes werden geschmissen -> ÜBERPRÜFEN + Feedback an User
   async register(email, firstname, lastname, school_number) {
     const { data, error: registerError } = await this.client
       .from('unregistered_users')
@@ -155,13 +155,14 @@ export class SupabaseFactoryService {
       .eq('email', email)
   }
 
+  //RG: unsicher für was das war bzw. für was das gebraucht wird? --> wirkt mir in der Nutzung recht random
   async updateId() {
-    const mail = (await this.client.auth.getUser()).data.user.email;
+    const email = (await this.client.auth.getUser()).data.user.email;
 
     const { data: idData, error: idError } = await this.client
       .from('users')
       .select('id')
-      .eq('email', mail)
+      .eq('email', email)
 
     const authId = (await this.client.auth.getUser()).data.user.id;
 
@@ -186,6 +187,7 @@ export class SupabaseFactoryService {
     }
     return data;
   }
+
   async getUserContentByApprovement(is_approved: boolean, is_disapproved: boolean,userID: string): Promise<any>{
 
     const { data, error } = await this.client
@@ -214,6 +216,7 @@ export class SupabaseFactoryService {
     return data;
   }
 
+  //RG: nirgendwo benutzt --> für was ist das gedacht?
   async getContentsByCreatorID(userID: string): Promise<any> {
     const { data, error } = await this.client
       .from('contents')
@@ -233,7 +236,7 @@ export class SupabaseFactoryService {
     const { data, error } = await this.client
       .from('favorites')
       .select('content_id')
-      .eq('user_id', (await this.client.auth.getUser()).data.user.id);
+      .eq('user_id', userID)
 
     if (error) {
       console.error('Error fetching favorites:', error.message);
@@ -244,19 +247,23 @@ export class SupabaseFactoryService {
   }
 
   async addFavorite(contentId) {
+    const userID = (await this.client.auth.getUser()).data.user.id;
+
     const { data, error } = await this.client
       .from('favorites')
-      .insert({ user_id: (await this.client.auth.getUser()).data.user.id, content_id: contentId });
+      .insert({ user_id: userID, content_id: contentId });
 
     if (error) throw error;
     return data;
   }
 
   async removeFavorite(contentId) {
+    const userID = (await this.client.auth.getUser()).data.user.id;
+
     const { data, error } = await this.client
       .from('favorites')
       .delete()
-      .eq('user_id', (await this.client.auth.getUser()).data.user.id)
+      .eq('user_id', userID)
       .eq('content_id', contentId);
 
     if (error) throw error;
@@ -264,10 +271,12 @@ export class SupabaseFactoryService {
   }
 
   async getFavoriteDetails(): Promise<any[]> {
+    const userID = (await this.client.auth.getUser()).data.user.id;
+
     const { data: favorites, error: favError } = await this.client
       .from('favorites')
       .select('content_id')
-      .eq('user_id', (await this.client.auth.getUser()).data.user.id);
+      .eq('user_id', userID);
 
     if (favError) {
       console.error('Error fetching favorites:', favError.message);
@@ -309,10 +318,12 @@ export class SupabaseFactoryService {
   }
 
   async getOwnContentDetails(){
+    const userID = (await this.client.auth.getUser()).data.user.id;
+
     const { data: ownContents, error: ownContentsError } = await this.client
       .from('contents')
       .select('id')
-      .eq('creator_id', (await this.client.auth.getUser()).data.user.id);
+      .eq('creator_id', userID);
 
     if (ownContentsError) {
       console.error('Error fetching favorites:', ownContentsError.message);
@@ -377,7 +388,7 @@ export class SupabaseFactoryService {
   }
 
   async updateContent(heading, description, gradeLevel, topic, perspective, id){
-    
+
     const { data: contentData, error: contentError } = await this.client
       .from('contents')
       .update([
@@ -399,7 +410,7 @@ export class SupabaseFactoryService {
 
 
   async updateDisapprovedContent(heading, description, gradeLevel, topic, perspective, id){
-      
+
     const { data: contentData, error: contentError } = await this.client
       .from('contents')
       .update([
@@ -431,7 +442,7 @@ export class SupabaseFactoryService {
     }
     return data;
   }
-  
+
   // Funktion zur signierten URL Erstellung für den sicheren Datei-Download
   async generateSignedUrl(filePath: string): Promise<string | null> {
     const { data, error } = await this.client
