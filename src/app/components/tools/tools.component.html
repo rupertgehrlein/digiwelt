@@ -1,7 +1,7 @@
 <div class="container container-top">
-    <h1 class="display-4">Tools</h1>
-</div>
-<div class="row align-items-center">
+  <h1 class="display-4">Tools</h1>
+
+  <div class="row align-items-center">
     <div class="col">
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -10,129 +10,132 @@
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="InfoDaten" data-bs-toggle="tab" data-bs-target="#InfoDaten-tab-pane"
-            type="button" role="tab" aria-controls="InfoDaten-tab-pane" aria-selected="false">Information und Daten</button>
+            type="button" role="tab" aria-controls="InfoDaten-tab-pane" aria-selected="false">Information und
+            Daten</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="GrundProg" data-bs-toggle="tab" data-bs-target="#GrundProg-tab-pane"
-              type="button" role="tab" aria-controls="GrundProg-tab-pane" aria-selected="false">Grundlagen der Programmierung</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="Vernetzung" data-bs-toggle="tab" data-bs-target="#Vernetzung-tab-pane"
-              type="button" role="tab" aria-controls="Vernetzung-tab-pane" aria-selected="false">Vernetzung</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="Allgemein" data-bs-toggle="tab" data-bs-target="#Allgemein-tab-pane"
-              type="button" role="tab" aria-controls="Allgemein-tab-pane" aria-selected="false">Allgemein</button>
-          </li>
+          <button class="nav-link" id="GrundProg" data-bs-toggle="tab" data-bs-target="#GrundProg-tab-pane"
+            type="button" role="tab" aria-controls="GrundProg-tab-pane" aria-selected="false">Grundlagen der
+            Programmierung</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="Vernetzung" data-bs-toggle="tab" data-bs-target="#Vernetzung-tab-pane"
+            type="button" role="tab" aria-controls="Vernetzung-tab-pane" aria-selected="false">Vernetzung</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="Allgemein" data-bs-toggle="tab" data-bs-target="#Allgemein-tab-pane"
+            type="button" role="tab" aria-controls="Allgemein-tab-pane" aria-selected="false">Allgemein</button>
+        </li>
       </ul>
     </div>
-</div>   
+  </div>
 
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="CompUber-tab-pane" role="tabpanel" aria-labelledby="CompUber"
-          tabindex="0">
-          <div class="container tabs">
-            <div class="row" *ngFor="let tool of CompUberTools">
-              <div class="card">
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-start">
-                    <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading }}</a></h5>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <p class="card-text">{{ tool.description }}</p>
-                  </div>
-                  <div>
-                    <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
-                  </div>
-                </div>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="CompUber-tab-pane" role="tabpanel" aria-labelledby="CompUber"
+      tabindex="0">
+      <div class="container tabs">
+        <div class="row" *ngFor="let tool of CompUberTools">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading
+                    }}</a></h5>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">{{ tool.description }}</p>
+              </div>
+              <div>
+                <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="tab-pane fade " id="InfoDaten-tab-pane" role="tabpanel" aria-labelledby="InfoDaten"
-             tabindex="0">
-            <div class="container tabs">
-                <div class="row" *ngFor="let tool of InfoDatenTools">
-                <div class="card">
-                    <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading }}</a></h5>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text">{{ tool.description }}</p>
-                    </div>
-                    <div>
-                        <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-pane fade " id="GrundProg-tab-pane" role="tabpanel" aria-labelledby="GrundProg"
-             tabindex="0">
-            <div class="container tabs">
-                <div class="row" *ngFor="let tool of GrundProgTools">
-                <div class="card">
-                    <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading }}</a></h5>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text">{{ tool.description }}</p>
-                    </div>
-                    <div>
-                        <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-pane fade " id="Vernetzung-tab-pane" role="tabpanel" aria-labelledby="Vernetzung"
-             tabindex="0">
-            <div class="container tabs">
-                <div class="row" *ngFor="let tool of VernetzungTools">
-                <div class="card">
-                    <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading }}</a></h5>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text">{{ tool.description }}</p>
-                    </div>
-                    <div>
-                        <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-pane fade " id="Allgemein-tab-pane" role="tabpanel" aria-labelledby="Allgemein"
-             tabindex="0">
-            <div class="container tabs">
-                <div class="row" *ngFor="let tool of AllgemeinTools">
-                <div class="card">
-                    <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading }}</a></h5>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <p class="card-text">{{ tool.description }}</p>
-                    </div>
-                    <div>
-                        <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    
+    <div class="tab-pane fade " id="InfoDaten-tab-pane" role="tabpanel" aria-labelledby="InfoDaten" tabindex="0">
+      <div class="container tabs">
+        <div class="row" *ngFor="let tool of InfoDatenTools">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading
+                    }}</a></h5>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">{{ tool.description }}</p>
+              </div>
+              <div>
+                <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane fade " id="GrundProg-tab-pane" role="tabpanel" aria-labelledby="GrundProg" tabindex="0">
+      <div class="container tabs">
+        <div class="row" *ngFor="let tool of GrundProgTools">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading
+                    }}</a></h5>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">{{ tool.description }}</p>
+              </div>
+              <div>
+                <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane fade " id="Vernetzung-tab-pane" role="tabpanel" aria-labelledby="Vernetzung" tabindex="0">
+      <div class="container tabs">
+        <div class="row" *ngFor="let tool of VernetzungTools">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading
+                    }}</a></h5>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">{{ tool.description }}</p>
+              </div>
+              <div>
+                <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane fade " id="Allgemein-tab-pane" role="tabpanel" aria-labelledby="Allgemein" tabindex="0">
+      <div class="container tabs">
+        <div class="row" *ngFor="let tool of AllgemeinTools">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <h5 class="card-title"><a href="{{tool.link}}" target="_blank" rel="noopener noreferrer">{{ tool.heading
+                    }}</a></h5>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <p class="card-text">{{ tool.description }}</p>
+              </div>
+              <div>
+                <a href="{{tool.link}}" class="btnStack" target="_blank" rel="noopener noreferrer">{{tool.link}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
