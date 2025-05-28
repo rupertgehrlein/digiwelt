@@ -57,9 +57,9 @@ export class ToolsComponent {
       link: "https://scratch.mit.edu/"
     },
     {
-      heading:"CoSpaces", 
-      description:"CoSpaces Edu ist eine intuitive Software, in der sich virtuelle Welten spielerisch leicht entwerfen lassen. So können selbst Kinder im Grundschulalter eigene 3D Räume erschaffen.", 
-      link: "cospaces.io"
+      heading:"Delightex (ehem. 'CoSpaces')", 
+      description:"Delightex ist eine intuitive Software, in der sich virtuelle Welten spielerisch leicht entwerfen lassen. So können selbst Kinder im Grundschulalter eigene 3D Räume erschaffen.", 
+      link: "https://www.delightex.com"
     },
     {
       heading:"Robot Karol", 
